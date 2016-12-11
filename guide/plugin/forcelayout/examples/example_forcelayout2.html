@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ForceLayout for Graph3dView</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-forcelayout.js"></script>   
+        <script>
+            function init(){                
+                items = [ 
+                    {
+                        label: 'Force Layout',
+                        selected: true,
+                        type: 'toggle',
+                        action: function(){
+                            if(this.selected){
+                                forceLayout.start();                            
+                            }else{
+                                forceLayout.stop();
+                            }                            
+                        }                 
+                    },                                          
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        selected: false,
+                        action: function(item){
+                            g3d.setEditable(item.selected);
+                        }
+                    }                    
+                ];
+
+                dataModel = new ht.DataModel();                   
+                g3d = new ht.graph3d.Graph3dView(dataModel); 
+                toolbar = new ht.widget.Toolbar(items);
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(g3d);
+                        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                                                                                
+                          
+                initDataModel();
+    
+                g3d.setGridSize(100);
+                g3d.setGridGap(100);
+                g3d.setGridVisible(true);
+                g3d.setEye([0, 200, 800]);
+                forceLayout = new ht.layout.ForceLayout(g3d);     
+                forceLayout.start();
+            }
+
+            function createNode(name){
+                var node = new ht.Node();
+                node.setId(name);
+                node.setName(name);                
+                node.setElevation(15);
+                node.s3(80, 30, 20);
+                node.s({
+                    'label.position': 17,
+                    'label.background': 'yellow'
+                });
+                dataModel.add(node);
+                return node;
+            }
+            
+            function createEdge(sourceNode, targetNode){
+                var edge = new ht.Edge(sourceNode, targetNode);
+                edge.s({
+                    'edge.width': 1,
+                    'edge.color': 'red'
+                });
+                dataModel.add(edge);
+                return edge;
+            }
+
+            function initDataModel(){                      
+                var ip = "192.168.1.";
+                var count = 0;
+                iNode = createNode(ip + count++);
+                
+                for (var j = 0; j < 2; j++) {
+                    jNode = createNode(ip + count++);
+                    createEdge(iNode, jNode);
+                    
+                    for (var z = 0; z < 3; z++) {
+                        zNode = createNode(ip + count++);
+                        createEdge(jNode, zNode);
+                    }    
+                }
+                
+                var x = 3;
+                var y = 3;                
+                for (var j = 0; j < y; j++) {
+                    for (var i = 0; i < x; i++) {
+                        createNode(i + " - " + j);                         
+                    }
+                }
+                for (var j = 0; j < y; j++) {
+                    for (var i = 0; i < x; i++) {
+                        if (i > 0) {
+                            createEdge(dataModel.getDataById(i + " - " + j), dataModel.getDataById((i - 1) + " - " + j));                            
+                        }
+                        if (j > 0) {
+                            createEdge(dataModel.getDataById(i + " - " + j), dataModel.getDataById(i + " - " + (j - 1)));
+                        }
+                    }
+                }               
+            }            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

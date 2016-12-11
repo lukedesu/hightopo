@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>3D Cube</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script>
+            htconfig = {
+                Default:{                     
+                    toolTipDelay: 100,
+                    toolTipContinual: true
+                }
+            };            
+        </script>
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="texture.js"></script>   
+        <script>                         
+            function init(){                                                                                                                            
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);                  
+                view = g3d.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    g3d.invalidate();
+                }, false);   
+                
+                g3d.setEye([0, 400, 800]);
+                g3d.enableToolTip();
+                g3d.getToolTip = function(e){
+                    var data = this.getDataAt(e);
+                    if(data){
+                        return '<pre>' + JSON.stringify(data.getStyleMap(), function(key, value){
+                            if(value && value.length > 0 && typeof value[0] === 'number'){
+                                var v = [];
+                                for(var i=0; i<value.length; i++){
+                                    v[i] = parseFloat(value[i].toFixed(2));
+                                }                                
+                                return '[' + v.join(',') + ']';
+                            }
+                            return value;
+                        }, 4) + '</pre>';
+                    }
+                    return null;
+                };
+                                
+                // first row
+                createNode([-300, 0, 300], [100, 100, 100]).s({
+                    'left.color': 'pink',
+                    'right.color': 'yellow',
+                    'front.color': 'red',
+                    'back.color': 'green',
+                    'top.color': 'blue',
+                    'bottom.color': 'orange'                    
+                }); 
+                createNode([-100, 0, 300], [100, 100, 100]).s({
+                    'left.color': 'pink',
+                    'right.color': 'yellow',
+                    'front.color': 'red',
+                    'back.color': 'green',
+                    'top.color': 'blue',
+                    'bottom.color': 'orange',
+                    'all.light': false
+                });                
+                createNode([100, 0, 300], [100, 100, 100]).s({
+                    'all.color': '#1ABC9C'
+                });
+                createNode([300, 0, 300], [100, 100, 100]).s({
+                    'all.color': '#1ABC9C',
+                    'all.light': false
+                });
+                
+                // second row
+                createNode([-300, 0, 100], [100, 100, 100]).s({
+                    'left.color': 'pink',
+                    'right.color': 'yellow',
+                    'front.color': 'red',
+                    'back.color': 'green',                    
+                    'bottom.color': 'orange',
+                    'top.visible': false
+                }); 
+                createNode([-100, 0, 100], [100, 100, 100]).s({
+                    'left.color': 'pink',
+                    'right.color': 'yellow',
+                    'front.color': 'red',
+                    'back.color': 'green',
+                    'top.color': 'blue',
+                    'bottom.color': 'orange',
+                    'all.light': false,
+                    'top.visible': false,
+                    'all.reverse.flip': true
+                });                
+                createNode([100, 0, 100], [100, 100, 100]).s({
+                    'all.color': '#1ABC9C',
+                    'top.visible': false
+                });
+                createNode([300, 0, 100], [100, 100, 100]).s({
+                    'all.color': '#1ABC9C',
+                    'all.light': false,
+                    'top.visible': false,
+                    'left.reverse.color': 'pink',
+                    'right.reverse.color': 'yellow',
+                    'front.reverse.color': 'red',
+                    'back.reverse.color': 'green',
+                    'bottom.reverse.color': 'orange' 
+                });
+                
+                
+                // third row
+                createNode([-300, 0, -100], [100, 100, 100]).s({
+                    'all.image': 'dice',
+                    'all.discard.selectable': false
+                }); 
+                createNode([-100, 0, -100], [100, 100, 100]).s({
+                    'all.image': 'dice',
+                    'front.uv': [0.25, 0.75, 0.25, 1, 0.5, 1, 0.5, 0.75],
+                    'top.uv': [0.25, 0.5, 0.25, 0.75, 0.5, 0.75, 0.5, 0.5],
+                    'back.uv': [0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.25],
+                    'bottom.uv': [0.25, 0, 0.25, 0.25, 0.5, 0.25, 0.5, 0],
+                    'left.uv': [0, 0.75, 0, 1, 0.25, 1, 0.25, 0.75],
+                    'right.uv': [0.5, 0.75, 0.5, 1, 0.75, 1, 0.75, 0.75]
+                });                
+                createNode([100, 0, -100], [100, 100, 100]).s({
+                    'all.image': 'dice',
+                    'front.uv': [0.25, 0.75, 0.25, 1, 0.5, 1, 0.5, 0.75],                    
+                    'back.uv': [0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.25],
+                    'bottom.uv': [0.25, 0, 0.25, 0.25, 0.5, 0.25, 0.5, 0],
+                    'left.uv': [0, 0.75, 0, 1, 0.25, 1, 0.25, 0.75],
+                    'right.uv': [0.5, 0.75, 0.5, 1, 0.75, 1, 0.75, 0.75],
+                    'top.visible': false
+                });
+                createNode([300, 0, -100], [100, 100, 100]).s({
+                    'all.image': 'dice',
+                    'front.uv': [0.25, 0.75, 0.25, 1, 0.5, 1, 0.5, 0.75],
+                    'top.uv': [0.25, 0.5, 0.25, 0.75, 0.5, 0.75, 0.5, 0.5],
+                    'back.uv': [0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.25],
+                    'bottom.uv': [0.25, 0, 0.25, 0.25, 0.5, 0.25, 0.5, 0],
+                    'left.uv': [0, 0.75, 0, 1, 0.25, 1, 0.25, 0.75],
+                    'right.uv': [0.5, 0.75, 0.5, 1, 0.75, 1, 0.75, 0.75],
+                    'top.visible': false,
+                    'all.reverse.flip': true
+                });
+                
+                // fourth row
+                createNode([0, 0, -300], [700, 100, 100]).s({
+                    'all.image': 'fab',
+                    'front.uv.scale': [7, 1],
+                    'top.uv.scale': [14, 2],
+                    'back.uv.scale': [4, 1],
+                    'back.uv.offset': [0.5, 0.5],
+                    'left.uv': [1,0, 0,0, 0,1, 1,1],
+                    'right.uv': [0,1, 1,1, 1,0, 0,0]
+                }); 
+                
+                // transparent
+                createNode([0, 0, 0], [700, 200, 20]).s({
+                    'all.color': 'rgba(0, 0, 255, 0.7)',
+                    'all.transparent': true,
+                    'all.reverse.cull': true
+                });  
+                
+                createNode([0, 0, 200], [30, 150, 300]).s({                    
+                    'left.transparent': true,                                        
+                    'left.visible': true,
+                    'left.reverse.flip': true,                    
+                    'left.color': 'rgba(0, 255, 0, 0.5)',
+                    'right.transparent': true,                                        
+                    'right.visible': true,
+                    'right.reverse.flip': true,
+                    'right.color': 'rgba(0, 255, 0, 0.5)'
+                });                  
+            } 
+            
+            function createNode(p3, s3){
+                var node = new ht.Node();
+                node.p3(p3);
+                node.s3(s3);
+                dataModel.add(node);
+                return node;
+            }
+                        
+          
+        </script>
+    </head>
+    <body onload="init();">                  
+              
+    </body>
+</html>

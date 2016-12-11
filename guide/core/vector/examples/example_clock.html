@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Clock</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init() {
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();
+
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    graphView.invalidate();
+                }, false);
+
+                ht.Default.setCompType('clock-face', function(g, rect, comp, data, view) {
+                    var cx = rect.x + rect.width / 2;
+                    var cy = rect.y + rect.height / 2;
+                    var theta = 0;
+                    var r = Math.min(rect.width, rect.height)/2 * 0.92;
+                    
+                    g.strokeStyle = "#137";
+                    for (var i = 0; i < 60; i++) {                        
+                        g.beginPath();
+                        g.arc(
+                            cx + Math.cos(theta) * r, 
+                            cy + Math.sin(theta) * r, 
+                            i % 5 === 0 ? 4 : 1, 
+                            0, Math.PI * 2, true);
+                        g.closePath();
+                        g.lineWidth = i % 5 === 0 ? 2 : 1;
+                        g.stroke();
+                        theta = theta + (6 * Math.PI / 180);
+                    }
+                });
+
+                ht.Default.setImage('clock', {
+                    width: 500,
+                    height: 500,
+                    comps: [
+                        {
+                            type: 'circle',
+                            relative: true,
+                            rect: [0, 0, 1, 1],
+                            background: 'yellow',
+                            gradient: 'linear.northeast'
+                        },
+                        {
+                            type: 'clock-face',
+                            relative: true,
+                            rect: [0, 0, 1, 1]
+                        },
+                        {
+                            type: function(g, rect, comp, data, view) {
+                                // get current time
+                                var date = data.a('date');
+                                if(!date){
+                                    return;
+                                }
+                                
+                                var hours = date.getHours();
+                                var minutes = date.getMinutes();
+                                var seconds = date.getSeconds();
+                                hours = hours > 12 ? hours - 12 : hours;
+                                var hour = hours + minutes / 60;
+                                var minute = minutes + seconds / 60;
+                                var clockRadius = 250;
+
+                                // save current context
+                                g.save();
+
+                                g.translate(clockRadius, clockRadius);
+                                g.beginPath();
+
+                                // draw numbers
+                                g.font = '36px Arial';
+                                g.fillStyle = '#000';
+                                g.textAlign = 'center';
+                                g.textBaseline = 'middle';
+                                for (var n = 1; n <= 12; n++) {
+                                    var theta = (n - 3) * (Math.PI * 2) / 12;
+                                    var x = clockRadius * 0.75 * Math.cos(theta);
+                                    var y = clockRadius * 0.75 * Math.sin(theta);
+                                    g.fillText(n, x, y);
+                                }
+
+                                // draw hour
+                                g.save();
+                                var theta = (hour - 3) * 2 * Math.PI / 12;
+                                g.rotate(theta);
+                                g.beginPath();
+                                g.moveTo(-15, -5);
+                                g.lineTo(-15, 5);
+                                g.lineTo(clockRadius * 0.5, 1);
+                                g.lineTo(clockRadius * 0.5, -1);
+                                g.fill();
+                                g.restore();
+
+                                // draw minute
+                                g.save();
+                                var theta = (minute - 15) * 2 * Math.PI / 60;
+                                g.rotate(theta);
+                                g.beginPath();
+                                g.moveTo(-15, -4);
+                                g.lineTo(-15, 4);
+                                g.lineTo(clockRadius * 0.8, 1);
+                                g.lineTo(clockRadius * 0.8, -1);
+                                g.fill();
+                                g.restore();
+
+                                // draw second
+                                g.save();
+                                var theta = (seconds - 15) * 2 * Math.PI / 60;
+                                g.rotate(theta);
+                                g.beginPath();
+                                g.moveTo(-15, -3);
+                                g.lineTo(-15, 3);
+                                g.lineTo(clockRadius * 0.9, 1);
+                                g.lineTo(clockRadius * 0.9, -1);
+                                g.fillStyle = '#0f0';
+                                g.fill();
+                                g.restore();
+
+                                g.restore();
+                            }
+                        }
+                    ]
+                });
+
+                var node = new ht.Node();
+                node.setPosition(150, 150);
+                node.setSize(250, 250);
+                node.setImage('clock');
+                node.a('date', new Date());
+                node.s('image.stretch', 'centerUniform');
+                dataModel.add(node);
+
+                graphView.setEditable(true);
+                
+                setInterval(function(){
+                    node.a('date', new Date());
+                }, 1000);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Live node</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-live.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            dataModel.setAutoAdjustIndex(false);
+            var graphView = new ht.graph.GraphView(dataModel);
+            var buttonGroup = new ht.ButtonGroup();
+            
+            var liveNodes = [
+                'Button',
+                'ToggleButton',
+                'Checkbox',
+                'Switch',
+                'RadioButton',
+                'ProgressBar',
+                'Slider',
+                'Spinner',
+                'Combobox',
+                'RadioButton'
+            ];
+            
+            function init () {
+                liveNodes.forEach(function (type, i) {
+                    var node = addNode(type, 120 + (i % 5) * 150, 50 + Math.floor(i / 5) * 50);
+                    if (i % 5 === 4) buttonGroup.add(node);
+                });
+                
+                initBody();
+            }
+            
+            function addNode (type, x, y) {
+                // Create live node
+                var node = new ht[type + 'Node']();
+                node.setPosition(x, y);
+                dataModel.add(node);
+                
+                // Set button label
+                node.s('live.label', type);
+                
+                // Set toggle button selected
+                if (node.setSelected) node.setSelected(true);
+                
+                // Set value for ProgressBar, Slider and Spinner
+                if (node.setValue) node.setValue(50);
+                
+                // Setup Combobox
+                if (node.setItems) {
+                    node.setItems(liveNodes);
+                    node.setSelectedItem(type);
+                }
+                
+                return node;
+            }
+            
+            function initBody () {
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '0px';
+                style.top = '0px';
+                style.right = '0px';
+                style.bottom = '0px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

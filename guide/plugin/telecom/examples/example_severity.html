@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Custom AlarmSeverity</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-telecom.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            var graphView = new ht.graph.GraphView(dataModel);
+            
+            function init() {
+                // Add custom AlarmSeverity
+                ht.AlarmSeverity.add(50, 'Trivial', 'T', '#20B2AA');
+                
+                // Iterate HT default AlarmSeverity, add node with related AlarmSeverity
+                var x = 30;
+                ht.AlarmSeverity.each(function (severity) {
+                    var node = new ht.Node();
+                    node.setName(severity.name);
+                    node.setPosition(x += 100, 100);
+                    node.getAlarmState().increaseNewAlarm(severity);
+                    dataModel.add(node);
+                });
+                
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '10px';
+                style.top = '10px';
+                style.right = '10px';
+                style.bottom = '10px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

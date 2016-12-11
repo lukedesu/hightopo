@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Toolbar Form</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>              
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());                              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+
+            }
+            function createToolbar(){
+                var toolbar = new ht.widget.Toolbar([
+                    {
+                        id: 'step',
+                        label: 'Step',
+                        unfocusable: true,
+                        slider: {
+                            width: 120,
+                            step: 5,
+                            min: 100,
+                            max: 200,
+                            value: 125,
+                            thickness: 1,
+                            onValueChanged: function(){
+                                toolbar.getItemById('step').label = this.getValue();
+                                toolbar.redraw();
+                            },
+                            onEndValueChanged: function(){
+                                toolbar.getItemById('step').label = 'Step';
+                                toolbar.redraw();
+                            }        
+                        }
+                    },
+                    {        
+                        id: 'nation',
+                        label: 'Nation',                        
+                        unfocusable: true,
+                        comboBox: {
+                            width: 120,
+                            value: 'Sweden',
+                            values: ['Spain', 'Sweden', 'Switzerland'],
+                            icons: ['images/spain.png', 'images/sweden.png', 'images/switzerland.png']
+                        }
+                    },
+                    {
+                        id: 'text',
+                        unfocusable: true,
+                        textField: {
+                            width: 120,
+                            color: 'red'        
+                        }
+                    },
+                    'separator', 
+                    {
+                        unfocusable: true,
+                        button: {
+                            width: 120,
+                            label: 'Get Information',                            
+                            onClicked: function(){
+                                alert('Slider:' + toolbar.v('step') + '\n' +
+                                    'Nation:' + toolbar.v('nation') + '\n' +
+                                    'Name:' + toolbar.v('text')
+                                );                                
+                            }
+                        }
+                    }
+                ]);
+                toolbar.v('text', 'Eric Lin');
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">         
+    </body>
+</html>

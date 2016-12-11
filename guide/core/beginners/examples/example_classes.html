@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HT Classes</title>
+        <meta charset="UTF-8">        
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            
+            var discriptionMap = {
+                ht: 'HT框架的唯一全局对象，其他类和包的起始节点',
+                graph: '2D拓扑图形包，与2D拓扑图形相关的类皆在此包下',  
+                GraphView: '2D拓扑图形组件，可视化呈现数据模型中的图元数据关系',                              
+                Interactor: 'GraphView交互器的基类，封装了拓扑图组件交互的基础功能',
+                DefaultInteractor: '实现GraphView手抓图，Group双击展开合并，进出SubGraph，EdgeGroup展开合并等基本交互功能',
+                SelectInteractor: '实现GraphView单选和多选的选择交互功能',
+                MoveInteractor: '实现GraphView拖拽移动图元交互功能',
+                EditInteractor: '实现GraphView对图元的大小，旋转以及多边形的编辑操作功能',
+                TouchInteractor: '实现GraphView在触摸屏幕上的手势操作交互功能',   
+                graph3d: '3D渲染引擎包，与3D渲染引擎相关的类皆在此包下',  
+                Graph3dView: '3D渲染引擎组件，可视化呈现数据模型的三维环境场景',                
+                widget: '通用组件包，包含树、表格、属性、分割和页签等组件',
+                SplitView: '分割组件，用于左右或上下分割两个组件',
+                AccordionView: '折叠组件，用于多组件的折叠展开效果，提供水平和垂直两种布局方式',
+                TabView: '页签组件，以页签的方式呈现多组件，页签支持拖拽和关闭等功能',
+                PropertyView: '属性组件，用于显示Data类型对象属性，以分组、排序等方式展示属性',
+                ListView: '列表组件，以列表的方式呈现DataModel中的Data数据',
+                TreeView: '树形组件，以树形的方式呈现DataModel中Data数据的父子关系',
+                TableView: '表格组件，以表格的方式呈现DataModel中Data的属性',
+                TreeTableView: '树表组件，以树形和表格的方式组合呈现DataModel中Data的父子及属性信息',
+                TableHeader: '表头组件，常与TableView和TreeTableView结合呈现Column信息，并提供Column的排序、大小和位置变化等交互操作功能',
+                TablePane: '表格面板，组合了TableHeader和TableView两个子组件',
+                TreeTablePane: '树表面板，组合TableHeader和TreeTableView两个子组件', 
+                Toolbar:'工具条组件，提供按钮等组件的水平摆放功能',
+                BorderPane:'边框面板，管理上、下、左、右及中间五个组件',
+                DataModel: '数据模型类，作为Data数据的容器以及管理者，可添加和删除Data数据，监听派发相应的变化事件',
+                SelectionModel: '选择模型，每个DataModel都包含一个选择模型，管理图元的选择状态以及派发选择改变事件',
+                Data: '数据元素Data，不同组件有不同解释，对于表格组件代表一行记录，对于树形组件代表一个节点，对于图形组件代表一个图形元素',
+                Node: '节点类型图形元素，具有位置和大小等节点相关属性', 
+                Edge: '连线类型图形元素，可以连接两个Node节点类型图元', 
+                Group: '组类型图形元素，可以包含Node或其它孩子图形元素，可双击展开合并', 
+                SubGraph: '子图形类型元素，可以分层次的管理呈现图元，一般用于根据区域或业务分类管理图元', 
+                Grid: '网格类型图形元素，可嵌套包含附属节点，以网格方式定位附属节点，一般用于呈现设备面板',
+                Shape: '多边形图形元素，由多点组合形成的多边形，不填充颜色可作为折线或曲线图元', 
+                Column: '列数据，用于定义表格组件的列信息，包含列名称、类型以及自定义渲染和编辑单元格等信息',
+                Tab: '页签数据，用于加入TabView页签组件，页签的name属性用于显示名称，view属性对应要呈现的组件',
+                Property: '属性数据，用户指定PropertyView属性组件要显示的属性',
+                Default: 'js对象(非类)，包含HT系统模型的众多默认参数信息以及一些工具函数，可进行设置改变默认行为', 
+                Style: 'js对象(非类)，包含图元默认的Style信息，可进行获取和修改', 
+                List: '数组类，该类是对js原生Array类型数据进行封装，提供更为直观便捷的函数', 
+                Notifier: '事件通知器，可对其添加和删除事件监听器，并可派发事件调用其监听器，HT整个系统的事件监听皆使用该类管理',
+                JSONSerializer: '可对DataModel数据进行JSON格式的序列化和反序列化，简单需求可以直接调用DataModel上的serialize和deserialize函数', 
+                EdgeGroup: '连接两个节点的连线超过一条时，GraphView上呈现成捆效果，该类用来管理连线成捆信息，Edge的getEdgeGroup函数可以获取该对象',
+                Color: 'HT系统使用到的所有颜色信息'        
+            };            
+            
+            function init(){
+                hiberarchyTable = new ht.widget.TreeTablePane();
+                packageTable = new ht.widget.TreeTablePane();
+                flatTable = new ht.widget.TablePane();
+                tabView = new ht.widget.TabView();
+                
+                tabView.addToDOM();                                                 
+
+                tabView.add('Package', packageTable);
+                tabView.add('Hiberarchy', hiberarchyTable);
+                var flatTab = tabView.add('Flat', flatTable, true);
+                     
+                var column = new ht.Column();
+                column.setName('name');
+                column.setWidth(180);
+                column.setDisplayName('Class Name');
+                flatTable.getColumnModel().add(column);    
+    
+                addDiscription(packageTable);
+                addDiscription(hiberarchyTable);                
+                addDiscription(flatTable);
+                
+                var dataModel = packageTable.getDataModel();
+                dataModel.map = {};
+                adddDatas(dataModel, null, ['ht', 'graph', 'graph3d', 'widget']);
+                adddDatas(dataModel, 'graph', [
+                    'GraphView', 'Interactor', 'DefaultInteractor', 'SelectInteractor', 'MoveInteractor', 'EditInteractor', 'TouchInteractor']);
+                adddDatas(dataModel, 'graph3d', [
+                    'Graph3dView'
+                ]);  
+                adddDatas(dataModel, 'widget', [
+                    'SplitView', 'AccordionView', 'TabView',
+                    'PropertyView', 'ListView', 'TreeView', 'TableView', 'TreeTableView', 
+                    'TableHeader', 'TablePane', 'TreeTablePane','Toolbar','BorderPane'
+                ]);               
+                adddDatas(dataModel, null, [
+                    'DataModel', 'SelectionModel',
+                    'Data', 'Node', 'Edge', 'Group', 'SubGraph', 'Grid', 'Shape', 
+                    'Column', 'Tab', 'Property',
+                    'Default', 'Style', 'Color', 'List', 'Notifier', 'JSONSerializer', 'EdgeGroup'
+                ]);
+                
+                flatTab.setName('Flat (4 Packages and ' + (dataModel.size() - 4) + ' Classes)');
+                dataModel.each(function(data){
+                    var newData = new ht.Data();
+                    newData.setName(data.getName());
+                    flatTable.getDataModel().add(newData); 
+                });
+                
+                dataModel = hiberarchyTable.getDataModel();
+                dataModel.map = {};
+                adddDatas(dataModel, null, [
+                    'ht', 'graph', 'graph3d', 'widget',
+                    'Default', 'Style', 'Color', 'List', 'Notifier',
+                    
+                    'Data', 'DataModel', 'SelectionModel', 'EdgeGroup', 'JSONSerializer',
+                    
+                    'GraphView', 'Interactor', 'Graph3dView',   
+                    
+                    'SplitView', 'AccordionView', 'TabView', 'Toolbar','BorderPane',
+                    'PropertyView', 'ListView', 'TreeView', 'TableView', 'TreeTableView', 
+                    'TableHeader', 'TablePane', 'TreeTablePane'                                                                            
+                ]);
+                
+                adddDatas(dataModel, 'Data', ['Node', 'Edge', 'Column', 'Tab', 'Property']);
+                adddDatas(dataModel, 'Node', ['Group', 'SubGraph', 'Grid', 'Shape']);
+                adddDatas(dataModel, 'Interactor', ['DefaultInteractor', 'SelectInteractor', 'MoveInteractor', 'EditInteractor', 'TouchInteractor']);          
+
+            }
+            
+            function adddDatas(dataModel, parent, names){
+                names.forEach(function(name){
+                    var data = new ht.Data();
+                    data.setName(name);
+                    if(parent){
+                        data.setParent(dataModel.map[parent]);      
+                    }      
+                    data.setIcon(null);
+                    dataModel.add(data);
+                    dataModel.map[name] = data;
+                });
+            }
+            
+            function addDiscription(tablePane){
+                var column = new ht.Column();
+                column.setWidth(800);
+                column.setDisplayName('Discription');
+                column.getValue = function(data){
+                    return discriptionMap[data.getName()];
+                };
+                tablePane.getColumnModel().add(column);                 
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

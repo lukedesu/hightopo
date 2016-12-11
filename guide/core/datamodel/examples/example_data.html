@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Data</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            ht.Default.setImage('edit', 'res/edit.png');
+            ht.Default.setImage('mail', 'res/mail.png');
+            ht.Default.setImage('readmail', 'res/readmail.png');
+            ht.Default.setImage('search', 'res/search.png');
+            ht.Default.setImage('settings', 'res/settings.png');            
+            
+            function init(){                                
+                dataModel = new ht.DataModel();                    
+                treeView = new ht.widget.TreeView(dataModel);
+                view = treeView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    treeView.invalidate();
+                }, false);                         
+                     
+                var inbox = addData('Inbox', 'mail');
+                addData('Read Mail', 'readmail', inbox);                             
+                addData('Drafts', 'edit');
+                var search = addData('Search Folders', 'search');
+                addData('Categorized Mail', 'search', search);                             
+                addData('Large mail', 'search', search);                             
+                addData('UnRead Mail', 'search', search);                             
+                addData('Settings', 'settings');
+                
+                treeView.expandAll();
+                treeView.getSelectionModel().setSelection(search);
+            }
+            
+            function addData(name, icon, parent){
+                var data = new ht.Data();
+                data.setName(name);
+                data.setIcon(icon);
+                data.setParent(parent); // or parent.addChild(data);
+                dataModel.add(data);                
+                return data;
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

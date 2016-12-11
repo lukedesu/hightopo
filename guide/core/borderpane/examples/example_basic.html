@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BorderPane Basic</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>    
+        <script>
+
+            function init(){                                                   
+                borderPane = new ht.widget.BorderPane();       
+
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                                                  
+                
+                innerBorder = new ht.widget.BorderPane();
+                innerBorder.setTopView(createDiv('lightyellow', 'top'), 50);
+                innerBorder.setBottomView(createDiv('lightyellow', 'bottom'), 50);
+                innerBorder.setLeftView(createDiv('#3498DB', 'left'), 100);
+                innerBorder.setRightView(createDiv('#3498DB', 'right'), 100); 
+                innerBorder.setCenterView(createDiv('#F4F4F4', 'center')); 
+    
+                borderPane.setTopView(createDiv('#1ABC9C'), 30);
+                borderPane.setBottomView(createDiv('#1ABC9C'), 30);
+                borderPane.setLeftView(createDiv('#E74C3C'), 50);
+                borderPane.setRightView(createDiv('#E74C3C'), 50);  
+                borderPane.setCenterView(innerBorder);                
+            }              
+
+            function createDiv(background, text){
+                var div = document.createElement('div');  
+                div.style.position = 'absolute';                
+                div.style.background = background;           
+                if(text) div.innerHTML = text;
+                return div;
+            }          
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

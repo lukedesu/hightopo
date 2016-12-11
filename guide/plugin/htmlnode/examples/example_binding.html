@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Data binding</title>
+        <style>
+            .panel{
+                border:1px solid #333;
+                background:#eee;
+                font-size:13px;
+                width:10em;
+            }
+            .panel .title{
+                padding:5px;
+            }
+            .panel p{
+                margin:0;
+                padding:0;
+            }
+            .panel .content span{
+                box-sizing: border-box;
+                display: inline-block;
+                padding:2px;
+            }
+            .panel .content span.label{
+                text-align:right;
+                width:40%;
+            }
+            .panel .content span.value{
+                width:60%;
+            }
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script id="controlpanel-template" type="text/x-handlebars-template">
+            <div class="panel">
+                <div class="title">Dashboard</div>
+                <div class="content">
+                    <p><span class="label">KPI：</span><span class="value">{{value}}</span></p>
+                    <p>
+                    <span class="label">Stop：</span>
+                    <span class="value"><input type="checkbox" {{#if isStopped}}checked{{/if}} bind="isStopped"></span>
+                    </p>
+                </div>
+            </div>
+        </script>
+        <script src="../../../../lib/core/ht.js"></script>        
+        <script src="../../../../lib/plugin/ht-htmlnode.js"></script>
+        <script src="handlebars.js"></script>
+        <script type="text/javascript">
+            var dataModel = new ht.DataModel(),
+                    graphView = new ht.graph.GraphView(dataModel),
+                    view = graphView.getView();
+            function init() {
+                var context = {
+                    value: 10
+                };
+                graphView.setEditable(true);
+                
+                
+                var node = new ht.HtmlNode();
+                node.setPosition(200, 100);
+                node.setHtml(document.getElementById("controlpanel-template").innerHTML);
+                node.setContext(context);
+                dataModel.add(node);
+    
+                setInterval(function() {
+                    if(!context.isStopped){
+                        context.value=parseInt(100*Math.random());
+                        graphView.invalidateData(node);
+                    }
+                }, 1000);
+
+                var style = graphView.getView().style;
+                style.left = '0';
+                style.top = '0';
+                style.right = '0';
+                style.bottom = '0';
+                document.body.appendChild(graphView.getView());
+            }
+        </script>
+    </head>
+    <body onload="init()">
+
+    </body>
+</html>

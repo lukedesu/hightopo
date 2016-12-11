@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Toward North Layout</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-autolayout.js"></script>   
+        <script>
+            function init(){                
+                items = [ 
+                    {
+                        label: 'Toward North Layout',
+                        action: function(){
+                            layout(true);                          
+                        }                 
+                    },                                          
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        selected: false,
+                        action: function(item){
+                            graphView.setEditable(item.selected);
+                        }
+                    }                    
+                ];
+
+                dataModel = new ht.DataModel();                   
+                graphView = new ht.graph.GraphView(dataModel); 
+                toolbar = new ht.widget.Toolbar(items);
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(graphView);
+                        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                                                                                
+                          
+                initDataModel();
+    
+                autoLayout = new ht.layout.AutoLayout(graphView);     
+                layout(false);
+            }
+
+            function layout(animate){
+                autoLayout.setAnimate(animate);
+                autoLayout.layout('towardnorth', function(){
+                    graphView.fitContent(animate);
+                });                  
+            }
+
+            function createNode(name){
+                var node = new ht.Node();
+                node.setName(name);
+                dataModel.add(node);
+                return node;
+            }
+            
+            function createEdge(sourceNode, targetNode){
+                var edge = new ht.Edge(sourceNode, targetNode);
+                edge.s({
+                    'edge.width': 1,
+                    'edge.color': 'red'
+                });
+                dataModel.add(edge);
+                return edge;
+            }
+
+            function initDataModel(){                       
+                var ip = "192.168.1.";
+                var count = 0;
+                root = createNode(ip + count++);
+
+                for (var i = 0; i < 2; i++) {
+                    iNode = createNode(ip + count++);
+                    createEdge(root, iNode);
+
+                    for (var j = 0; j < 2; j++) {
+                        jNode = createNode(ip + count++);
+                        createEdge(iNode, jNode);
+
+                        for (var z = 0; z < 3; z++) {
+                            zNode = createNode(ip + count++);
+                            createEdge(jNode, zNode);
+                        }    
+                    }
+                }                
+            }
+            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

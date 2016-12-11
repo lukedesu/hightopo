@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CheckBox</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script>                  
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                borderPane.setBottomView(createToolbar(true));
+                  
+                formPane = new ht.widget.FormPane();                                             
+                borderPane.setCenterView(formPane);              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+                
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Node'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Group',
+                            selected: true
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'SubGraph'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Grid',
+                            selected: true
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1]);
+                
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Node',
+                            icon: 'node_icon',
+                            selected: true
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Group',
+                            icon: 'group_icon'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'SubGraph',
+                            icon: 'subGraph_icon',
+                            selected: true,
+                            disabled: true
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Grid',
+                            icon: 'grid_icon'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1]);
+                
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Critical',                            
+                            icon: 'node_icon',
+                            iconColor: '#FF0000'                         
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Major',
+                            icon: 'node_icon',
+                            iconColor: '#FFA000'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Minor',
+                            icon: 'node_icon',
+                            iconColor: '#FFFF00'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Warning',
+                            icon: 'node_icon',
+                            iconColor: '#00FFFF'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Indeterminate',
+                            icon: 'node_icon',
+                            iconColor: '#C800FF'
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Cleared',
+                            icon: 'node_icon',
+                            iconColor: '#00FF00'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 0.1);
+            }
+            function createToolbar(stickToRight){
+                var basicCheckBox = new ht.widget.CheckBox();
+                basicCheckBox.setLabel('Basic CheckBox');  
+                basicCheckBox.setWidth(110);
+
+                toolbar = new ht.widget.Toolbar([
+                    {
+                        element: basicCheckBox
+                    },                    
+                    {
+                        checkBox: {
+                            label: 'Icon CheckBox',
+                            icon: 'grid_icon',
+                            selected: true,
+                            width: 120,
+                            onClicked: function(e){
+                                alert('Selected:' + this.isSelected());
+                            }
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Disabled CheckBox',
+                            icon: 'node_icon',
+                            disabled: true,
+                            width: 145
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Color CheckBox',
+                            labelColor: 'red',                                                 
+                            pressBackground: 'yellow',
+                             width: 110
+                        }
+                    }    
+                ]);
+                toolbar.setStickToRight(stickToRight);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

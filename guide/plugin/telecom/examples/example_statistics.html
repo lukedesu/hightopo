@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>AlarmStateStatistics</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-telecom.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            var borderPane = new ht.widget.BorderPane();
+            var graphView = new ht.graph.GraphView(dataModel);
+            var statisticsView = new ht.graph.GraphView();
+            
+            // Create instance of AlarmStateStatistics
+            var alarmStateStatistics = new ht.AlarmStateStatistics(dataModel);
+            
+            function init() {
+                // Add nodes with random alarm
+                var i = 0, x = 0, y = 50;
+                for(i = 0; i < 10; i++ ) {
+                    var node = new ht.Node();
+                    if (i == 5) {
+                        x = 0;
+                        y = 150;
+                    }
+                    node.setPosition(x += 100, y);
+                    if (randomBoolean()) {
+                        node.getAlarmState().increaseNewAlarm(randomNonClearedSeverity());
+                    } else {
+                        node.getAlarmState().increaseAcknowledgedAlarm(randomNonClearedSeverity());
+                    }
+                    dataModel.add(node);
+                }
+                
+                
+                // Register AlarmStateStatistics image
+                initAlarmStateStatisticsImage();
+                
+                // Init AlarmStateStatistics node
+                var statistics = new ht.Node();
+                statistics.setImage('alarm_statistics');
+                statistics.setPosition(150, 90);
+                statisticsView.getDataModel().add(statistics);
+                
+                // Add listener to monitor alarmState property change, invalidate AlarmStateStatistics panel
+                alarmStateStatistics.mp(function (e) {
+                    statisticsView.invalidateAll();
+                });
+                
+                // Disable pan, zoom and select function of AlarmStateStatistics panel
+                var emptyFunciton = function () {};
+                
+                statisticsView.setTranslateX = emptyFunciton;
+                statisticsView.setTranslateY = emptyFunciton;
+                
+                statisticsView.setZoom = emptyFunciton;
+                
+                statisticsView.isSelectable = function (data) {
+                    return false;
+                };
+                
+                // Add graphView and statisticsView
+                borderPane.setCenterView(graphView);
+                borderPane.setRightView(statisticsView);
+                borderPane.setRightWidth(300);
+                
+                // Add borderPane to document body
+                var style = borderPane.getView().style;
+                style.left = '10px';
+                style.top = '10px';
+                style.right = '10px';
+                style.bottom = '10px';
+                document.body.appendChild(borderPane.getView());
+                
+                // Invalidate borderPane when window size changed
+                window.onresize = function () {
+                    borderPane.iv();
+                };
+            }
+            
+            function initAlarmStateStatisticsImage() {
+                ht.Default.setImage('alarm_statistics', {
+                    width: 180,
+                    height: 180,
+                    comps: [
+                        {
+                            type: 'pieChart',
+                            hollow: true,
+                            rect: [5, 5, 170, 170],
+                            label: true,
+                            shadow: true,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                            values: {
+                                func: function () {
+                                    var result = [];
+                                    ht.AlarmSeverity.each(function (severity) {
+                                        var count = alarmStateStatistics.getTotalAlarmCount(severity);
+                                        if (count > 0) {
+                                            result.push(count);
+                                        }
+                                    });
+                                    return result;
+                                }
+                            },
+                            colors: {
+                                func: function () {
+                                    var result = [];
+                                    ht.AlarmSeverity.each(function (severity) {
+                                        var count = alarmStateStatistics.getTotalAlarmCount(severity);
+                                        if (count > 0) {
+                                            result.push(severity.color);
+                                        }
+                                    });
+                                    return result;
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+            
+            function randomInt (n) {
+                return Math.floor(Math.random() * n);
+            }
+            
+            function randomBoolean () {
+                return randomInt(2) !== 0;
+            }
+            
+            function randomNonClearedSeverity () {
+                while (true) {
+                    var severity = randomSeverity();
+                    if (!ht.AlarmSeverity.isClearedAlarmSeverity(severity)) {
+                        return severity;
+                    }
+                }
+                return null;
+            }
+            
+            function randomSeverity () {
+                var severities = ht.AlarmSeverity.severities;
+                return severities.get(randomInt(severities.size()));
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

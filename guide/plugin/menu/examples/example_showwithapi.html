@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Menu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script src="../../../../lib/plugin/ht-menu.js"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+        <script type="text/javascript">
+            ht.Default.setImage('menu_icon', "settings.png");
+            var iconSrc = 'menu_icon';
+            function init() {
+                var json = [
+                    {
+                        label: "File",
+                        items: [
+                            {
+                                label: "New...",
+                                icon: iconSrc, 
+                                action: function(item) { 
+                                    alert(item.label);
+                                }
+                            },
+                            {
+                                label: "Open...",
+                                icon: iconSrc,
+                                suffix: "Ctrl+O", 
+                                key: [Key.ctrl, Key.o], 
+                                action: function(item) {
+                                    alert("you clicked:" + item.label + ",this=" + this);
+                                },
+                                scope: "hello" 
+                            },
+                            {
+                                label: "Disabled",
+                                icon: iconSrc, 
+                                disabled: true 
+                            },
+                            "separator",
+                            {
+                                label: "More...",
+                                icon: iconSrc,
+                                type: "check", 
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        label: "Edit",
+                        items: [
+                            {
+                                label: "Copy",
+                                icon: iconSrc
+                            },
+                            {
+                                label: "Paste",
+                                icon: iconSrc
+                            }
+                        ]
+                    },
+                    {
+                        label: "CheckMenuItems",
+                        items: [
+                            {
+                                label: "Check1",
+                                icon: iconSrc,
+                                type: "check"
+                            },
+                            {
+                                label: "Check2",
+                                icon: iconSrc,
+                                type: "check"
+                            },
+                            {
+                                label: "Check3",
+                                icon: iconSrc,
+                                type: "check",
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    }
+                                ]
+                            }
+                        ],
+                        action: function(item) {
+                            alert("you clicked:" + item.label + ",this=" + this);
+                        }
+                    },   
+                    {
+                        label: "RadioMenuItems",
+                        action: function(item, event) {
+                            alert("you clicked:" + item.label);
+                        },
+                        items: [
+                            {
+                                label: "Radio1",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1 
+                            },
+                            {
+                                label: "Radio2",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1
+                            },
+                            {
+                                label: "Radio3",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1,
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        label: "TestMenu",
+                        icon: iconSrc,
+                        action: function(item) {
+                            alert(item.label);
+                        },
+                        items: [
+                            {
+                                label: "Homepage",
+                                href: "http://www.hightopo.com",
+                                linkTarget: "_blank", 
+                                key: [Key.ctrl, Key.enter],
+                                suffix: "Ctrl+Enter",
+                                preventDefault: false
+                            },
+                            {
+                                label: "submenu",
+                                action: function(item) {
+                                    alert(item.label);
+                                }
+                            }
+                        ]
+                    }
+                ];
+                var menu = window.menu = new ht.widget.Menu(json);
+                menu.enableGlobalKey();
+                menu.addTo(document.getElementById("menuDiv"));
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="menuDiv"></div>
+        
+        <div style="position: absolute; bottom: 5px; left: 10px; border: 1px solid rgb(115,137,166); background: rgb(197,214,230);">
+            <input type="text" id="txt" style="width: 60px;" placeholder="index...">
+            <input type="button" value="Show" onclick="window.menu.showDropdownMenu(document.getElementById('txt').value);">
+            <input type="button" value="Hide" onclick="window.menu.hideDropdownMenu();">
+            <input type="button" value="PrintIndex" onmousedown="alert(window.menu.getShowingMenuIndex());">
+        </div>
+    </body>
+</html>

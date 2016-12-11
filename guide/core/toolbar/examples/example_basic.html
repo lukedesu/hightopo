@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Toolbar Basic</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>              
+        <script src="../../../../lib/core/ht.js"></script>           
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createTopToolbar());
+                borderPane.setBottomView(createBottomToolbar());                              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+
+            }
+            function createTopToolbar(){
+                var toolbar = new ht.widget.Toolbar([
+                    {                        
+                        label: 'Get Information',
+                        toolTip: 'Get HT Version Information',
+                        action: function(){
+                            var nation;
+                            if(toolbar.getItemById('spain').selected){
+                                nation = 'Spain';
+                            }
+                            else if(toolbar.getItemById('sweden').selected){
+                                nation = 'Sweden';
+                            }
+                            else if(toolbar.getItemById('switzerland').selected){
+                                nation = 'Switzerland';
+                            }
+                            alert('HT for Web ' + ht.Default.getVersion() + '\n' +
+                                'Nation is ' + nation + '\n'
+                            );
+                        }
+                    },
+                    'separator',
+                    {
+                        id: 'spain',
+                        label: 'Spain',
+                        icon: 'images/spain.png',
+                        groupId: 'nation',
+                        type: 'radio'
+                    },
+                    {
+                        id: 'sweden',
+                        label: 'Sweden',
+                        icon: 'images/sweden.png',
+                        groupId: 'nation',
+                        type: 'radio',
+                        selected: true
+                    },
+                    {
+                        id: 'switzerland',
+                        label: 'Switzerland',
+                        icon: 'images/switzerland.png',
+                        groupId: 'nation',
+                        type: 'radio'
+                    },
+                    'separator',
+                    {                        
+                        type: 'toggle',
+                        label: 'Stop',
+                        selected: true,
+                        toolTip: 'Stop it',
+                        icon: 'images/stop.png',                        
+                        action: function(){
+                            this.icon = this.selected ? 'images/stop.png' : 'images/play.png';
+                            this.toolTip = this.selected ? 'Stop it' : 'Play it';
+                            this.label = this.selected ? 'Stop' : 'Play';
+                        }
+                    }
+                ]);
+                toolbar.enableToolTip();
+                return toolbar;                
+            }
+            function createBottomToolbar(){
+                var toolbar = new ht.widget.Toolbar([
+                    {
+                        label: 'HT for Web',
+                        type: 'check',
+                        unfocusable: true,
+                        selected: true,
+                        action: function(){
+                            if(this.selected){
+                                alert('HT for Web is selected');
+                            }                            
+                        }
+                    },
+                    'separator',
+                    {
+                        label: 'Spain',
+                        icon: 'images/spain.png',
+                        groupId: 'nation'                        
+                    },
+                    {
+                        label: 'Sweden',
+                        icon: 'images/sweden.png',
+                        groupId: 'nation',
+                        selected: true
+                    },
+                    {
+                        label: 'Switzerland',
+                        icon: 'images/switzerland.png',
+                        groupId: 'nation'
+                    },
+                    'separator',
+                    {                        
+                        type: 'toggle',
+                        selected: true,
+                        toolTip: 'Stop it',
+                        icon: 'images/stop.png',                        
+                        action: function(){
+                            this.icon = this.selected ? 'images/stop.png' : 'images/play.png';
+                            this.toolTip = this.selected ? 'Stop it' : 'Play it';
+                        }
+                    }        
+                ]);
+                toolbar.enableToolTip();
+                toolbar.setStickToRight(true);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

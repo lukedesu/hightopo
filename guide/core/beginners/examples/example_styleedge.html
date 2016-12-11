@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Style Edge</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            
+            ht.Default.setImage('toArrow', {
+                width: 100,
+                height: 50,
+                comps: [
+                    {
+                        type: 'shape',
+                        points: [2, 25, 30, 25],
+                        borderWidth: 4,
+                        borderColor: 'rgba(255, 0, 0, 0.9)'
+                    },
+                    {
+                        type: 'shape',
+                        points: [30, 10, 30, 40, 50, 25, 30, 10],
+                        background: 'rgba(255, 0, 0, 0.9)',
+                        borderWidth: 1,
+                        borderColor: 'red',
+                        gradient: 'spread.vertical',
+                        gradientColor: 'rgba(255, 255, 255, 0.9)'
+                    }
+                ]
+            }); 
+            ht.Default.setImage('fromArrow', {
+                width: 100,
+                height: 50,
+                comps: [
+                    {
+                        type: 'image',
+                        name: 'toArrow',
+                        rect: [0, 0, 100, 50],
+                        rotation: Math.PI
+                    }
+                ]
+            });            
+            
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);                         
+                     
+                var a = createNode('A', 0, 0, 'circle', 'white'),
+                    b = createNode('B', 100, 100, 'circle', 'white'),
+                    c = createNode('C', 200, 0, 'circle', 'white'),
+                    d = createNode('D', 300, 0, 'rect', 'rgba(155, 255, 255, 0.5)'),
+                    e = createNode('E', 500, 100, 'rect', 'rgba(155, 255, 255, 0.5)');                                        
+                    
+                var edge1 = createEdge(a, b).s({
+                    'edge.3d': true,
+                    'edge.width': 6,
+                    'edge.dash': true,
+                    'edge.dash.color': 'yellow',
+                    'edge.dash.width': 4,
+                    'edge.dash.pattern': [8],
+                    'edge.type': 'points',
+                    'edge.points': [
+                        { x: 0, y: 25 },
+                        { x: 25, y: 25 },
+                        { x: 25, y: 50 },
+                        { x: 50, y: 50 },
+                        { x: 50, y: 75 },
+                        { x: 75, y: 75 },
+                        { x: 75, y: 100 }
+                    ]
+                });                
+                
+                createEdge(b, c, 'red', 1).s('edge.pattern', [5]);  
+                createEdge(b, c, 'red', 1).s('edge.pattern', [5]);  
+                createEdge(b, c, '#40A3FC', 2);  
+                createEdge(b, c, '#40A3FC', 2);  
+                createEdge(b, c, '#40A3FC', 2).toggle();                
+    
+                var edge2 = createEdge(d, e).s({                    
+                    'edge.dash': true,
+                    'edge.dash.width': 8,                    
+                    'edge.dash.pattern': [16, 5, 3, 3],
+                    'edge.dash.3d': true,
+                    'edge.dash.color': 'green',
+                    'edge.dash.3d.color': 'yellow',
+                    'edge.offset': 0,                                        
+                    'edge.center': false,
+                    'edge.type': 'points',
+                    'edge.points': [{x : 400, y: 0}],
+                    'icons': {
+                       fromArrow: {
+                            position: 15,
+                            keepOrien: true,
+                            width: 40,
+                            height: 20,
+                            names: ['fromArrow']
+                        },
+                        toArrow: {
+                            position: 19,
+                            keepOrien: true,
+                            width: 40,
+                            height: 20,                        
+                            names: ['toArrow']
+                        }
+                    }
+                });                 
+    
+                graphView.translate(50, 50);
+                graphView.setEditable(true);
+                graphView.setEditableFunc(function(data){
+                    return data === edge1 || data === edge2;
+                });
+                graphView.getLabel = function(data){
+                    if(data instanceof ht.Edge){
+                        if(data.isEdgeGroupAgent()){
+                            return '+' + data.getEdgeGroupSize();
+                        }
+                    }
+                    return data.getName();
+                };
+            }
+            
+            function createNode(name, x, y, shape, background){
+                var node = new ht.Node();
+                node.setSize(30, 30);                
+                node.setPosition(x, y);
+                node.setName(name);
+                node.setStyle('label.font', '20px sans-serif');
+                node.setStyle('label.position', 17);
+                node.setStyle('label.color', '#40A3FC');
+                node.setStyle('shape', shape);
+                node.setStyle('select.type', shape);
+                node.setStyle('shape.background', background);
+                node.setStyle('shape.border.width', 1);
+                dataModel.add(node);
+                return node;
+            }
+
+            function createEdge(source, target, color, group){
+                var edge = new ht.Edge(source, target);
+                edge.setStyle('label.position', 17);
+                edge.setStyle('label.offset.y', -6);
+                edge.setStyle('edge.center', true);
+                edge.setStyle('edge.gap', 21);
+                if(color) edge.setStyle('edge.color', color);
+                if(group) edge.setStyle('edge.group', group);
+                dataModel.add(edge);
+                return edge;
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

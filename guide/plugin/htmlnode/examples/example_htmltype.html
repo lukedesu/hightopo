@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML kinds</title>
+        <style>
+            .htmlWrapper{
+                background:#F0EFEE;
+                font-size:13px;
+                padding:5px;
+                border:1px solid #333;
+            }
+            .htmlWrapper input[type=text]{
+                width:8em;
+            }
+            .domWrapper{
+                width:100px;
+                height:60px;
+                line-height: 60px;
+                font-size:13px;
+                background:#00CC33;
+                border:1px solid #333;
+                text-align: center;
+            }
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="handlebars.js"></script>
+        <script src="../../../../lib/core/ht.js"></script>        
+        <script src="../../../../lib/plugin/ht-htmlnode.js"></script>
+        <script type="text/javascript">
+            var dataModel = new ht.DataModel(),
+                    graphView = new ht.graph.GraphView(dataModel),
+                    view = graphView.getView();
+            
+            function modifyNodeName(e){
+                var input=e.target,
+                        nodeid=input.getAttribute("nodeid"),
+                        node=dataModel.getDataById(nodeid);
+                node.setName(node.getContext().value);
+            }
+            function init() {
+                graphView.setEditable(true);
+                
+                var htmlNode = new ht.HtmlNode();
+                htmlNode.setPosition(200, 50);
+                htmlNode.setName("Rendering HTML text");
+                htmlNode.setHtml("<div class='htmlWrapper'>Node's new name：<input type='text' value='{{value}}' bind='value'>\n\
+                                  <input type='button' value='Modify' nodeid='{{nodeid}}' onclick='modifyNodeName(event)'/></div>");
+                htmlNode.setContext({
+                    value:htmlNode.getName(),
+                    nodeid:htmlNode.getId()
+                });
+                dataModel.add(htmlNode);
+
+                var div = document.createElement("div");
+                div.className = "domWrapper";
+                div.innerHTML = "Rendering DOM";
+                var domNode = new ht.HtmlNode();
+                domNode.setHtml(div);
+                domNode.setPosition(200, 150);
+                dataModel.add(domNode);
+
+                var htNode = new ht.HtmlNode();
+                htNode.setHtml(createTable());
+                htNode.setPosition(500, 100);
+                htNode.setName("Alarm Statistics(TablePane)");
+                htNode.setScalable(false);
+                dataModel.add(htNode);
+
+
+                var style = graphView.getView().style;
+                style.left = '0';
+                style.top = '0';
+                style.right = '0';
+                style.bottom = '0';
+                document.body.appendChild(graphView.getView());
+            }
+            function createTable() {
+                var table = new ht.widget.TablePane(),
+                    dataModel = table.getDataModel(),
+                    columnModel = table.getColumnModel(),
+                        view = table.getView();
+                view.style.width = "170px";
+                view.style.height = "120px";
+                
+
+                var node = new ht.Node();
+                node.a("alarmSeverity", "Critical");
+                node.a("alarmCount", Math.floor(Math.random() * 100));
+                dataModel.add(node);
+
+                node = new ht.Node();
+                node.a("alarmSeverity", "Major");
+                node.a("alarmCount", Math.floor(Math.random() * 100));
+                dataModel.add(node);
+
+                node = new ht.Node();
+                node.a("alarmSeverity", "Minor");
+                node.a("alarmCount", Math.floor(Math.random() * 100));
+                dataModel.add(node);
+
+                node = new ht.Node();
+                node.a("alarmSeverity", "Warning");
+                node.a("alarmCount", Math.floor(Math.random() * 100));
+                dataModel.add(node);
+
+                node = new ht.Node();
+                node.a("alarmSeverity", "Indeterminate");
+                node.a("alarmCount", Math.floor(Math.random() * 100));
+                dataModel.add(node);
+
+                var colors = {
+                    "Critical": "#FF0000",
+                    "Major": "#FFA000",
+                    "Minor": "#FFFF00",
+                    "Warning": "#00FFFF",
+                    "Indeterminate": "#C800FF"
+                };
+
+                var column = new ht.Column();
+                column.setName("alarmSeverity");
+                column.setWidth(100);
+                column.setAccessType("attr");
+                column.setDisplayName("AlarmSeverity");
+                column.drawCell = function(g, data, selected, column, x, y, width, height) {
+                    g.save();
+                    g.fillStyle = colors[data.a("alarmSeverity")];
+                    g.fillRect(x, y, width, height);
+                    
+                    ht.Default.drawText(g, data.a("alarmSeverity"), null, "black", x, y, width, height, "center");
+                    g.restore();
+                };
+                columnModel.add(column);
+
+
+                column = new ht.Column();
+                column.setAccessType("attr");
+                column.setName("alarmCount");
+                column.setDisplayName("Counter");
+                columnModel.add(column);
+
+                return table;
+            }
+        </script>
+    </head>
+    <body onload="init()">
+
+    </body>
+</html>

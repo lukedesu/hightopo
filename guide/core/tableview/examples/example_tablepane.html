@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TablePane</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+
+            function init(){      
+                
+                com = {};
+                com.hightopo = {}; 
+                 
+                var LanguageColumn = com.hightopo.LanguageColumn = function(){
+                    LanguageColumn.superClass.constructor.call(this);                    
+                    this.setName('Language');
+                    this.setAccessType('attr');
+                    this.setEnum({values: [1, 2, 3, 4, 5, 6], labels: ['C', 'C++', 'Java', 'JS', 'AS', 'C#']});
+                    this.setEditable(true);
+                    this.setSortFunc(function(v1, v2, d1, d2){
+                        if(v1 === v2){
+                            return 0;
+                        }
+                        if(v1 === 2){
+                            return 1;
+                        }
+                        if(v2 === 2){
+                            return -1;
+                        }
+                        if(v1 === 5){
+                            return -1;
+                        }
+                        if(v2 === 5){
+                            return 1;
+                        }
+                        return v1 - v2;
+                    });                    
+                }; 
+                ht.Default.def('com.hightopo.LanguageColumn', ht.Column, {
+                });     
+                
+                var SexColumn = com.hightopo.SexColumn = function(){
+                    SexColumn.superClass.constructor.call(this);                    
+                    this.setName('Sex');
+                    this.setAccessType('attr');
+                    this.setEnum(['Male', 'Female']);                   
+                    this.setEditable(true);                    
+                }; 
+                ht.Default.def('com.hightopo.SexColumn', ht.Column, {
+                });                                 
+                
+                var LanguageProperty = com.hightopo.LanguageProperty = function(){
+                    LanguageProperty.superClass.constructor.call(this);                    
+                    this.setName('Language');
+                    this.setAccessType('attr');
+                    this.setEnum({values: [1, 2, 3, 4, 5, 6], labels: ['C', 'C++', 'Java', 'JS', 'AS', 'C#']});                 
+                }; 
+                ht.Default.def('com.hightopo.LanguageProperty', ht.Property, {
+                });
+                
+                var SexProperty = com.hightopo.SexProperty = function(){
+                    SexProperty.superClass.constructor.call(this);                    
+                    this.setName('Sex');
+                    this.setAccessType('attr');
+                    this.setEnum(['Male', 'Female']);                       
+                }; 
+                ht.Default.def('com.hightopo.SexProperty', ht.Property, {
+                });                 
+                
+                
+                dataModel = new ht.DataModel();
+                tablePane = new ht.widget.TablePane(dataModel);
+                propertyView = new ht.widget.PropertyView(dataModel);
+                splitView = new ht.widget.SplitView(tablePane, propertyView);
+                view = splitView.getView();                                
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);                         
+    
+                var data;
+                for(var i=0; i<20; i++){
+                    data = new ht.Data();
+                    data.a('Language', i % 6 + 1);
+                    data.a('Sex', i % 2 === 0 ? 'Male' : 'Female');
+                    dataModel.add(data);
+                }
+                dataModel.sm().ss(data);
+               
+                tablePane.addColumns([
+                    {
+                        name: 'id',
+                        width: 60,
+                        tag: 'id'
+                    },
+                    {
+                        className: 'com.hightopo.LanguageColumn',
+                        width: 100,
+                        tag: 'language'
+                    },
+                    {
+                        className: 'com.hightopo.SexColumn',
+                        width: 100,
+                        tag: 'sex'
+                    }
+                ]);
+                
+                propertyView.addProperties([
+                    {
+                        name: 'id'
+                    },
+                    {
+                        className: 'com.hightopo.LanguageProperty',
+                        editable: true
+                    },
+                    {
+                        className: 'com.hightopo.SexProperty',
+                        editable: true
+                    }                    
+                ]);
+                                
+                tablePane.getTableHeader().setResizable(false);                
+                tablePane.addViewListener(function(e){
+                    if(e.kind === 'beginValidate'){
+                        var columnModel = tablePane.getColumnModel(),
+                            width = tablePane.getWidth();
+                        columnModel.getDataByTag('id').setWidth(width * 0.2);
+                        columnModel.getDataByTag('language').setWidth(width * 0.4);
+                        columnModel.getDataByTag('sex').setWidth(width * 0.4);                        
+                    }
+                });                
+                
+                tableView = tablePane.getTableView();                
+                lastFocusData = null;
+                tableView.getView().addEventListener('mousemove', function(e){
+                    var data = tableView.getDataAt(e);
+                    if(data !== lastFocusData){
+                        if(lastFocusData){
+                            lastFocusData.a('isFocused', false);
+                        }
+                        if(data){
+                            data.a('isFocused', true);
+                        }
+                        lastFocusData = data;
+                    }
+                }); 
+                tableView.drawRowBackground = function(g, data, selected, x, y, width, height){
+                    var color;
+                    if(selected){
+                        color = this.getSelectBackground();
+                    }
+                    else if(data.a('isFocused')){
+                        color = 'lightyellow';
+                    }
+                    if(color){                                                
+                        g.fillStyle = color;
+                        g.beginPath();
+                        g.rect(x, y, width, height);
+                        g.fill();                        
+                    } 
+                };
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

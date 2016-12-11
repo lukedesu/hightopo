@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+    <head>
+        <title>HT for Web 灯光手册</title>
+        <meta charset="UTF-8">    
+        <meta name="viewport" content="user-scalable=yes, width=1024">
+        <style type="text/css"> 
+            h1, h2, h3, h4, h5, h6, p, blockquote {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+                font-size: 13px;
+                line-height: 18px;
+                color: #737373;
+                background-color: white; 
+                margin: 10px 13px 10px 13px;
+            }
+            table {
+                margin: 10px 0 15px 0;
+                border-collapse: collapse;
+            }
+            td,th {	
+                border: 1px solid #ddd;
+                padding: 3px 10px;
+            }
+            th {
+                padding: 5px 10px;	
+            }
+            a {
+                color: #0069d6;
+            }
+            a:hover {
+                color: #0050a3;
+                text-decoration: none;
+            }
+            a img {
+                border: none;
+            }
+            p {
+                margin-bottom: 9px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #404040;
+                line-height: 36px;
+            }
+            h1 {
+                margin-bottom: 18px;
+                font-size: 30px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 18px;
+            }
+            h4 {
+                font-size: 16px;
+            }
+            h5 {
+                font-size: 14px;
+            }
+            h6 {
+                font-size: 13px;
+            }
+            hr {
+                margin: 0 0 19px;
+                border: 0;
+                border-bottom: 1px solid #ccc;
+            }
+            blockquote {
+                padding: 13px 13px 21px 15px;
+                margin-bottom: 18px;
+                font-family:georgia,serif;
+                font-style: italic;
+            }
+            blockquote:before {
+                content:"\201C";
+                font-size:40px;
+                margin-left:-10px;
+                font-family:georgia,serif;
+                color:#eee;
+            }
+            blockquote p {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 18px;
+                margin-bottom: 0;
+                font-style: italic;
+            }
+            code, pre {
+                font-family: Monaco, Andale Mono, Courier New, monospace;
+            }
+            code {
+                background-color: #fee9cc;
+                color: rgba(0, 0, 0, 0.75);
+                padding: 1px 3px;
+                font-size: 12px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+            }
+            pre {
+                display: block;
+                padding: 14px;
+                margin: 0 0 18px;
+                line-height: 16px;
+                font-size: 11px;
+                border: 1px solid #d9d9d9;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            pre code {
+                background-color: #fff;
+                color:#737373;
+                font-size: 11px;
+                padding: 0;
+            }
+            sup {
+                font-size: 0.83em;
+                vertical-align: super;
+                line-height: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact;
+            }
+            @media screen and (min-width: 914px) {
+                body {
+                    width: 854px;
+                    margin:10px auto;
+                }
+            }
+            @media print {
+                body,code,pre code,h1,h2,h3,h4,h5,h6 {
+                    color: black;
+                }
+                table, pre {
+                    page-break-inside: avoid;
+                }
+            }                        
+            iframe{
+                width: 100%;
+                border: 1px solid #34495E;
+                margin: 0;                
+            }            
+            .logo{
+                vertical-align: middle;
+            }
+
+        </style>        
+        <script>
+            function init() {
+                var logoSrc = 'data:image/png;base64,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',
+                    logos = document.querySelectorAll('.logo'),
+                    i = 0;
+                for (; i < logos.length; i++) {
+                    logos[i].src = logoSrc;
+                }
+                
+                var iframes = document.querySelectorAll('iframe'),
+                    func = function(){};
+                for (i=0; i < iframes.length; i++) {
+                    var iframe = iframes[i];
+                    
+                    // a small hack to make it work on android
+                    iframe.ontouchstart = func;
+                    
+                    var div = document.createElement('div');
+                    div.innerHTML = '<a href="' + iframe.src + '" target="_blank">独立运行→</a>';
+                    iframe.parentNode.insertBefore(div, iframe);
+                }   
+            }
+        </script>    
+    </head>
+    <body onload="init();">
+        <a href="http://www.hightopo.com"><img class="logo"></a>HT for Web 灯光手册
+        <hr style="margin: 1px 0 20px 0">
+<p>索引</p>
+
+<ul><li><a href="#ref_overview">概述</a></li><li><a href="#ref_headlight">头灯</a></li><li><a href="#ref_light">灯对象</a><ul><li><a href="#ref_pointlight">点光灯</a></li><li><a href="#ref_spotlight">聚光灯</a></li><li><a href="#ref_directionallight">方向光</a></li></ul></li><li><a href="#ref_fog">雾</a>    </li></ul>
+
+<hr/>
+
+<div id="ref_overview"></div>
+
+<h2>概述</h2>
+
+<p>构建<code>3D</code>的场景除了创建模型，对模型设置颜色和贴图外，还需要有灯光的效果才能更逼真的反映真实世界的场景。
+本手册将深入介绍<a href="#ref_headlight">头灯</a>、<a href="#ref_pointlight">点光灯</a>、<a href="#ref_spotlight">聚光灯</a>
+和<a href="#ref_directionallight">方向光</a>等光源的各种配置参数，以及雾化等效果。</p>
+
+<p><iframe src="examples/example_flowing.html" style="height:460px"></iframe></p>
+
+<div id="ref_headlight"></div>
+
+<h2>头灯</h2>
+
+<p><code>HT</code>默认内置了一盏头灯，头灯相当于在<code>graph3dView.getEye()</code>的眼睛位置有一个<a href="#ref_pointlight">点光灯</a>，
+该灯源的位置随<code>graph3dView.getEye()</code>自定变化，因此用户即使不做任何灯光设置，漫游到任何位置都能体验到基本光照效果。</p>
+
+<p><code>Graph3dView</code>通过以下参数控制头灯：</p>
+
+<ul><li><code>headlightRange</code>：灯影响范围，默认为<code>0</code>代表可照射到无穷远处，如果设置了值则光照射效果随物体远离光影而衰减</li><li><code>headlightColor</code>：灯颜色</li><li><code>headlightIntensity</code>：灯强度，默认为<code>1</code>，大于<code>1</code>增强，小于<code>1</code>减弱</li><li><code>headlightDisabled</code>：关闭灯光效果，默认为<code>false</code>，可设置为<code>true</code>关闭灯效果</li></ul>
+
+<p><iframe src="examples/example_headlight.html" style="height:460px"></iframe></p>
+
+<div id="ref_light"></div>
+
+<h2>灯对象</h2>
+
+<p><code>HT</code>提供了<code>ht.Light</code>类型的图元，该类型继承于<code>ht.Node</code>，通过创建<code>ht.Light</code>类型的图元对象，
+然后添加到<code>DataModel</code>数据模型达到添加灯的效果。以下介绍的<a href="#ref_pointlight">点光灯</a>、<a href="#ref_spotlight">聚光灯</a>
+和<a href="#ref_directionallight">方向光</a>等光源类型都是通过<code>ht.Light</code>对象控制，以下为灯光类型共同的<code>style</code>属性：</p>
+
+<ul><li><code>light.type</code>：默认为<code>point</code>点光灯，可设置为<code>spot</code>聚光灯，以及<code>directional</code>的方向光类型</li><li><code>light.color</code>：灯颜色</li><li><code>light.intensity</code>：灯强度，默认为<code>1</code>，大于<code>1</code>增强，小于<code>1</code>减弱</li><li><code>light.disabled</code>：关闭灯光效果，默认为<code>false</code>，可设置为<code>true</code>关闭灯效果</li></ul>
+
+<blockquote><p>同<code>DataModel</code>中删除<code>ht.Light</code>对象，与将<code>light.disabled</code>属性设置为<code>false</code>都能得到关闭灯光效果，
+但从<code>DataModel</code>中删除操作较重，建议在长时间不使用灯光时采用删除方式，如果要实现闪烁等频繁变化效果时，
+建议通过<code>light.disabled</code>控制较为高效。</p></blockquote>
+
+<div id="ref_pointlight"></div>
+
+<h3>点光灯</h3>
+
+<p>点灯光从它的位置各个方向发出光线，影响其长度范围内的所有对象。</p>
+
+<ul><li>点光灯的光源位置通过<code>ht.Light</code>对象的中心位置决定，即<code>light.p3()</code>值</li><li><code>light.range</code>：灯影响范围，默认为<code>0</code>代表可照射到无穷远处，如果设置了值则光照射效果随物体远离光影而衰减</li></ul>
+
+<p><iframe src="examples/example_pointlight.html" style="height:460px"></iframe></p>
+
+<div id="ref_spotlight"></div>
+
+<h3>聚光灯</h3>
+
+<p>聚光灯从它所在位置，以到中心点的位置为方向，在指定的张角和长度范围内的对象受其影响。</p>
+
+<ul><li>聚光灯的光源位置通过<code>ht.Light</code>对象的中心位置决定，即<code>light.p3()</code>值</li><li><code>light.center</code>：光源照射方向的中心点位置，默认为原点<code>[0, 0, 0]</code></li><li><code>light.range</code>：灯影响范围，默认为<code>0</code>代表可照射到无穷远处，如果设置了值则光照射效果随物体远离光影而衰</li><li><code>light.angle</code>：灯照射的张角弧度，该张角照射范围内物体才受此光源影响</li><li><code>light.exponent</code>：灯光照射衰减指数，默认值为<code>0</code>，值越大离中心方向越远的物体受光照影响效果越弱</li></ul>
+
+<p><iframe src="examples/example_spotlight.html" style="height:460px"></iframe></p>
+
+<div id="ref_directionallight"></div>
+
+<h3>方向光</h3>
+
+<p>方向光源在无穷远处，以指定的方向照射到场景内的所有物体，太阳光就是这类光的应用。</p>
+
+<ul><li>方向光的光照方向通过<code>ht.Light</code>对象中心点到三维坐标原点<code>[0, 0, 0]</code>得矢量方向决定，
+因此改变灯对象的中心点位置即可改变光照方向。</li></ul>
+
+<p><iframe src="examples/example_directionallight.html" style="height:460px"></iframe></p>
+
+<div id="ref_fog"></div>
+
+<h3>雾</h3>
+
+<p><code>HT</code>提供了使场景呈现笼罩在雾化的环境效果，<code>Graph3dView</code>通过以下参数进行控制：</p>
+
+<ul><li><code>fogDisabled</code>：默认为<code>true</code>不启用雾效果，可设置为<code>true</code>启用雾效果</li><li><code>fogColor</code>：雾颜色</li><li><code>fogNear</code>：默认为<code>1</code>，代表从该距离起物体开始受雾效果影响</li><li><code>fogFar</code>：默认为<code>2000</code>，代表从该距离之后物体完全看不清</li></ul>
+
+<p><iframe src="examples/example_fog.html" style="height:460px"></iframe></p>    <hr id="contact" style="margin: 20px 0 1px 0">
+    <a href="http://www.hightopo.com"><img class="logo"></a>欢迎交流 <a href="mailto:service@hightopo.com">service@hightopo.com</a>
+</body>
+</html>

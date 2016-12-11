@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+    <head> 
+        <meta name="viewport" content="user-scalable=no">
+        <title>From Easing</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #000033
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(255, 255, 255, 0.85);
+            }            
+        </style>         
+    </head>
+    <script>
+        htconfig = {
+            Color: {
+                widgetIconHighlight: 'red',
+                highlight: '#4183C4'
+            },
+            Default: {
+                disabledBackground: 'rgba(0, 50, 50, 0.3)'
+            }
+        };
+    </script>   
+    <script src="../../../../lib/core/ht.js"></script>    
+    <script src="../../../../lib/plugin/ht-modeling.js"></script> 
+    <script src="../../../../lib/plugin/ht-form.js"></script>
+    <script src="easing.js"></script>
+    <script>
+
+        ht.Default.setShape3dModel('arrow', [
+            {
+                shape3d: ht.Default.createCylinderModel(32, 0, 32, false, false, true, true),
+                r3: [0, 0, Math.PI / 2],
+                t3: [-2, 0, 0],
+                s3: [0.4, 2.5, 0.4],
+                color: '#3498DB'
+            },
+            {
+                shape3d: ht.Default.createConeModel(32, 0, 32, false, false, true),
+                r3: [0, 0, -Math.PI / 2],
+                t3: [-0.5, 0, 0],
+                color: {
+                    func: 'attr@color'
+                }
+            }
+        ]);
+
+        function init() {
+            w = 60;
+            m = 20;
+
+            dm = new ht.DataModel();
+
+            g3d = new ht.graph3d.Graph3dView(dm);
+            g3d.setGridVisible(true);
+            g3d.setGridSize(m);
+            g3d.setGridGap(w);
+            g3d.setEye([-1300, 800, 1400]);
+
+            g3d.sm().setSelectionMode('none');
+            g3d.isVisible = function(data) {
+                if (data.category) {
+                    return tableView.isSelectedById(data.category);
+                }
+                return !data.hidden;
+            };
+
+            g3d.getView().className = 'main';
+            document.body.appendChild(g3d.getView());
+
+            createFormPane();
+            formPane.getView().className = 'formpane';
+            document.body.appendChild(formPane.getView());
+
+            window.addEventListener('resize', function(e) {
+                g3d.iv();
+            }, false);
+
+            animatingList = new ht.List();
+            animate();
+        }
+
+        function createFormPane() {
+            tablePane = new ht.widget.TablePane();
+            tableHeader = tablePane.getTableHeader();
+            tableView = tablePane.getTableView();
+
+            tableView.addColumns([
+                {
+                    name: 'id',
+                    displayName: 'Easing Type',
+                    width: 150
+                }
+            ]);
+            for (var name in Easing) {
+                var data = new ht.Data();
+                data.setId(name);
+                tableView.dm().add(data);
+            }
+
+            tableView.setCheckMode(true);
+            tableView.getCheckColumn().setSortable(false);
+
+            tableHeader.setResizable(false);
+            tableHeader.setMovable(false);
+            tableHeader.setCheckIcon('check');
+            tableView.sm().sa();
+            tableView.sm().ms(function(e) {
+                g3d.invalidateAll();
+            });
+
+            formPane = new ht.widget.FormPane();
+            formPane.setPadding(2);
+            formPane.setHGap(2);
+            formPane.setWidth(240);
+            formPane.setHeight(350);
+
+            formPane.addRow([tablePane], [0.1], 0.1);
+            formPane.addRow(['Frames', {
+                    id: 'frames',
+                    slider: {
+                        min: 10,
+                        max: 60,
+                        value: 40,
+                        step: 1
+                    }
+                }], [70, 0.1]);
+            formPane.addRow(['Interval:', {
+                    id: 'interval',
+                    slider: {
+                        min: 1,
+                        max: 100,
+                        value: 60,
+                        step: 1
+                    }
+                }], [70, 0.1]);
+            formPane.addRow([
+                {
+                    button: {
+                        label: 'Start',
+                        onClicked: function() {
+                            animate();
+                        }
+                    }
+                },
+                {
+                    button: {
+                        label: 'Reset',
+                        onClicked: function() {
+                            reset();
+                        }
+                    }
+                },
+                {
+                    button: {
+                        label: 'Full Screen',
+                        onClicked: function() {
+                            var element = g3d.getView();
+                            if (!document.fullscreenElement && 
+                                    !document.mozFullScreenElement && 
+                                    !document.webkitFullscreenElement && 
+                                    !document.msFullscreenElement) { 
+                                if (element.requestFullscreen) {
+                                    element.requestFullscreen();
+                                } else if (element.msRequestFullscreen) {
+                                    element.msRequestFullscreen();
+                                } else if (element.mozRequestFullScreen) {
+                                    element.mozRequestFullScreen();
+                                } else if (element.webkitRequestFullscreen) {
+                                    element.webkitRequestFullscreen();
+                                }
+                            } else {
+                                if (document.exitFullscreen) {
+                                    document.exitFullscreen();
+                                } else if (document.msExitFullscreen) {
+                                    document.msExitFullscreen();
+                                } else if (document.mozCancelFullScreen) {
+                                    document.mozCancelFullScreen();
+                                } else if (document.webkitExitFullscreen) {
+                                    document.webkitExitFullscreen();
+                                }
+                            }
+                        }
+                    }
+                }
+            ], [0.1, 0.1, 0.2]);
+
+            var href = document.createElement('a');
+            href.setAttribute('href', 'http://www.hightopo.com');
+            href.innerHTML = 'http://www.hightopo.com';
+            href.style.font = formPane.getLabelFont();
+            href.style.lineHeight = formPane.getRowHeight() + 'px';
+            href.style.textAlign = 'right';
+            formPane.addRow([href], [0.1]);
+        }
+
+        function reset() {
+            dm.clear();
+            var k = 0;
+            for (var name in Easing) {
+                var node = new ht.Node();
+                node.setName(name);
+                node.category = name;
+                node.s3(30, 30, 30);
+                node.p3(-w * m / 2, 0, (-m / 2 + k + 2) * w);
+                node.s({
+                    'shape3d': 'arrow',
+                    'label.background': '#E74C3C',
+                    'label.color': 'white',
+                    'label.position': 1,
+                    'label.reverse.flip': true,
+                    'label.t3': [-60, -8, -15]
+                });
+                node.a({
+                    color: '#3498DB'
+                });
+                k++;
+                dm.add(node);
+            }
+        }
+
+        function animate() {
+            reset();
+            formPane.setDisabled(true);
+            dm.each(function(node) {
+                var oldP3 = node.p3();
+                animatingList.add(ht.Default.startAnim({
+                    frames: formPane.v('frames'),
+                    interval: formPane.v('interval'),
+                    easing: Easing[node.getName()],
+                    finishFunc: function() {
+                        animatingList.remove(this);
+                        if (animatingList.isEmpty()) {
+                            formPane.setDisabled(false);
+                        }
+                    },
+                    action: function(v, t) {
+                        var c = parseInt(255 * (1 - v));
+                        if (c > 255)
+                            c = 255;
+                        if (c < 0)
+                            c = 0;
+                        node.a('color', 'rgb(255, ' + c + ', ' + c + ')');
+                        node.p3(oldP3[0] + w * m * v, oldP3[1], oldP3[2]);
+                        lineTo(node, v, t);
+                    }
+                }));
+            });
+        }
+
+        function lineTo(node, t, time) {
+            var size = w * m,
+                    n1 = node.n1,
+                    n2 = new ht.Node();
+            n2.hidden = true;
+            dm.add(n2);
+            n2.s3(10, 10, 10);
+            n2.p3(-size / 2 + size * time, t * size / 3, node.p3()[2]);
+            if (n1) {
+                var edge = new ht.Edge(n1, n2);
+                edge.s('edge.offset', 0);
+                edge.s('edge.color', node.a('color'));
+                edge.category = node.getName();
+                dm.add(edge);
+            }
+            node.n1 = n2;
+        }
+
+    </script>
+
+    <body onload="init();">
+    </body>
+
+</html>
+
+

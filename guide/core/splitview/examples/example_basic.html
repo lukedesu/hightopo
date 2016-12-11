@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SplitView Basic</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+
+            function init(){                                      
+                
+                topView = new ht.widget.SplitView(createDiv('#1ABC9C'), createDiv('#9B59B6'), 'h', 0.3);
+                bottomView = new ht.widget.SplitView(createDiv('#34495E'), createDiv('#E74C3C'), 'h', 100);
+                mainView = new ht.widget.SplitView(topView, bottomView, 'v', -100);                
+                
+                view = mainView.getView();                                
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    mainView.iv();
+                }, false);                         
+                                   
+            }
+            
+            function createDiv(background){
+                var div = document.createElement('div');  
+                div.style.position = 'absolute';                
+                div.style.background = background;
+                div.style.border = '10px solid yellow';                
+                div.style.setProperty('box-sizing', 'border-box', null);             
+                return div;
+            }
+
+        </script>
+    </head>
+    <body onload="init();">                     
+    </body>
+</html>

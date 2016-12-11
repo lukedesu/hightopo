@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .view {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+            body {
+                background: black;
+            }
+        </style>        
+        <script type="text/javascript" src="../../../../lib/core/ht.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-flow.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-xeditinteractor.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script type="text/javascript" src="contextmenu.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            ht.Default.setImage("arrow", "data:image/png;base64,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");
+            ht.Default.setImage("bus", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADuUlEQVR4Xu2XS2hcVRzGf+ec+8hMnaRJbNQkJVRIfZS0ahobRKHu+rIPROtK1AqSLmyrVhBcZKWb1EYXBdGF+NioEVqirlSM4itiKImVoNWpj5a2ah5tJ5nk3vN3LvfOIpQJc1dZmA+++z/nu/P9z8c5ZxZXiQhLCQ38vwMsB1gOoCJ2vTi02ck1fmpFEAEBkIW/UqTTtaqw3OylJ7493P06YAGciMH83D1rG33aGzMABFYIS5TYgtEqImEK3TMKrRRCAgFBODE6dwB4C5ghQaaj95O3j49NyrwVufXIqFyZF/lnRuRiIa7R/JaU+vr+Mdn3Xl4eeTcvj5XqXcdOiRWRpwb/kFXde5pJoAFH1VzT2ZhzuVwExzFcmoWpGVtiGNVojjEp9CIorenf3caRnW0c3dXG2qYV/PJvwN1r6mjd/fQLgFMO4OJlb26p9fj+7CwZX1MMKVEW1Jo0egCeq5megcmCMF2IA41fKHLn6hzZuoYHgZpyAANCa63DlTlLjWcIQ7BWlRjXIArgaoIq9cif8Q1zIYSR38b+/NQcjobN7Q2Zdc8ObAOUAyiNwgLnLs+T812UAqM1WgSlVImQq0mp+y77P8wjAq6JL2vWLUbh2NiaY7Cx5UnguAKaNvaPnn9oU3PpCApopeJ/gQhlGKXQCqxQlR71AHhnTysTBXj5u7/JTxVxtWJXez23NWe4/40xRg51rHQAMAa0Jus7gCCACAugVFmrTrciPDp4FgEcFd8JgA9OT+L7LmgD4DkABT/HrPHwvYD113rU+hpRigUQIQ2EhX5FfDyf/Rkw8BcUsg2U7wAjB1bT+7XgukV+mghAa0SXUwI2BBvEVQAqhVGgiH1X+xEB4+d47aLD9CGoA5xyO6vB91w0IGHI9GAf8+fGAXBvuInaHQdRno/YsPJuKIXSpqJfHBetDZwCASgHWPfKBfZqMNkVaKM4/2YvG1pX0r33GQC++WKIkyeOct3DvUgQIhUCqCiAYxb1GwuHHxDeb5mEffVxgOfsADIUNQZtHMbzP9Kx8yB9fS8B0NPTw+df9rPpq1exYbDYDlThD0Epnjeax8s7MH46DwgQNTAEVijMzOK6HkA0jjR+PvM7NlxsB6rzl9ciedYDa5IK4GzdtuNYV1fXjRtuvwOAkyM/MDw8/OvHHw3uBwIqIKV/AvgNwEtCNCVsA7q3bNl6Zvv2+yRiNI605F1TBab11wMeVwMXuB7oBO5N2JloLhWQyl9lkzpgVcK6FOY0/qXH8qfZkgdYDvAftC1Oc+4ypOMAAAAASUVORK5CYII=");
+            function init() {
+                var graph = window.graph = new ht.graph.GraphView(),
+                    editInteractor = window.editInteractor = new ht.graph.XEditInteractor(graph),
+                    dm = graph.dm(),
+                    view = graph.getView();
+                
+                var shape = new ht.Shape();
+                shape.setPoints(new ht.List([
+                    {x: 0, y: 0},
+                    {x: 0, y: 100},
+                    {x: 100, y: 200},
+                    {x: 150, y: 100},
+                    {x: 200, y: 0},
+                    {x: 300, y: 0},
+                    {x: 350, y: 100}
+                ]));
+                shape.setSegments(new ht.List([
+                    1, 2, 3, 4
+                ]));
+                shape.setPosition(814, 313);
+                shape.s("flow", true);
+                shape.s("flow.count", 3);
+                shape.s("shape.border.width", 1);
+                shape.s("shape.border.color", "rgb(240, 255, 114)");
+                shape.s("shape.background", null);
+                dm.add(shape);
+                
+                var shape1 = new ht.Shape();
+                shape1.setPoints(new ht.List([
+                    {x: 0, y: 100},
+                    {x: 0, y: 0},
+                    {x: 200, y: 0},
+                    {x: 200, y: 100}
+                ]));
+                shape1.setSegments(new ht.List([1,4]));
+                shape1.setPosition(113, 371);
+                shape1.s("flow", true);
+                shape1.s("flow.count", 2);
+                dm.add(shape1);
+                
+                
+                var shape2 = new ht.Shape();
+                shape2.setPoints(new ht.List([                    
+                    // draw H
+                    {x: 20, y: 0},
+                    {x: 20, y: 100},
+                    {x: 20, y: 50},
+                    {x: 80, y: 50},
+                    {x: 80, y: 0},
+                    {x: 80, y: 100},
+                    // draw T
+                    {x: 120, y: 0},
+                    {x: 180, y: 0},
+                    {x: 150, y: 0},
+                    {x: 150, y: 100}                    
+                ]));                                
+                shape2.setSegments(new ht.List([
+                    // draw H
+                    1, 2, 1, 2, 1, 2,
+                    // draw T
+                    1, 2, 1, 2
+                ]));
+                shape2.setPosition(442, 262);
+                shape2.setStyle("shape.background", null);
+                shape2.setStyle("shape.border.width", 10);
+                shape2.setStyle("shape.border.color", "#1ABC9C");
+                shape2.s("flow", true);
+                dm.add(shape2);
+                
+                var shape3 = new ht.Shape(),
+                    h = 10;
+                shape3.setPoints(new ht.List([                                        
+                    {x: 0, y: 0},
+                    {x: 25, y: -h},
+                    {x: 50, y: 0},
+                    {x: 75, y: h},
+                    {x: 100, y: 0},                                     
+                    {x: 125, y: -h},
+                    {x: 150, y: 0},                    
+                    {x: 175, y: h},
+                    {x: 200, y: 0}
+                ]));                                
+                shape3.setSegments(new ht.List([
+                    1, 3, 3, 3, 3
+                ]));     
+                shape3.setPosition(890, 0);
+                shape3.setStyle("shape.background", null);
+                shape3.setStyle("shape.border.width", 2);
+                shape3.setStyle("shape.border.color", "#3498DB");
+                shape3.setStyle("flow", true);
+                dm.add(shape3);
+                
+                var shape4 = new ht.Shape();
+                shape4.setPoints(new ht.List([
+                    {x: 0, y: 0},
+                    {x: 200, y: 100},
+                    {x: 400, y: 0}
+                ]));
+                shape4.setSegments(new ht.List([
+                    1, 3
+                ]));
+                shape4.setPosition(786, 164);
+                shape4.s("shape.background", null);
+                shape4.s("shape.border.color", "rgb(203, 78, 7)");
+                shape4.s("shape.border.width", 1);
+                shape4.s("flow", true);
+                shape4.s("flow.count", 5);
+                shape4.s("flow.element.count", 2);
+                shape4.s("flow.element.space", 30);
+                shape4.s("flow.element.max", 30);
+                shape4.s("flow.element.min", 30);
+                shape4.s("flow.element.image", "arrow");
+                shape4.s("flow.element.shadow.visible", false);
+                shape4.s("flow.element.autorotate", true);
+                dm.add(shape4);
+                
+                var shape5 = new ht.Shape();
+                shape5.setPoints(new ht.List([
+                    {x: 0, y: 0},
+                    {x: 100, y: 100},
+                    {x: 200, y: 0},
+                    {x: 100, y: -100},
+                    {x: 0, y: 0}
+                ]));
+                shape5.setSegments(new ht.List([
+                    1, 3, 3
+                ]));
+                shape5.setPosition(420, 93);
+                shape5.s("flow", true);
+                shape5.s("flow.count", 2);
+                shape5.s("shape.background", null);
+                shape5.s("shape.border.width", 1);
+                dm.add(shape5);
+                    
+                var shape6 = new ht.Shape();
+                shape6.setPoints(new ht.List([
+                    {x: 165, y: 40},
+                    {x: 79, y: 241},
+                    {x: 261, y: 104},
+                    {x: 69, y: 104},
+                    {x: 251, y: 241},
+                    {x: 165, y: 40}
+                ]));
+                shape6.setSegments(new ht.List([
+                    1, 2, 2, 2, 2, 2
+                ]));
+                shape6.translate(10, 0);
+                shape6.s("flow", true);
+                shape6.s("flow.count", 38);
+                shape6.s("flow.element.count", 1);
+                shape6.s("shape.background", null);
+                shape6.s("shape.border.width", 1);
+                dm.add(shape6);
+                
+                
+                var shape7 = new ht.Shape();
+                shape7.setPoints(new ht.List([
+                    {x: 20, y: 0},
+                    {x: 100, y: 0},
+                    {x: 200, y: 0},
+                    {x: 300, y: 0},
+                    {x: 400, y: 0},
+                    {x: 500, y: 0},
+                    {x: 600, y: 0},
+                    {x: 700, y: 0}
+                ]));                                
+                shape7.setSegments(new ht.List([
+                    1, 2, 1, 2, 1, 2, 1, 2
+                ]));
+                shape7.translate(20, 0);
+                shape7.setStyle("shape.background", null);
+                shape7.setStyle("shape.border.color", "#1ABC9C");
+                shape7.setStyle("shape.border.width", 2);
+                shape7.s("flow", true);
+                shape7.s("flow.count", 1);
+                shape7.s("flow.step", 2);
+                dm.add(shape7);
+                
+                var node1 = new ht.Node(),
+                    node2 = new ht.Node(),
+                    edge1 = new ht.Edge(node1, node1),
+                    edge2 = new ht.Edge(node1, node2),
+                    edge3 = new ht.Edge(node1, node2);
+                
+                dm.add(node1);
+                
+                node2.setPosition(0, 200);
+                dm.add(node2);
+                
+                edge1.s("flow", true);
+                dm.add(edge1);
+                
+                edge2.s("flow", true);
+                edge2.s("flow.reverse", true);
+                edge2.s("flow.element.background", "rgba(255, 0, 0, 0.4)");
+                edge2.s("flow.element.shadow.begincolor", "rgba(194, 62, 0, 0.3)");
+                edge2.s("flow.element.shadow.endcolor", "rgba(194, 62, 0, 0)");
+                dm.add(edge2);
+                
+                edge3.s("edge.type", "points");
+                edge3.s("edge.points", new ht.List([
+                    { x: 0, y: 25 },
+                    { x: 25, y: 25 },
+                    { x: 25, y: 50 },
+                    { x: 50, y: 50 },
+                    { x: 50, y: 75 },
+                    { x: 75, y: 75 },
+                    { x: 75, y: 200 }
+                ]));
+                edge3.s("flow", true);
+                edge3.s("flow.element.max", 30);
+                edge3.s("flow.element.count", 1);
+                edge3.s("flow.element.image", "bus");
+                edge3.s("flow.element.shadow.visible", false);
+                edge3.s("flow.element.autorotate", true);
+                dm.add(edge3);
+                
+                var contextMenu = new ht.widget.ContextMenu([]);
+                contextMenu.addTo(view);
+                contextMenu.afterShow = function() {
+                    editInteractor._pause = true;
+                };
+                contextMenu.afterHide = function() {
+                    editInteractor._pause = false;
+                };
+                contextMenu.beforeShow = function() {
+                    if (editInteractor._hoverSegmentIndex >= 0) {
+                        var shape = editInteractor._shape,
+                            segments = shape.getSegments(),
+                            segment = segments.get(editInteractor._hoverSegmentIndex);
+                            contextMenuChangeToMove.selected = segment === 1;
+                            contextMenuChangeToLine.selected = segment === 2;
+                            contextMenuChangeToQuadratic.selected = segment === 3;
+                            contextMenuChangeToBezier.selected = segment === 4;
+                        contextMenu.setItems([contextMenuChangeToMove, contextMenuChangeToLine, contextMenuChangeToQuadratic, contextMenuChangeToBezier, contextMenuAddPoint]);
+                    } else if(editInteractor._removePointIndex >= 0) {
+                        contextMenu.setItems([contextMenuRemovePoint]);
+                    } else {
+                        contextMenu.setItems(null);
+                    }
+                };
+                graph.setInteractors(new ht.List([
+                    new ht.graph.SelectInteractor(graph),
+                    editInteractor,
+                    new ht.graph.MoveInteractor(graph),
+                    new ht.graph.DefaultInteractor(graph),
+                    new ht.graph.TouchInteractor(graph , {editable: false})
+                ]));
+                view.className = "view";
+                document.body.appendChild(view);
+                
+                graph.translate(-40, -20);
+                graph.setZoom(0.8);
+                graph.enableFlow(60);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

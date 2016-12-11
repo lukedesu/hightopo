@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RadioButton</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script>                  
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                borderPane.setBottomView(createToolbar(true));
+                  
+                formPane = new ht.widget.FormPane();                                             
+                borderPane.setCenterView(formPane);              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+                
+                formPane.addRow([
+                    {
+                        radioButton: {
+                            label: 'Node'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Group',
+                            selected: true
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'SubGraph'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Grid',
+                            selected: true
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1]);
+                
+                formPane.addRow([
+                    {
+                        radioButton: {
+                            label: 'Node',
+                            icon: 'node_icon',
+                            selected: true
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Group',
+                            icon: 'group_icon'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'SubGraph',
+                            icon: 'subGraph_icon',
+                            selected: true,
+                            disabled: true
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Grid',
+                            icon: 'grid_icon'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1]);
+                
+                formPane.addRow([
+                    {
+                        radioButton: {
+                            label: 'Critical',                            
+                            icon: 'node_icon',
+                            iconColor: '#FF0000',
+                            groupId: 'alarm'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Major',
+                            icon: 'node_icon',
+                            iconColor: '#FFA000',
+                            groupId: 'alarm'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Minor',
+                            icon: 'node_icon',
+                            iconColor: '#FFFF00',
+                            groupId: 'alarm'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Warning',
+                            icon: 'node_icon',
+                            iconColor: '#00FFFF',
+                            groupId: 'alarm'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Indeterminate',
+                            icon: 'node_icon',
+                            iconColor: '#C800FF',
+                            groupId: 'alarm'
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Cleared',
+                            icon: 'node_icon',
+                            iconColor: '#00FF00',
+                            groupId: 'alarm',
+                            selected: true
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 0.1);
+            }
+            function createToolbar(stickToRight){
+                var basicRadioButton = new ht.widget.RadioButton();
+                basicRadioButton.setLabel('Basic CheckBox');  
+                basicRadioButton.setWidth(110);
+
+                toolbar = new ht.widget.Toolbar([
+                    {
+                        element: basicRadioButton
+                    },                    
+                    {
+                        radioButton: {
+                            label: 'Icon RadioButton',
+                            icon: 'grid_icon',
+                            selected: true,
+                            width: 130,
+                            onClicked: function(e){
+                                alert('Selected:' + this.isSelected());
+                            }
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Disabled RadioButton',
+                            icon: 'node_icon',
+                            disabled: true,
+                            width: 160
+                        }
+                    },
+                    {
+                        radioButton: {
+                            label: 'Color RadioButton',
+                            labelColor: 'red',                                                 
+                            pressBackground: 'yellow',
+                             width: 120
+                        }
+                    }    
+                ]);
+                toolbar.setStickToRight(stickToRight);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

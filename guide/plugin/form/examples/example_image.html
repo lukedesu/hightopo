@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Image</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script>                  
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                borderPane.setBottomView(createToolbar(true));
+                  
+                formPane = new ht.widget.FormPane();                                             
+                borderPane.setCenterView(formPane);              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+                                
+                formPane.addRow([
+                    {
+                        image: {
+                            toolTip: 'Critical',                            
+                            icon: 'subGraph_image',
+                            iconColor: '#FF0000',   
+                            stretch: undefined,
+                            borderColor: '#FF0000'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Major',
+                            icon: 'subGraph_image',
+                            iconColor: '#FFA000',
+                            stretch: undefined,
+                            background: '#ECF0F1',
+                            onClicked: function(e){
+                                console.log(e);
+                            }
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Minor',
+                            icon: 'subGraph_image',
+                            iconColor: '#FFFF00',
+                            stretch: undefined   
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Warning',
+                            icon: 'subGraph_image',
+                            iconColor: '#00FFFF',
+                            stretch: undefined   
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Indeterminate',
+                            icon: 'subGraph_image',
+                            iconColor: '#C800FF',
+                            stretch: undefined   
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Cleared',
+                            icon: 'subGraph_image',
+                            iconColor: '#00FF00',
+                            stretch: undefined   
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 50);
+                
+                formPane.addRow([
+                    {
+                        image: {
+                            toolTip: 'Critical',                            
+                            icon: 'subGraph_image',
+                            iconColor: '#FF0000',
+                            borderColor: '#FF0000'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Major',
+                            icon: 'subGraph_image',
+                            iconColor: '#FFA000',
+                            background: '#ECF0F1'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Minor',
+                            icon: 'subGraph_image',
+                            iconColor: '#FFFF00'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Warning',
+                            icon: 'subGraph_image',
+                            iconColor: '#00FFFF'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Indeterminate',
+                            icon: 'subGraph_image',
+                            iconColor: '#C800FF'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Cleared',
+                            icon: 'subGraph_image',
+                            iconColor: '#00FF00'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 0.1);
+                
+                formPane.addRow([
+                    {
+                        image: {
+                            toolTip: 'Critical',                            
+                            icon: 'subGraph_image',
+                            iconColor: '#FF0000',   
+                            borderColor: '#FF0000',   
+                            stretch: 'uniform'                         
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Major',
+                            icon: 'subGraph_image',
+                            iconColor: '#FFA000',
+                            stretch: 'uniform',
+                            background: '#ECF0F1'
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Minor',
+                            icon: 'subGraph_image',
+                            iconColor: '#FFFF00',
+                            stretch: 'uniform'      
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Warning',
+                            icon: 'subGraph_image',
+                            iconColor: '#00FFFF',
+                            stretch: 'uniform'      
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Indeterminate',
+                            icon: 'subGraph_image',
+                            iconColor: '#C800FF',
+                            stretch: 'uniform'      
+                        }
+                    },
+                    {
+                        image: {
+                            toolTip: 'Cleared',
+                            icon: 'subGraph_image',
+                            iconColor: '#00FF00',
+                            stretch: 'uniform'      
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 0.1);
+            }
+            function createToolbar(stickToRight){
+                var image = new ht.widget.Image();
+                image.setIcon('grid_icon');  
+                image.setToolTip('Hightopo is a great company');
+                image.enableToolTip();
+                image.setWidth(24);
+
+                toolbar = new ht.widget.Toolbar([
+                    {
+                        element: image
+                    },
+                    {
+                        image: {
+                            icon: 'grid_icon',
+                            borderColor: '#3498DB',
+                            background: 'yellow',
+                            width: 24,
+                            toolTip: 'Who knows what miracles you can achieve'
+                        }
+                    }
+                ]);
+                toolbar.setStickToRight(stickToRight);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

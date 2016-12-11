@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Slider</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script>          
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                toolbar = createToolbar();
+                toolbar.setStickToRight(true);
+                borderPane.setBottomView(toolbar);
+                  
+                dataModel = new ht.DataModel();
+                tablePane = new ht.widget.TablePane(dataModel);
+                propertyView = new ht.widget.PropertyView(dataModel);
+                splitView = new ht.widget.SplitView(tablePane, propertyView, 'h', 0.6);                                
+                borderPane.setCenterView(splitView);              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false); 
+                
+                for(var color in ht.Color){                    
+                    value = ht.Color[color];
+                    if(typeof value === 'string'){
+                        data = new ht.Data();
+                        data.a({
+                            'name': color,
+                            'value': value,
+                            'array': ht.Default.toColorData(value)
+                        });
+                        dataModel.add(data);                        
+                    }
+                }
+                dataModel.sm().ss(data);
+
+                var attributes = [
+                    {
+                        name: 'name',
+                        accessType: 'attr',
+                        displayName: 'Name',
+                        width: 90
+                    },
+                    {
+                        name: 'value',
+                        accessType: 'attr',                      
+                        displayName: 'Value',
+                        width: 100
+                    },
+                    {
+                        name: 'value',
+                        accessType: 'attr',
+                        valueType: 'color',
+                        displayName: 'Color'
+                    },
+                    createAttribute('Red', 'red', 0),
+                    createAttribute('Green', 'green', 1),
+                    createAttribute('Blue', 'blue', 2),
+                    createAttribute('Alpha', 'black', 3)                         
+                ];
+                
+                tableHeader = tablePane.getTableHeader();
+                tableHeader.getView().style.background = '#4799BC';
+                tableHeader.getLabelColor = function(column){return 'white';};                                
+                tablePane.addColumns(attributes);
+                tablePane.getTableView().setSelectBackground('#1BBCD5');
+                propertyView.addProperties(attributes);
+                propertyView.setSelectBackground('#1BBCD5');
+
+            }  
+            function createAttribute(name, color, index){
+                return {
+                    displayName: name,
+                    align: 'center',
+                    editable: true,
+                    color: color,
+                    getValue: function(data){
+                        return data.a('array')[index];
+                    },
+                    setValue: function(data, column, value, view){                           
+                        var array = data.a('array');
+                        array[index] = value;
+                        data.a('value', 'rgba('+ array[0] + ',' + array[1] + ',' + array[2] + ',' + array[3]/255 + ')');                      
+                    },
+                    slider: {
+                        min: 0,
+                        max: 255,
+                        step: 1,
+                        leftBackground: color,
+                        background: 'white'
+                    }
+                }; 
+            }
+            function createToolbar(){
+                var colorSlider = new ht.widget.Slider();
+                colorSlider.setThickness(8);
+                colorSlider.setBackground('black');
+                colorSlider.setLeftBackground('red');
+                                                               
+                var toolbar = new ht.widget.Toolbar([
+                    {
+                        label: 'Basic',
+                        element: new ht.widget.Slider(),
+                        unfocusable: true
+                    },
+                    {
+                        label: 'Color',
+                        element: colorSlider,
+                        unfocusable: true
+                    },
+                    {
+                        id: 'step',
+                        label: 'Step',
+                        unfocusable: true,
+                        slider: {
+                            width: 120,
+                            step: 5,
+                            min: 100,
+                            max: 200,
+                            value: 125,
+                            thickness: 1,
+                            onValueChanged: function(){
+                                toolbar.getItemById('step').label = this.getValue();
+                                toolbar.redraw();
+                            },
+                            onEndValueChanged: function(){
+                                toolbar.getItemById('step').label = 'Step';
+                                toolbar.redraw();
+                            }        
+                        }
+                    }
+                ]);
+                
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

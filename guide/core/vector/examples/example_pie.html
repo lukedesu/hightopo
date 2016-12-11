@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pie Type</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init() {
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();
+
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    graphView.invalidate();
+                }, false);
+                
+                values = [56.15, 19.15, 17.17, 5.55, 1.98];
+                names = ['IE', 'Firefox', 'Chrome', 'Safari', 'Other'];
+                colors = ['#E74C3C', '#E2E2E2', '#34495E', '#3498DB', '#1ABC9C'];
+                
+                ht.Default.setImage('pie', {
+                    width: 800,
+                    height: 200,
+                    comps: [
+                        {
+                            type: 'pieChart',
+                            rect: [5, 5, 190, 190],
+                            label: function(value, i, sum, data){return value + '%';},
+                            labelColor: 'white',
+                            shadow: true,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                            values: values,
+                            colors: colors
+                        },
+                        {
+                            type: 'pieChart',
+                            hollow: true,
+                            startAngle: Math.PI/4,
+                            rect: [205, 5, 190, 190],
+                            label: true,
+                            labelColor: 'white',
+                            shadow: true,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                            values: values,
+                            colors: colors
+                        },
+                        {
+                            type: 'pieChart',                                                        
+                            rect: [405, 5, 190, 190],
+                            label: function(value, index, sum, data){return names[index];},
+                            labelColor: 'white',
+                            labelFont: '11px Arial',
+                            values: values
+                        },                                  
+                        {
+                            type: 'pieChart',                                                        
+                            rect: [605, 5, 190, 190],
+                            hollow: true,  
+                            startAngle: -Math.PI/4,
+                            values: values
+                        }                                                          
+                    ]
+                });
+            
+                var node = new ht.Node();
+                node.setPosition(420, 120);
+                node.setImage('pie');
+                node.setStyle('image.stretch', 'uniform');
+                dataModel.add(node);                 
+
+                graphView.setEditable(true);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fog</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                background: black;
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.5);
+            } 
+        </style>    
+                                       
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-modeling.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        
+        <script src="util.js"></script> 
+        <script src="scooter_obj.js"></script> 
+        <script src="scooter_mtl.js"></script>        
+                
+        <script>
+                                    
+            function init(){                                                                                                                                              
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);    
+                g3d.setEye([500, 400, 900]);
+                g3d.setFogDisabled(false);
+                g3d.setFogNear(100);
+                g3d.setFogFar(2000);
+                g3d.setFogColor('white');
+        
+                view = g3d.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    g3d.iv();
+                }, false);                                
+                
+                createModel();
+                
+                createFormPane();
+                formPane.v('wall', true); 
+                formPane.v('floor', true); 
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());                                                                               
+                
+            }            
+            
+            function createFormPane(){                                                
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(200);
+                formPane.setHeight(180);
+                       
+                createTexturePane();         
+        
+                newLine('Fog');
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Disabled',                            
+                            onValueChanged: function(){
+                                g3d.setFogDisabled(this.getValue());
+                            }
+                        }
+                    },
+                    {                        
+                        comboBox: {
+                            values: ['white', 'gray', 'yellow', 'red', 'blue', 'green', 'orange'],
+                            value: 'white',
+                            onValueChanged: function(){
+                                g3d.setFogColor(this.getValue());
+                            }
+                        }                        
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Near', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 1000,
+                            value: g3d.getFogNear(),                            
+                            onValueChanged: function(){     
+                                g3d.setFogNear(this.getValue());                                
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);
+                formPane.addRow([
+                    'Near', 
+                    {
+                        slider: {                    
+                            min: 1000,
+                            max: 3000,
+                            value: g3d.getFogFar(),                            
+                            onValueChanged: function(){     
+                                g3d.setFogFar(this.getValue());                                
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);
+            }
+            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContextMenu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+
+        <script type="text/javascript">
+            ht.Default.setImage('contextmenu_icon', "settings.png");
+            var iconSrc = 'contextmenu_icon';
+            function init() {
+                document.body.addEventListener("touchstart", function(e) {
+                    e.preventDefault();
+                });
+                var json = [{
+                        label: "LongText12345678901234567890123456789012345678901234567890",
+                        items: [{
+                            label: "Check1",
+                            icon: iconSrc,
+                            type: "check"
+                        }, {
+                            label: "Check2",
+                            icon: iconSrc,
+                            type: "check"
+                        }, {
+                            label: "Check3",
+                            icon: iconSrc,
+                            type: "check",
+                            items: [{
+                                label: "AAAA"
+                            }, {
+                                label: "BBBB"
+                            }, {
+                                label: "CCCC"
+                            }, {
+                                label: "DDDD"
+                            }, {
+                                label: "EEEE"
+                            }, {
+                                label: "FFFF"
+                            }, {
+                                label: "GGGG"
+                            }, {
+                                label: "HHHH"
+                            }, {
+                                label: "IIII"
+                            }, {
+                                label: "JJJJ"
+                            }, {
+                                label: "KKKK"
+                            }, {
+                                label: "LLLL"
+                            }, {
+                                label: "MMMM"
+                            }, {
+                                label: "NNNN"
+                            }, {
+                                label: "OOOO"
+                            }]
+                        }]
+                    }, {
+                        label: "RadioMenuItems",
+                        items: [{
+                            label: "Radio1",
+                            icon: iconSrc,
+                            type: "radio",
+                            groupId: 1
+                        }, {
+                            label: "Radio2",
+                            icon: iconSrc,
+                            type: "radio",
+                            groupId: 1
+                        }, {
+                            label: "Radio3",
+                            icon: iconSrc,
+                            type: "radio",
+                            groupId: 1
+                        }]
+                    },
+                    "separator", {
+                        label: "Menu1(disabled)",
+                        disabled: true
+                    }, {
+                        label: "Menu2",
+                        action: function(item, event) {
+                            alert("you clicked:" + item.label + ",this=" + this);
+                        },
+                        scope: "hello"
+                    }, {
+                        label: "Menu3",
+                        icon: iconSrc,
+                        action: function(item) {
+                            alert(item.label);
+                        },
+                        items: [{
+                            label: "Homepage",
+                            href: "http://www.hightopo.com",
+                            linkTarget: "_blank",
+                            key: [Key.ctrl, Key.enter],
+                            suffix: "Ctrl+Enter",
+                            preventDefault: false
+                        }, {
+                            label: "submenu2",
+                            action: function(item) {
+                                alert(item.label);
+                            }
+                        }]
+                    }, {
+                        label: "AAAA"
+                    }, {
+                        label: "BBB"
+                    }, {
+                        label: "CCCC"
+                    }, {
+                        label: "DDDD"
+                    }, {
+                        label: "EEEE"
+                    }, {
+                        label: "FFFF"
+                    }, {
+                        label: "GGGG"
+                    }, {
+                        label: "HHHH"
+                    }, {
+                        label: "IIII"
+                    }, {
+                        label: "JJJJ"
+                    }, {
+                        label: "KKKK"
+                    }, {
+                        label: "LLLL"
+                    }
+                ];
+                var contextmenu = new ht.widget.ContextMenu(json);
+                contextmenu.enableGlobalKey();
+                contextmenu.setLabelMaxWidth(200);
+                contextmenu.addTo(document.getElementById("div"));
+
+                contextmenu.beforeShow = function(e) {
+                        if (window.console) console.log("beforeShow", e);
+                    },
+                    contextmenu.afterShow = function(e) {
+                        if (window.console) console.log("afterShow", e);
+                    };
+                contextmenu.afterHide = function() {
+                    if (window.console) console.log("afterHide");
+                };
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="div" style="width: 200px; height: 100px; background: #ddd; text-align: center;">Right Click Here!</div>
+    </body>
+</html>

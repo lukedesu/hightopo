@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Position</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>     
+        <script>                                       
+            
+            ht.Default.setImage('arrow', {
+                width: 100,
+                height: 50,
+                comps: [
+                    {
+                        type: 'shape',
+                        points: [2, 25, 30, 25],
+                        borderWidth: 4,
+                        borderColor: 'rgba(255, 0, 0)'
+                    },
+                    {
+                        type: 'shape',
+                        points: [15, 5, 30, 25, 15, 45, 50, 25, 15, 5],
+                        background: 'yellow',
+                        borderWidth: 1,
+                        borderColor: 'red'
+                    }
+                ]
+            });             
+            
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);  
+                                   
+                for(var i=1; i<56; i++){
+                    var node = new ht.Node();
+                    node.setTag(i);
+                    node.setRect(80, 60, 400, 160);                                        
+                    node.s({
+                        'label': '   ' + i + '   ',
+                        'label.position': i,
+                        'label.offset.x': 0,
+                        'label.offset.y': 0,
+                        'label.font': '25px Arial',
+                        'shape': 'rect',
+                        'shape.background': null,
+                        'shape.border.width': 1,                        
+                        'select.width': 0
+                    });                    
+                    dataModel.add(node);                    
+                }
+                
+                var n1 = new ht.Node();
+                n1.setPosition(600, 230);                
+                dataModel.add(n1);
+                var n2 = new ht.Node();
+                n2.setPosition(800, 60);
+                dataModel.add(n2);
+                var edge = new ht.Edge(n1, n2);
+                edge.s({
+                    'select.color': 'yellow',
+                    'edge.width': 5,
+                    'edge.offset': 25,
+                    'edge.cap': 'round', // butt, round, square
+                    'label': 34,
+                    'label.position': 54,
+                    'label.offset.x': 0,
+                    'label.offset.y': 5,
+                    'label2': 35,
+                    'label2.position': 39,
+                    'label2.offset.x': 0,
+                    'label2.offset.y': -5,
+                    
+                    'icons': {
+                        fromArrow: {
+                            position: 15,
+                            names: ['arrow'],
+                            rotation: Math.PI,
+                            keepOrien: true,
+                            width: 50,
+                            height: 25
+                        },
+                        toArrow: {
+                            position: 19,
+                            names: ['arrow'],
+                            keepOrien: true,
+                            width: 50,
+                            height: 25
+                        }
+                    }
+                });
+                
+                dataModel.add(edge);                
+                
+                graphView.getSelectionModel().setSelection([dataModel.getDataByTag(17), edge]);
+                
+                graphView.getLabelBackground = function(data){
+                    return graphView.isSelected(data) ? '#1ABC9C' : null;
+                };
+                graphView.getLabelColor = function(data){
+                    return graphView.isSelected(data) ? '#FFF' : '#000';
+                };    
+                graphView.getLabel2Background = function(data){
+                    return graphView.isSelected(data) ? '#3498DB' : null;
+                };
+                graphView.getLabel2Color = function(data){
+                    return graphView.isSelected(data) ? '#FFF' : '#000';
+                };                  
+            }
+                        
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

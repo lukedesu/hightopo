@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContextMenu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <style>
+            html {
+                font-size: 13px;
+            }
+            body {
+                width: 2000px;
+                height: 2000px;
+            }
+            input[type=text] {
+                width: 50px;
+            }
+        </style>
+        <script type="text/javascript">
+            ht.Default.setImage('contextmenu_icon', "settings.png");
+            var iconSrc = 'contextmenu_icon';
+            function init() {
+                var json = [
+                    {
+                        label: "CheckMenuItems",
+                        items: [
+                            {
+                                label: "Check1",
+                                icon: iconSrc,
+                                type: "check"
+                            },
+                            {
+                                label: "Check2",
+                                icon: iconSrc,
+                                type: "check"
+                            },
+                            {
+                                label: "Check3",
+                                icon: iconSrc,
+                                type: "check",
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    },
+                                    {
+                                        label: "DDDD"
+                                    },
+                                    {
+                                        label: "EEEE"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        label: "RadioMenuItems",
+                        items: [
+                            {
+                                label: "Radio1",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1
+                            },
+                            {
+                                label: "Radio2",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1
+                            },
+                            {
+                                label: "Radio3",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1
+                            }
+                        ]
+                    },
+                    "separator",
+                    {
+                        label: "Menu1(disabled)",
+                        disabled: true
+                    },   
+                    {
+                        label: "Menu2",
+                        action: function(item, event) {
+                            alert("you clicked:" + item.label + ",this=" + this);
+                        },
+                        scope: "hello"
+                    },
+                    {
+                        label: "Menu3",
+                        icon: iconSrc,
+                        action: function(item) {
+                            alert(item.label);
+                        },
+                        items: [
+                            {
+                                label: "Homepage",
+                                href: "http://www.hightopo.com",
+                                linkTarget: "_blank",
+                                key: [Key.ctrl, Key.enter],
+                                suffix: "Ctrl+Enter",
+                                preventDefault: false
+                            },
+                            {
+                                label: "submenu2",
+                                action: function(item) {
+                                    alert(item.label);
+                                }
+                            }
+                        ]
+                    }
+                ];
+                window.contextmenu = new ht.widget.ContextMenu(json);
+                contextmenu.enableGlobalKey();
+                contextmenu.addTo(null);
+                contextmenu.beforeShow = function(e) {
+                    if(window.console)console.log("beforeShow", e);
+                },
+                contextmenu.afterShow = function(e) {
+                    if(window.console)console.log("afterShow", e);
+                };
+                contextmenu.afterHide = function() {
+                    if(window.console)console.log("afterHide");
+                };
+            }
+            function show() {
+                var x = parseInt(document.getElementById("menux").value),
+                    y = parseInt(document.getElementById("menuy").value);
+                if (!isNaN(x) && !isNaN(y)) {
+                    contextmenu.show(x, y);
+                }
+            }
+            function hide() {
+                contextmenu.hide();
+            }
+            function dispose() {
+                contextmenu.dispose();
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div style="position: fixed; top: 20px; left: 20px;">
+            X: <input type="text" id="menux" value="200">
+            Y: <input type="text" id="menuy" value="80">
+            <input type="button" value="Show" onclick="show();">
+            <input type="button" value="Hide" onclick="hide();">
+            <input type="button" value="Dispose" onclick="dispose();">
+        </div>
+    </body>
+</html>

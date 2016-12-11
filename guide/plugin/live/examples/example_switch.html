@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Switch</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-live.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            dataModel.setAutoAdjustIndex(false);
+            var graphView = new ht.graph.GraphView(dataModel);
+            
+            function init() {
+                initBody();
+                
+                setSwitchImage();
+                addSwitch(300, 50, true);
+                addSwitch(500, 50, false);
+            }
+            
+            function addSwitch (x, y, selected) {
+                var switchNode = new ht.SwitchNode();
+                switchNode.setPosition(x, y);
+                switchNode.setSize(60, 35);
+                switchNode.setSelected(selected);
+                switchNode.setImage('Switch');
+                dataModel.add(switchNode);
+            }
+            
+            function setSwitchImage () {
+                var background = {
+                    func: function (data) {
+                        return data.isSelected() ? '#00E663' : '#B1B4B3';
+                    }
+                };
+                ht.Default.setImage('Switch', {
+                    width: { func: 'getWidth' },
+                    height: { func: 'getHeight' },
+                    comps: [
+                        {
+                            type: 'circle',
+                            borderColor: '#B1B4B3',
+                            borderWidth: 1,
+                            background: background,
+                            rect: {
+                                func: function (data) {
+                                    return [0, 0, data.getHeight(), data.getHeight()];
+                                }
+                            }
+                        },
+                        {
+                            type: 'circle',
+                            borderColor: '#B1B4B3',
+                            borderWidth: 1,
+                            background: background,
+                            rect: {
+                                func: function (data) {
+                                    return [data.getWidth() - data.getHeight(), 0, data.getHeight(), data.getHeight()];
+                                }
+                            }
+                        },
+                        {
+                            type: 'rect',
+                            background: background,
+                            rect: {
+                                func: function (data) {
+                                    return [data.getHeight() / 2, 0, data.getWidth() - data.getHeight(), data.getHeight()];
+                                }
+                            }
+                        },
+                        {
+                            type: 'rect',
+                            borderColor: '#B1B4B3',
+                            borderWidth: 0.5,
+                            rect: {
+                                func: function (data) {
+                                    return [data.getHeight() / 2, 0, data.getWidth() - data.getHeight(), 0];
+                                }
+                            }
+                        },
+                        {
+                            type: 'rect',
+                            borderColor: '#B1B4B3',
+                            borderWidth: 0.5,
+                            rect: {
+                                func: function (data) {
+                                    return [data.getHeight() / 2, data.getHeight(), data.getWidth() - data.getHeight(), 0];
+                                }
+                            }
+                        },
+                        {
+                            type: 'circle',
+                            borderColor: '#E3E3E3',
+                            borderWidth: 1,
+                            background: '#FEFEFE',
+                            rect: {
+                                func: function (data) {
+                                    var gap = 3;
+                                    return [data.isSelected() ? data.getWidth() - data.getHeight() + gap : gap, gap, data.getHeight() - gap * 2, data.getHeight() - gap * 2];
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+            
+            function initBody () {
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '0px';
+                style.top = '0px';
+                style.right = '0px';
+                style.bottom = '0px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EMS</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-modeling.js"></script> 
+        <script>                         
+            function init(){                                 
+                dm = new ht.DataModel();                
+                treeView = new ht.widget.TreeView(dm);                                                                                                 
+                g3d = new ht.graph3d.Graph3dView(dm);                          
+                mainSplit = new ht.widget.SplitView(treeView, g3d, 'h', 0.2);   
+                
+                view = mainSplit.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    mainSplit.invalidate();
+                }, false);                         
+
+                register2DImage();
+                register3DModel();
+                addModel(); 
+                                
+                g3d.setGridVisible(true); 
+                g3d.setGridSize(30);
+                g3d.setGridGap(50);
+                g3d.setEye([200, 200, 600]);
+                g3d.setCenter([0, 200, 0]);
+                g3d.getView().style.background = '#F9F9F9';                 
+                g3d.getLabel = function(data){
+                    return data.s('label');
+                };
+                dm.sm().setFilterFunc(function(data){
+                    return data !== wall;
+                });
+                treeView.setVisibleFunc(function(data){
+                    return data !== wall;
+                });                
+                treeView.expandAll();
+            }
+            
+            function register2DImage(){
+                ht.Default.setImage('ems-frame', {
+                    width: 18,
+                    height: 18,
+                    comps: [
+                        {
+                            type: 'rect',
+                            rect: [5, 4, 8, 11],
+                            borderWidth: 2,
+                            borderColor: '#34495E'
+                        }                         
+                ]});        
+    
+                ht.Default.setImage('ems-pane', {
+                    width: 18,
+                    height: 18,
+                    comps: [
+                        {
+                            type: 'rect',
+                            rect: [0, 4, 18, 10],
+                            background: {func: 'style@shape3d.color'}
+                        }                         
+                ]});     
+
+                ht.Default.setImage('ems-block', {
+                    width: 18,
+                    height: 18,
+                    comps: [
+                        {
+                            type: 'circle',
+                            rect: [0, 2, 18, 10],
+                            background: {
+                                func: 'attr@circleColor',
+                                value: '#3498DB'                               
+                            }
+                        }, 
+                        {
+                            type: 'rect',
+                            rect: [4, 14, 10, 3],
+                            background: {
+                                func: 'attr@rectColor',
+                                value: '#3498DB'                               
+                            }
+                        }                           
+                ]});                 
+            }
+            
+            function register3DModel(){
+                ht.Default.setShape3dModel('ems-frame', ht.Default.createFrameModel(0.1, 0, 0.1, {top: true, bottom: true, back: true}));       
+    
+                ht.Default.setShape3dModel('ems-block', [
+                    {
+                        shape3d: ht.Default.createCylinderModel(32, 0, 32, false, false, true, true),   
+                        r3: [Math.PI/2, 0, 0],   
+                        color: {
+                            func: 'attr@circleColor',
+                            value: '#3498DB'
+                        }     
+                    },
+                    {
+                        shape3d: 'box',
+                        s3: [1, 0.2, 1], 
+                        t3: [0, -0.7, 0],
+                        color: {
+                            func: 'attr@rectColor',
+                            value: '#3498DB'
+                        }
+                    }
+                ]);                  
+            }
+            
+            function addModel(){
+                wall = new ht.Shape();
+                wall.setName('Wall');
+                wall.setPoints(new ht.List([
+                    {x: -750, y: 750},
+                    {x: -750, y: -750},
+                    {x: 750, y: -750},
+                    {x: 750, y: 750}
+                ]));
+                wall.setTall(400);
+                wall.setElevation(200);
+                wall.s({
+                    'shape.border.width': 5,
+                    'shape.border.color': 'rgba(20, 20, 20, 0.8)',
+                    'shape.background': null,    
+                    'all.color': 'rgba(102, 192, 218, 0.95)',
+                    'all.transparent': true,
+                    'all.reverse.cull': true
+                });
+                dm.add(wall);                                               
+    
+                var frame = new ht.Node();
+                frame.setName('Main Frame');
+                frame.setIcon('ems-frame');
+                frame.s3(120, 300, 120);
+                frame.p3(0, 152, 0);
+                frame.s({
+                    'shape3d': 'ems-frame',
+                    'shape3d.color': '#34495E',
+                    'label': 'www.hightopo.com',
+                    'label.color': 'white',
+                    'label.background': '#3498DB',
+                    'label.position': 6,
+                    'label.t3': [-6, -54, 6],
+                    'label.r3': [0, Math.PI/4, Math.PI/2]
+                });
+                dm.add(frame);                                
+                
+                var colors = ['#9C8CE7', '#00C59D', '#A741B6', '#F5C700', '#31485F', '#F81F25', '#00B862', '#3B7DA7'];
+                for(var i=0; i<6; i++){
+                    var pane = new ht.Node();
+                    pane.setIcon('ems-pane');
+                    pane.setName('Pane' + (i+1));
+                    pane.s3(108, 16, 8);                    
+                    pane.s({
+                        'shape3d': 'box',
+                        'shape3d.color': '#ECF0F1'
+                    });
+                    pane.setHost(frame);
+                    pane.setParent(frame);                     
+                    dm.add(pane);
+                    
+                    if(i < 2){
+                        for(var j=0; j<8; j++){
+                            var block = new ht.Node();
+                            block.setName('block ' + i + '*' + j);
+                            block.s3(8, 8, 12);                
+                            block.p3(-39+j*11, 1, 0);
+                            block.setHost(pane);
+                            block.setParent(pane); 
+                            block.setIcon('ems-block');
+                            block.s({
+                                'shape3d': 'ems-block'
+                            });                       
+                            if(i === 1){
+                                block.a({
+                                    'circleColor': colors[j],
+                                    'rectColor': '#00F2CF'
+                                });
+                                
+                            }
+                            dm.add(block);                                        
+                        }                     
+                    }else{
+                        pane.setName('Pane' + (i+1) + ' [ Empty ]');
+                        pane.s({
+                            'shape3d.color': '#BDC3C7'
+                        });
+                    }                   
+                    pane.p3(0, 265-i*27, 54);
+                }                
+            }
+
+        </script>
+    </head>
+    <body onload="init();">                                
+    </body>
+</html>

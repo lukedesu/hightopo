@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Style Group</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>    
+        <script>     
+
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);                         
+                
+                var group = createGroup('Center Title Group');                
+                group.setStyle('group.title.align' ,'center');
+                group.setStyle('group.padding', 20); 
+                group.setStyle('group.depth', 5);                             
+    
+                createNode('Node1', group).setPosition(80, 90);                                               
+                createNode('Node12', group).setPosition(180, 90);                                          
+                
+                group = createGroup();   
+                group.setStyle('group.toggleable', false);
+                group.setStyle('group.padding', 20); 
+                group.setStyle('group.depth', -5); 
+                group.setStyle('note', 'Always Expanded Group');                 
+                group.setExpanded(true);
+                
+                createNode('I am in a group without title', group).setPosition(380, 80);                
+                
+                group = createGroup('Oval Group');  
+                group.s({                   
+                    'select.type': 'oval',                    
+                    'select.padding': 3,
+                    'select.width': 2,
+                    'group.type': 'oval',
+                    'group.gradient': 'radial.west',
+                    'group.gradient.color': 'yellow',
+                    'group.background': 'red',
+                    'group.border.width': 2
+                });                               
+                createNode('Node1', group).setPosition(80, 220);                                               
+                createNode('Node12', group).setPosition(180, 270);    
+                
+                group = createGroup('Dash Group');  
+                group.s({              
+                    'select.width': 0,
+                    'group.type': 'roundRect',
+                    'group.background': null,  
+                    'group.border.width': 3,
+                    'group.border.pattern': [8, 3, 3, 3]
+                    
+                });                               
+                var node1 = createNode('Node1', group).p(310, 220);                                               
+                var node2 = createNode('Node12', group).p(450, 270);                                 
+                for(var i=0; i<2; i++){
+                    var edge = new ht.Edge(node1, node2);
+                    edge.s({
+                        'edge.gap': 10,
+                        'edge.offset': 0,
+                        'edge.center': true,
+                        'edge.pattern': [10]
+                    });
+                    dataModel.add(edge);
+                }
+                
+                group = createGroup('Group Image');  
+                group.s({              
+                    'group.image': 'res/background.jpg',
+                    'group.padding': 10,
+                    'group.depth': 0
+                });                               
+                createNode('Node1', group).p(600, 90).s({
+                    'label.color': 'white',
+                    'body.color': 'red',
+                    'note': '3 Alarms',
+                    'note.background': 'red'
+                }); 
+                createNode('Node2', group).p(730, 110).s({
+                    'label.color': 'white',
+                    'note': 'I am fine'
+                }); 
+                
+                group = createGroup('Group Image');  
+                group.s({              
+                    'group.repeat.image': 'res/ie.png',
+                    'group.padding': 10,
+                    'group.depth': 0,
+                    'group.type': 'oval',
+                    'group.border.width': 5,
+                    'select.type': 'oval',
+                    'select.padding': 5,
+                    'select.width': 3
+                });                               
+                createNode('Node1', group).p(600, 220).s({
+                    'label.background': 'yellow',
+                    'body.color': 'red'
+                }); 
+                createNode('Node2', group).p(740, 270).s({
+                    'label.background': 'yellow',
+                    'body.color': 'green'
+                });                 
+            }
+               
+            function createNode(name, parent){
+                var node = new ht.Node();
+                node.setName(name);                
+                node.setParent(parent);
+                dataModel.add(node);
+                return node;
+            }
+
+            function createGroup(name){
+                var group = new ht.Group();
+                group.setName(name);                
+                group.setExpanded(true);
+                dataModel.add(group);
+                return group;
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

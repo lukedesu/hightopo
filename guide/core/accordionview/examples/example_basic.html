@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AccordionView Basic</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+
+            function init(){                                                      
+                leftAccordion = new ht.widget.AccordionView();
+                rightAccordion = new ht.widget.AccordionView();
+                splitView = new ht.widget.SplitView(leftAccordion, rightAccordion, 'h', 0.7);                
+                
+                view = splitView.getView();                                
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.iv();
+                }, false);                                         
+                
+                leftAccordion.setOrientation('h');
+                leftAccordion.setLabelColor('#303030');
+                leftAccordion.setTitleHeight(36);
+                leftAccordion.setSelectWidth(6);
+                leftAccordion.setTitleBackground('#F2F2F2');
+                leftAccordion.setSelectBackground('#00AFFF');
+                leftAccordion.setSeparatorColor('#A1A1A1');
+                leftAccordion.getLabelFont = function(title){
+                    return title === this.getCurrentTitle() ? 'bold 15px arial, sans-serif' : '13px arial, sans-serif';
+                };
+                leftAccordion.setCollapseIcon({
+                    width: 14,
+                    height: 14,
+                    comps: [
+                        {
+                          type: 'shape',
+                          points: [0, 7, 14, 7, 7, 0, 7, 14],
+                          segments: [1, 2, 1, 2],
+                          borderWidth: 1,   
+                          borderColor: '#303030'
+                        }
+                    ]
+                });
+                leftAccordion.setExpandIcon({
+                    width: 16,
+                    height: 16,
+                    comps: [
+                        {
+                          type: 'shape',
+                          points: [0, 8, 16, 8],
+                          segments: [1, 2],
+                          borderWidth: 1,   
+                          borderColor: '#303030'
+                        }
+                    ]
+                });
+                
+                gradient = null;
+                addView(leftAccordion, 'circle', '#E74C3C', true);
+                addView(leftAccordion, 'star', '#FED652');
+                addView(leftAccordion, 'triangle', '#81B4D2');
+                                
+                gradient = 'radial.northwest';
+                addView(rightAccordion, 'circle', '#E74C3C');
+                addView(rightAccordion, 'star', '#FED652');
+                addView(rightAccordion, 'triangle', '#81B4D2', true);        
+            }
+            
+            function addView(accordionView, shape, color, expand){
+                var div = document.createElement('div');  
+                div.style.position = 'absolute';                
+                div.style.background = color;
+                
+                accordionView.add(shape, div, expand, {
+                    width: 16,
+                    height: 16,
+                    comps: [
+                        {
+                          type: shape,
+                          rect: [0, 0, 16, 16],
+                          background: color,    
+                          gradient: gradient
+                        }
+                    ]
+                });
+            }
+
+        </script>
+    </head>
+    <body onload="init();">                     
+    </body>
+</html>

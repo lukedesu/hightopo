@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ht.Default</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body, pre {
+                padding: 0px;
+                margin: 0px;                
+            }            
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script>      
+            
+            
+            function toComment(key, value){
+                var v;
+                if(value instanceof Array){
+                    v = '[' + value.join(',') + '], ';
+                }else{
+                    v = value + '，';                    
+                }
+                if(key === 'baseZIndex'){
+                    return v + '指定组件基准CSS的ZIndex值，改值仅在将HT与其他第三方组件混合使用时根据需要设置';
+                }
+                if(key === 'isTouchable'){
+                    return v + '判断是否为触屏可Touch方式交互，HT系统一般会自动判断，对于极少数HT无法正确识别的系统下，可以通过配置强制指定';
+                }
+                if(key === 'devicePixelRatio'){
+                    return v + '设备像素比，HT系统自动取至window.devicePixelRatio，某些特性情况需要为mobile应用牺牲精度节省内存时可以强制设置为较小值';
+                }
+                if(key === 'reinvalidateCount'){
+                    return v + '组件初次加载时界面宽高值可能会为0，HT会自动尝试等待下次延迟刷新，该参数一般无需改动';
+                }
+                if(key === 'hitMaxArea'){
+                    return v + '进行框选判断时为了避免内存占用过大，HT会根据最大面积限制进行缩放判断，该参数一般无需改动';
+                }
+                if(key === 'autoMakeVisible'){
+                    return v + '决定Data元素被选中时，组件是否自动滚动到Data元素可见位置';
+                }                    
+                if(key === 'autoHideScrollBar'){
+                    return v + '决定组件的滚动条默认是否自动隐藏，true为自动显示和隐藏，false则需要滚动时一直显示不会自动隐藏';
+                }
+                if(key === 'toolTipDelay'){
+                    return v + '决定组件的ToolTip显示的延迟间隔';
+                }
+                if(key === 'toolTipContinual'){
+                    return v + '决定组件的ToolTip显示的情况下，如果鼠标移动到新的位置时，ToolTip是否实时持续跟进';
+                } 
+                if(key === 'lineCap'){
+                    return v + '决定线条末端线帽的样式，可选参数为：butt|round|square';
+                }
+                if(key === 'lineJoin'){
+                    return v + '决定当两条线交汇时创建边角的类型，可选参数为：bevel|round|miter';
+                }
+                if(key === 'imageGradient'){
+                    return v + '决定默认图片的渐进色类型';
+                } 
+                if(key === 'animDuration'){
+                    return v + '决定默认动画周期';
+                }                 
+                if(key === 'animEasing'){
+                    return v + '决定默认动画效果函数，可参考http://msdn.microsoft.com/en-us/library/ee308751(v=vs.110).aspx';
+                }  
+                if(key === 'labelColor'){
+                    return v + '默认文字颜色';
+                }  
+                if(key === 'labelSelectColor'){
+                    return v + '默认选择状态下文字颜色';
+                }                      
+                if(key === 'labelFont'){
+                    return v + '默认文字字体';
+                }     
+                if(key === 'scrollBarColor'){
+                    return v + '默认滚动条颜色';
+                } 
+                if(key === 'scrollBarSize'){
+                    return v + '默认滚动条宽度';
+                } 
+                if(key === 'scrollBarTimeout'){
+                    return v + '默认滚动条隐藏间隔毫秒数';
+                } 
+                if(key === 'scrollBarMinLength'){
+                    return v + '默认滚动条最小长度';
+                } 
+                if(key === 'scrollBarInteractiveSize'){
+                    return v + '默认滚动条起作用区域大小';
+                } 
+                if(key === 'zoomIncrement'){
+                    return v + '默认缩放步进';
+                } 
+                if(key === 'scrollZoomIncrement'){
+                    return v + '默认滚轮缩放步进';
+                } 
+                if(key === 'pinchZoomIncrement'){
+                    return v + '默认双指触屏Touch方式缩放步进';
+                } 
+                if(key === 'zoomMax'){
+                    return v + '默认最大缩放倍数';
+                } 
+                if(key === 'zoomMin'){
+                    return v + '默认最小缩放倍数';
+                }                   
+                if(key === 'segmentResolution'){
+                    return v + '默认曲线分段微分数';
+                }   
+                if(key === 'shapeResolution'){
+                    return v + '默认模型分段微分数';
+                }                
+                if(key === 'shapeSide'){
+                    return v + '默认模型边数';
+                }                                                                  
+                if(key === 'getVersion'){
+                    return v + 'getVersion()获取HT系统版本号';
+                }         
+                if(key === 'createObject'){
+                    return 'createObject(clazz, attributes)构建类对象';
+                }                
+                if(key === 'preventDefault'){
+                    return 'preventDefault(e)阻止默认行为函数，常用于屏蔽触屏上默认DoubleTap缩放等行为';
+                }
+                if(key === 'getWindowInfo'){
+                    return 'getWindowInfo()获取当前窗口left|top|width|height的参数信息';
+                }                                                             
+                if(key === 'isDragging'){
+                    return '判断目前是否处于拖拽状态，isDraging()无输入参数，返回true|false';
+                }                    
+                if(key === 'isLeftButton'){
+                    return '判断是否鼠标左键被按下，isLeftButton(e)，传入交互事件，返回true|false';
+                }
+                if(key === 'getTouchCount'){
+                    return '获取当前Touch手指个数，getTouchCount(e)，传入交互事件，返回int类型个数';
+                }
+                if(key === 'isDoubleClick'){
+                    return '判断是否为双击事件，isDoubleClick(e)，传入交互事件，返回true|false';
+                }
+                if(key === 'isShiftDown'){
+                    return '判断是否鼠标Shift键被按下，isShiftDown(e)，传入交互事件，返回true|false';
+                }
+                if(key === 'isCtrlDown'){
+                    return '判断是否鼠标Ctrl键被按下，isCtrlDown(e)，传入交互事件，返回true|false';
+                }
+                if(key === 'getClientPoint'){
+                    return '返回client属性坐标，getClientPoint(e)，传入交互事件，返回{x:clientX, y:clientY}格式对象';
+                }
+                if(key === 'getPagePoint'){
+                    return '返回page属性坐标，getPagePoint(e)，传入交互事件，返回{x:pageX, y:pageY}格式对象';
+                }                
+                if(key === 'setImage'){
+                    return 'setImage(name)|setImage(name, img)|setImage(name, src)|setImage(name, width, height, src)四种方式设置图片，HT数据模型设置图片只需设置注册图片的name名称即可';
+                }     
+                if(key === 'getImage'){
+                    return 'getImage(name, color)获取图片，name为图片名称，color为染色颜色';
+                }
+                if(key === 'getId'){
+                    return 'getId()获取全局下一个id编号，该函数用户自动生成新创建Data对象的id值';
+                }  
+                if(key === 'callLater'){
+                    return '延迟回调函数callLater(func, scope, args, delay)，scope|args|delay皆为可选项，返回处理句柄';
+                }
+                if(key === 'sortFunc'){
+                    return '默认排序函数sortFunc(v1, v2)，传入两个比较值，返回-1|0|1的比较结果，例如用于默认的表头排序逻辑，可重载自定义';
+                }  
+                if(key === 'clone'){
+                    return '克隆函数clone(obj)，传入一个对象参数，浅拷贝方式返回一个新的复制对象';
+                }                 
+                if(key === 'getClassMap'){
+                    return 'getClassMap()函数返回所有HT预定义类的json结构信息，key为类全路径名，value为类定义';
+                }
+                if(key === 'getClass'){
+                    return 'getClass(name)，传入全路径类字符串名称，返回类定义';
+                }  
+                if(key === 'def'){
+                    return 'def(className, superClass, methods)定义类函数，例如ht.Default.def("com.hightopo.MyData", ht.Data, {getAge: function(){ return 33; }});';
+                }
+                if(key === 'startAnim'){
+                    return '启动动画函数startAnim(params)，参考入门手册详细说明';
+                }                                          
+                if(key === 'brighter'){
+                    return 'brighter(color, factor)返回比color更亮的颜色，factor缺省值为40，允许值为0~100';
+                }                      
+                if(key === 'darker'){
+                    return 'darker(color, factor)返回比color更暗的颜色，factor缺省值为-40，允许值为0~-100';
+                } 
+                if(key === 'drawText'){
+                    return 'drawText(g, value, font, color, x, y, width, height, align, vAlign)绘制文字，align的可选值为left|center|right，vAlign可选值为top|middle|bottom';
+                }        
+                if(key === 'getTextSize'){
+                    return 'getTextSize(font, text)获取文本大小，返回{width: 100, height: 20}的结构信息';
+                }                                
+                if(key === 'getDistance'){
+                    return 'getDistance(point1, point2)|getDistance(vec1, vec2)|getDistance(vec)获取两点之间距离，或矢量长度，point为{x:x,y:y}格式，vec为[x,y,z]数组';
+                }                      
+                if(key === 'unionPoint'){
+                    return 'unionPoint(point1, point2)|unionPoint(points)函数返回点组合的矩形区域，可传入两个点，也可传入ht.List和Array类似的数组';
+                } 
+                if(key === 'unionRect'){
+                    return 'unionRect(rect1, rect2)函数返回两个矩形区域union融合后的新矩形区域';
+                }                      
+                if(key === 'containsPoint'){
+                    return 'containsPoint(rect, point)函数判断point是否包含在rect的矩形区域里，返回true|false';
+                } 
+                if(key === 'containsRect'){
+                    return 'containsRect(rect1, rect2)函数判断矩形区域rect2是否包含在矩形区域rect1里面，返回true|false';
+                }                      
+                if(key === 'intersectsRect'){
+                    return 'intersectsRect(rect1, rect2)函数判断矩形区域rect1和矩形区域rect2是否相交，返回true|false';
+                } 
+                if(key === 'intersection'){
+                    return 'intersection(rect1, rect2)函数判断矩形区域rect1和矩形区域rect2的相交矩形区域，无相交则返回null';
+                }                      
+                if(key === 'grow'){
+                    return 'grow(rect, extend)函数改变rect大小，上下左右分别扩展extend的大小';
+                }            
+                if(key === 'getLogicalPoint'){
+                    return 'getLogicalPoint(e, view, translateX, translateY, zoomX, zoomY)获取交互点的逻辑坐标，一般View会提供getLogicalPoint(e)更便捷的函数';
+                }  
+                if(key === 'getToolTipDiv'){
+                    return 'getToolTipDiv()函数返回ToolTip的相应div组件，可获取进行风格自定义';
+                }   
+                if(key === 'isToolTipShowing'){
+                    return 'isToolTipShowing()函数判断当前ToolTip是否正在显示状态，返回true|false';
+                }   
+                if(key === 'hideToolTip'){
+                    return 'hideToolTip()函数隐藏正在显示的ToolTip';
+                }   
+                if(key === 'showToolTip'){
+                    return 'showToolTip(eventOrPoint, innerHTML)显示ToolTip，第一个参数可为交互事件或指定坐标点，第二个参数为文字内容';
+                }   
+                if(key === 'toolTipLabelColor'){
+                    return v + 'ToolTip的文字颜色';
+                }   
+                if(key === 'toolTipLabelFont'){
+                    return v + 'ToolTip的文字字体';
+                }     
+                if(key === 'toolTipBackground'){
+                    return v + 'ToolTip的背景颜色';
+                }   
+                if(key === 'toolTipShadowColor'){
+                    return v + 'ToolTip的阴影颜色';
+                }   
+                if(key === 'compStack'){
+                    return '矢量组件comp嵌套堆栈，矢量组件comp可嵌套定义，通过改参数能得到当前嵌套层次信息';
+                }   
+                if(key === 'getCurrentComp'){
+                    return 'getCurrentComp()函数返回当前矢量组件comp，即ht.Default.compStack[0]，一般用于矢量值绑定func动态调用时使用';
+                }   
+                if(key === 'getParentComp'){
+                    return 'getParentComp()函数返回当前矢量组件上一层comp，即ht.Default.compStack[1]，一般用于矢量值绑定func动态调用时使用';
+                }   
+                if(key === 'drawImage'){
+                    return 'drawImage(g, image, x, y, width, height, data, view, blendColor)绘制栅格图片和矢量图片的通用函数';
+                } 
+                if(key === 'edgeGroupAgentFunc'){
+                    return 'edgeGroupAgentFunc(edges)返回连线组的代理连线，edges为ht.List类型的ht.Edge对象数组，默认返回edges.get(0)，可重载自定义规则';
+                }   
+                if(key === 'graphViewAutoScrollZone'){
+                    return v + 'GraphView组件中拖动图元到边缘时会自动滚动，该参数决定开始自动滚动的区域范围，设置为0或负数则代表关闭自动滚动功能';
+                }   
+                if(key === 'graphViewResettable'){
+                    return v + '该属性决定GraphView组件按空格键是否允许复位，复位调用了GraphView#reset()函数，该函数默认会调用setZoom(1)和setTranslate(0, 0)';
+                }   
+                if(key === 'graphViewPannable'){
+                    return v + '该属性决定GraphView组件是否允许手抓图操作';
+                }
+                if(key === 'graphViewRectSelectable'){
+                    return v + '该属性决定GraphView组件是否允许按Ctrl键进行框选操作';
+                }   
+                if(key === 'graphViewScrollBarVisible'){
+                    return v + '该属性决定GraphView组件是否显示滚动条';
+                }   
+                if(key === 'graphViewRectSelectBorderColor'){
+                    return v + '该属性决定GraphView组件框选边框颜色';
+                }   
+                if(key === 'graphViewRectSelectBackground'){
+                    return v + '该属性决定GraphView组件框选背景颜色';
+                }
+                if(key === 'graphViewEditPointSize'){
+                    return v + '该属性决定GraphView组件编辑点大小';
+                }   
+                if(key === 'graphViewEditPointBorderColor'){
+                    return v + '该属性决定GraphView组件编辑点边框颜色';
+                }   
+                if(key === 'graphViewEditPointBackground'){
+                    return v + '该属性决定GraphView组件编辑点背景颜色';
+                }   
+                if(key === 'overviewBackground'){
+                    return v + '该属性决定鹰眼组件背景颜色';
+                }
+                if(key === 'overviewMaskBackground'){
+                    return v + '该属性决定鹰眼组件内容蒙罩颜色';
+                }   
+                if(key === 'overviewContentBorderColor'){
+                    return v + '该属性决定鹰眼组件内容区域边框颜色';
+                }   
+                if(key === 'overviewContentBackground'){
+                    return v + '该属性决定鹰眼组件内容区域背景颜色';
+                }                   
+                if(key === 'graph3dViewFogDisabled'){
+                    return v + '默认为`true`不启用雾效果，可设置为`false`启用雾效果';
+                }                  
+                if(key === 'graph3dViewFogColor'){
+                    return v + '雾颜色';
+                }                  
+                if(key === 'graph3dViewFogNear'){
+                    return v + '代表从该距离起物体开始受雾效果影响';
+                }                 
+                if(key === 'graph3dViewFogFar'){
+                    return v + '代表从该距离之后物体完全看不清';
+                }  
+                if(key === 'graph3dViewHeadlightRange'){
+                    return v + '头灯影响范围，默认为`0`代表可照射到无穷远处，如果设置了值则光照射效果随物体远离光影而衰减';
+                }        
+                if(key === 'graph3dViewHeadlightColor'){
+                    return v + '头灯颜色';
+                }                  
+                if(key === 'graph3dViewHeadlightIntensity'){
+                    return v + '头灯强度，默认为`1`，大于`1`增强，小于`1`减弱';
+                }                  
+                if(key === 'graph3dViewHeadlightDisabled'){
+                    return v + '关闭头灯效果，默认为`false`，可设置为`true`关闭灯效果';
+                }                
+                if(key === 'graph3dViewAttributes'){
+                    return v + '该属性决定Graph3dView组件初始化WebGL上下文参数，一般无需改动';
+                }   
+                if(key === 'graph3dViewMoveStep'){
+                    return v + '该属性决定Graph3dView组件键盘控制移动的步进';
+                }     
+                if(key === 'graph3dViewRotateStep'){
+                    return v + '该属性决定Graph3dView组件键盘控制旋转的步进';
+                }                 
+                if(key === 'graph3dViewFirstPersonMode'){
+                    return v + '该属性决定Graph3dView组件是否为第一人称交互方式，该值为false则以围绕中心点的交互方式';
+                }  
+                if(key === 'graph3dViewMouseRoamable'){
+                    return v + '该属性决定Graph3dView组件在第一人称交互方式时，鼠标是否能漫游，为true时代表：按左键前进，按右键后退；为false时代表：左键保持原始操作功能，右键改变视角方向';
+                } 
+                if(key === 'graph3dViewPannable'){
+                    return v + '该属性决定Graph3dView组件是否允许按Shift键进行手抓图平移';
+                }    
+                if(key === 'graph3dViewRotatable'){
+                    return v + '该属性决定Graph3dView组件是否允许进行旋转中心或方位操作';
+                }   
+                if(key === 'graph3dViewWalkable'){
+                    return v + '该属性决定Graph3dView组件是否允许前进后退操作';
+                }    
+                if(key === 'graph3dViewResettable'){
+                    return v + '该属性决定Graph3dView组件是否允许按空格键复位，复位调用了Graph3dView#reset()函数，该函数会重置Graph3dView的eye|center|up三个参数';
+                }   
+                if(key === 'graph3dViewZoomable'){
+                    return v + '该属性决定Graph3dView组件是否允许缩放';
+                }    
+                if(key === 'graph3dViewRectSelectable'){
+                    return v + '该属性决定Graph3dView组件是否允许框选择';
+                }   
+                if(key === 'graph3dViewRectSelectBackground'){
+                    return v + '该属性决定Graph3dView组件框选背景';
+                }     
+                if(key === 'graph3dViewGridVisible'){
+                    return v + '该属性决定Graph3dView组件是否允许显示xz面网格';
+                } 
+                if(key === 'graph3dViewGridSize'){
+                    return v + '该属性决定Graph3dView组件显示xz面的网格行列数';
+                }  
+                if(key === 'graph3dViewGridGap'){
+                    return v + '该属性决定Graph3dView组件显示xz面的网格行列间距';
+                } 
+                if(key === 'graph3dViewGridColor'){
+                    return v + '该属性决定Graph3dView组件显示xz面的网格线颜色';
+                } 
+                if(key === 'graph3dViewOriginAxisVisible'){
+                    return v + '该属性决定Graph3dView组件原点x|y|z三个轴线是否可见';
+                } 
+                if(key === 'graph3dViewCenterAxisVisible'){
+                    return v + '该属性决定Graph3dView组件屏幕中心点x|y|z三个轴线是否可见';
+                }
+                if(key === 'graph3dViewAxisXColor'){
+                    return v + '该属性决定Graph3dView组件显示x轴线颜色';
+                }  
+                if(key === 'graph3dViewAxisYColor'){
+                    return v + '该属性决定Graph3dView组件显示y轴线颜色';
+                }   
+                if(key === 'graph3dViewAxisZColor'){
+                    return v + '该属性决定Graph3dView组件显示z轴线颜色';
+                }  
+                if(key === 'graph3dViewEditSizeColor'){
+                    return v + '该属性决定Graph3dView组件在编辑状态图元拉伸标识颜色';
+                }                 
+                if(key === 'graph3dViewOrtho'){
+                    return v + '该属性决定Graph3dView组件是否显示为正交投影方式';
+                } 
+                if(key === 'graph3dViewOrthoWidth'){
+                    return v + '该属性决定Graph3dView组件正交投影方式下屏幕宽度内显示的逻辑宽度值';
+                } 
+                if(key === 'graph3dViewFovy'){
+                    return v + '该属性决定Graph3dView组件在透视投影方式下的y轴张角弧度（Field of view）';
+                } 
+                if(key === 'graph3dViewNear'){
+                    return v + '该属性决定Graph3dView组件投影呈现内容的最近距离，该值在可接受的范围内尽量设置较大值有利于呈现精度';
+                } 
+                if(key === 'graph3dViewFar'){
+                    return v + '该属性决定Graph3dView组件投影呈现内容的最远距离，该值可根据场景最远范围进行调节设置';
+                } 
+                if(key === 'graph3dViewEye'){
+                    return v + '该属性决定Graph3dView组件投影呈现时，眼睛观察点所在位置';
+                } 
+                if(key === 'graph3dViewCenter'){
+                    return v + '该属性决定Graph3dView组件投影呈现时，眼睛最终锁定的目标中心位置';
+                } 
+                if(key === 'graph3dViewUp'){
+                    return v + '该属性决定Graph3dView组件投影呈现时，摄像镜头垂直朝上方向';
+                }  
+                if(key === 'graph3dViewDashDisabled'){
+                    return v + '该属性决定Graph3dView组件是否启动虚线功能';
+                }
+                if(key === 'graph3dViewBatchBlendDisabled'){
+                    return v + '该属性决定Graph3dView组件是否启动批量染色功能';
+                }
+                if(key === 'graph3dViewBatchBrightnessDisabled'){
+                    return v + '该属性决定Graph3dView组件是否启动批量高亮功能';
+                }
+                if(key === 'graph3dViewBatchColorDisabled'){
+                    return v + '该属性决定Graph3dView组件是否启动批量颜色功能';
+                }
+                if(key === 'widgetIndent'){
+                    return v + '该属性决定通用组件缩进，例如树组件每一层的缩进';
+                } 
+                if(key === 'widgetRowHeight'){
+                    return v + '该属性决定通用组件行高，例如表格每行行高';
+                }  
+                if(key === 'widgetHeaderHeight'){
+                    return v + '该属性决定通用组件抬头高度，例如TabView，TableHeader和Toolbar等的头部高度';
+                }  
+                if(key === 'accordionViewLabelColor'){
+                    return v + '该属性决定折叠组件文字颜色';
+                } 
+                if(key === 'accordionViewLabelFont'){
+                    return v + '该属性决定折叠组件文字字体';
+                }                
+                if(key === 'accordionViewTitleBackground'){
+                    return v + '该属性决定折叠组件抬头背景';
+                } 
+                if(key === 'accordionViewSelectBackground'){
+                    return v + '该属性决定折叠组件选中背景';
+                }  
+                if(key === 'accordionViewSelectWidth'){
+                    return v + '该属性决定折叠组件选中宽度';
+                }                    
+                if(key === 'accordionViewSeparatorColor'){
+                    return v + '该属性决定折叠组件分隔条颜色';
+                } 
+                if(key === 'accordionViewExpandIcon'){
+                    return '该属性决定折叠组件展开状态图标';
+                }    
+                if(key === 'accordionViewCollapseIcon'){
+                    return '该属性决定折叠组件关闭状态图标';
+                }                
+                if(key === 'splitViewDividerSize'){
+                    return v + '该属性决定分割组件分隔条宽度';
+                } 
+                if(key === 'splitViewDividerBackground'){
+                    return v + '该属性决定分割组件分隔条背景';
+                }    
+                if(key === 'splitViewDragOpacity'){
+                    return v + '该属性决定分割组件分隔条拖拽过程透明度';
+                } 
+                if(key === 'splitViewToggleIcon'){
+                    return '该属性决定分割组件展开合并图标';
+                }                                 
+                if(key === 'propertyViewBackground'){
+                    return v + '该属性决定属性组件背景';
+                } 
+                if(key === 'propertyViewRowLineVisible'){
+                    return v + '该属性决定属性组件行线是否可见';
+                } 
+                if(key === 'propertyViewColumnLineVisible'){
+                    return v + '该属性决定属性组件列线是否可见';
+                } 
+                if(key === 'propertyViewLabelFont'){
+                    return v + '该属性决定属性组件文字字体';
+                }                
+                if(key === 'propertyViewLabelColor'){
+                    return v + '该属性决定属性组件文字颜色';
+                }                 
+                if(key === 'propertyViewLabelSelectColor'){
+                    return v + '该属性决定属性组件文字选中颜色';
+                }                 
+                if(key === 'propertyViewSelectBackground'){
+                    return v + '该属性决定属性组件选中背景色';
+                }  
+                if(key === 'propertyViewRowLineColor'){
+                    return v + '该属性决定属性组件行线颜色';
+                }  
+                if(key === 'propertyViewColumnLineColor'){
+                    return v + '该属性决定属性组件列线颜色';
+                }                 
+                if(key === 'propertyViewExpandIcon'){
+                    return '该属性决定属性组件展开图标';
+                }
+                if(key === 'propertyViewCollapseIcon'){
+                    return '该属性决定属性组件合并图标';
+                }
+                if(key === 'listViewLabelFont'){
+                    return v + '该属性决定列表组件文字字体';
+                }                
+                if(key === 'listViewLabelColor'){
+                    return v + '该属性决定列表组件文字颜色';
+                }                 
+                if(key === 'listViewLabelSelectColor'){
+                    return v + '该属性决定列表组件文字选中颜色';
+                }   
+                if(key === 'listViewSelectBackground'){
+                    return v + '该属性决定列表组件选中背景色';
+                }                  
+                if(key === 'listViewRowLineVisible'){
+                    return v + '该属性决定列表组件行线是否可见';
+                }                    
+                if(key === 'listViewRowLineColor'){
+                    return v + '该属性决定列表组件行线颜色';
+                }      
+                if(key === 'treeViewLabelFont'){
+                    return v + '该属性决定树组件文字字体';
+                }                
+                if(key === 'treeViewLabelColor'){
+                    return v + '该属性决定树组件文字颜色';
+                }                 
+                if(key === 'treeViewLabelSelectColor'){
+                    return v + '该属性决定树组件文字选中颜色';
+                }  
+                if(key === 'treeViewSelectBackground'){
+                    return v + '该属性决定树组件选中背景色';
+                }                  
+                if(key === 'treeViewRowLineVisible'){
+                    return v + '该属性决定树组件行线是否可见';
+                } 
+                if(key === 'treeViewRowLineColor'){
+                    return v + '该属性决定树组件行线颜色';
+                }              
+                if(key === 'treeViewExpandIcon'){
+                    return '该属性决定树组件展开状态图标';
+                }    
+                if(key === 'treeViewCollapseIcon'){
+                    return '该属性决定树组件关闭状态图标';
+                }                 
+                if(key === 'tableViewLabelFont'){
+                    return v + '该属性决定表格组件文字字体';
+                }                
+                if(key === 'tableViewLabelColor'){
+                    return v + '该属性决定表格组件文字颜色';
+                }                 
+                if(key === 'tableViewLabelSelectColor'){
+                    return v + '该属性决定表格组件文字选中颜色';
+                }          
+                if(key === 'tableViewSelectBackground'){
+                    return v + '该属性决定表格组件选中背景色';
+                }                  
+                if(key === 'tableViewRowLineVisible'){
+                    return v + '该属性决定表格组件行线是否可见';
+                } 
+                if(key === 'tableViewColumnLineVisible'){
+                    return v + '该属性决定表格组件列线是否可见';
+                }       
+                if(key === 'tableViewRowLineColor'){
+                    return v + '该属性决定表格组件行线颜色';
+                }  
+                if(key === 'tableViewColumnLineColor'){
+                    return v + '该属性决定表格组件列线颜色';
+                }                                  
+                if(key === 'treeTableViewLabelFont'){
+                    return v + '该属性决定树表组件文字字体';
+                }                
+                if(key === 'treeTableViewLabelColor'){
+                    return v + '该属性决定树表组件文字颜色';
+                }                 
+                if(key === 'treeTableViewLabelSelectColor'){
+                    return v + '该属性决定树表组件文字选中颜色';
+                }        
+                if(key === 'treeTableViewSelectBackground'){
+                    return v + '该属性决定树表组件选中背景色';
+                }                  
+                if(key === 'treeTableViewRowLineVisible'){
+                    return v + '该属性决定树表格组件行线是否可见';
+                }  
+                if(key === 'treeTableViewColumnLineVisible'){
+                    return v + '该属性决定树表格组件列线是否可见';
+                }    
+                if(key === 'treeTableViewRowLineColor'){
+                    return v + '该属性决定树表格组件行线颜色';
+                }  
+                if(key === 'treeTableViewColumnLineColor'){
+                    return v + '该属性决定树表格组件列线颜色';
+                }        
+                if(key === 'treeTableViewExpandIcon'){
+                    return '该属性决定树表格组件展开状态图标';
+                }    
+                if(key === 'treeTableViewCollapseIcon'){
+                    return '该属性决定树表格组件关闭状态图标';
+                }                 
+                if(key === 'tableHeaderLabelFont'){
+                    return v + '该属性决定表头组件文字字体';
+                }                
+                if(key === 'tableHeaderLabelColor'){
+                    return v + '该属性决定表头组件文字颜色';
+                }                
+                if(key === 'tableHeaderColumnLineVisible'){
+                    return v + '该属性决定表头组件列线是否可见';
+                } 
+                if(key === 'tableHeaderColumnLineColor'){
+                    return v + '该属性决定表头组件列线颜色';
+                }                 
+                if(key === 'tableHeaderBackground'){
+                    return v + '该属性决定表头组件背景';
+                } 
+                if(key === 'tableHeaderMoveBackground'){
+                    return v + '该属性决定表头组件移动状态背景';
+                } 
+                if(key === 'tableHeaderInsertColor'){
+                    return v + '该属性决定表头组件插入状态颜色';
+                }                 
+                if(key === 'tableHeaderSortDescIcon'){
+                    return '该属性决定表头组件降序图标';
+                }                 
+                if(key === 'tableHeaderSortAscIcon'){
+                    return '该属性决定表头组件升序图标';
+                }        
+                if(key === 'tabViewTabGap'){
+                    return v + '该属性决定页签组件间距';
+                } 
+                if(key === 'tabViewLabelColor'){
+                    return v + '该属性决定页签组件文字颜色';
+                } 
+                if(key === 'tabViewLabelFont'){
+                    return v + '该属性决定页签组件文字字体';
+                }                 
+                if(key === 'tabViewTabBackground'){
+                    return v + '该属性决定页签组件背景';
+                }  
+                if(key === 'tabViewSelectWidth'){
+                    return v + '该属性决定页签组件选中宽度';
+                }  
+                if(key === 'tabViewSelectBackground'){
+                    return v + '该属性决定页签组件选中背景';
+                }  
+                if(key === 'tabViewMoveBackground'){
+                    return v + '该属性决定页签组件移动状态背景';
+                }  
+                if(key === 'tabViewInsertColor'){
+                    return v + '该属性决定页签组件插入状态颜色';
+                }
+                if(key === 'toolbarLabelFont'){
+                    return v + '该属性决定工具条组件文字字体';
+                }                
+                if(key === 'toolbarLabelColor'){
+                    return v + '该属性决定工具条组件文字颜色';
+                }                 
+                if(key === 'toolbarLabelSelectColor'){
+                    return v + '该属性决定工具条组件文字选中颜色';
+                } 
+                if(key === 'toolbarSelectBackground'){
+                    return v + '该属性决定工具条组件选中背景色';
+                }  
+                if(key === 'toolbarBackground'){
+                    return v + '该属性决定工具条组件背景';
+                }    
+                if(key === 'toolbarItemGap'){
+                    return v + '该属性决定工具条组件Item的间距';
+                }   
+                if(key === 'toolbarSeparatorColor'){
+                    return v + '该属性决定工具条组件的分隔条颜色';
+                }  
+                if(key === 'startDragging'){
+                    return '启动拖拽函数startDragging(interactor, e)';
+                }
+                if(key === 'getImageMap'){
+                    return 'getImageMap()返回所有注册的图片信息对象';
+                }
+                if(key === 'getCurrentKeyCodeMap'){
+                    return 'getCurrentKeyCodeMap()函数返回当前键盘按键信息，key为键的keyCode，如果按下则值为true';
+                }                 
+                if(key === 'toBoundaries'){
+                    return 'toBoundaries(points, segments, resolution)将不连续曲线转化成Graph3dView#setBoundaries(bs)设置边界需要的参数格式';
+                }     
+                if(key === 'getInternal'){
+                    return 'getInternal()返回HT系统内部状态参数信息，一般用于调试测试';
+                }    
+                if(key === 'setShape3dModel'){
+                    return 'setShape3dModel(name, model)注册3D模型，对应于图元style上的shape3d属性名';
+                }                 
+                if(key === 'getShape3dModel'){
+                    return 'getShape3dModel(name)返回所注册的3D模型，对应于图元style上的shape3d属性名';
+                }                   
+                if(key === 'handleUnfoundImage'){
+                    return 'handleUnfoundImage(name, url)对系统内部找不到图片的情况下会调用该函数，默认访问空，可自定义返回一个默认的图片';
+                }   
+                if(key === 'handleImageLoaded'){
+                    return 'handleImageLoaded(name, img)系统图片在加载之后的回调函数';
+                }
+                if(key === 'setBatchInfo'){
+                    return 'setBatchInfo(name, batchInfo)注册3d图元的批量信息，对应style的batch属性，用于优化大数据量图元绘制性能';
+                }
+                if(key === 'getBatchInfo'){
+                    return 'getBatchInfo(name)获取注册3d图元的批量信息，用于优化大数据量图元绘制性能';
+                }
+                if(key === 'removeHTML'){
+                    return 'removeHTML(html)从界面删除指定的html元素';
+                }
+                if(key === 'drawCenterImage'){
+                    return 'drawCenterImage(g, img, x, y, data, view, color)在指定的x,y为中心位置绘制img图片';
+                } 
+                if(key === 'drawStretchImage'){
+                    return 'drawStretchImage(g, img, stretch, x, y, w, h, data, view, color)在矩形位置内绘制图片，stretch参数可为uniform/centerUniform/fill';
+                }  
+                if(key === 'createElement'){
+                    return 'createElement(tagName, borderColor, font, value)创建html元素';
+                }   
+                if(key === 'toColorData'){
+                    return 'toColorData(color)传入字符串的color值，返回[r,g,b,a]四个颜色数组信息';
+                }  
+                if(key === 'getEdgeType'){
+                    return 'getEdgeType(type)获取连线类型函数';
+                }                 
+                if(key === 'setEdgeType'){
+                    return 'setEdgeType(type, function(edge, gap, graphView){return {points: points, segments: segments};})注册连线类型';
+                } 
+                if(key === 'isIsolating'){
+                    return 'isIsolating()判断目前系统是否处于隔离状态，处于隔离状态时host吸附和Group组等图元间的联动关系将会被停止';
+                }
+                if(key === 'setIsolating'){
+                    return 'setIsolating(true)指定目前系统是否处于隔离状态，处于隔离状态时host吸附和Group组等图元间的联动关系将会被停止';
+                } 
+                if(key === 'disabledOpacity'){
+                    return '组件无效时的透明度';
+                }  
+                if(key === 'disabledBackground'){
+                    return '组件无效时的背景色';
+                }
+                if(key === 'dashPattern'){
+                    return '连线或多边形等图形的默认虚线样式';
+                } 
+                if(key === 'numberListener'){
+                    return '数字类型监听器，该监听器将使得input文本输入框只允许输入数学相关字符';
+                }
+                if(key === 'getCompType'){
+                    return 'getCompType(type)获取矢量组件类型';
+                }                 
+                if(key === 'setCompType'){
+                    return 'setCompType(type, function(g, rect, comp, data, view){})注册矢量组件类型';
+                }                   
+                if(key === 'widgetTitleHeight'){
+                    return v + '该属性决定AccordionView和TabView等组件的Title默认高度';
+                }
+                if(key === 'containedInView'){
+                    return 'containedInView(event, view)判断交互事件所处位置是否在指定View组件之上，一般用于Drog And Drop的拖拽操作判断';
+                }
+                if(key === 'toCanvas'){
+                    return 'toCanvas(image, width, height, stretch, data, view, color)将图标转换成Canvas组件，image可为注册的图片或矢量';
+                }                 
+                if(key === 'createMatrix'){
+                    return 'createMatrix(array, matrix)将一组JSON描述的缩放、移动和旋转等操作转换成对应的变化矩阵';
+                }  
+                if(key === 'transformVec'){
+                    return 'transformVec(vec, matrix)将制定矢量或顶点，通过矩阵转换运算出变化后的新矢量或顶点位置';
+                }                   
+                if(key === 'createBoxModel'){
+                    return 'createBoxModel()构建六面体模型，该模型的六个面显示的颜色和贴图都将一样';
+                }                  
+                if(key === 'createSphereModel'){
+                    return 'createSphereModel(side, sideFrom, sideTo, from, to, resolution)构建球体模型';
+                }                  
+                if(key === 'createSmoothSphereModel'){
+                    return 'createSmoothSphereModel(hResolution, vResolution, hStart, hArc, vStart, vArc, radius)构建光滑球体模型';
+                }   
+                if(key === 'createCylinderModel'){
+                    return 'createCylinderModel(side, sideFrom, sideTo, from, to, top, bottom)构建圆柱体模型';
+                }   
+                if(key === 'createSmoothCylinderModel'){
+                    return 'createSmoothCylinderModel(resolution, top, bottom, topRadius, bottomRadius, start, arc, height)构建光滑圆柱体模型';
+                }   
+                if(key === 'createConeModel'){
+                    return 'createConeModel(side, sideFrom, sideTo, from, to, bottom)构建圆锥体模型';
+                }   
+                if(key === 'createSmoothConeModel'){
+                    return 'createSmoothConeModel(bottom, resolution, start, arc, radius)构建光滑圆锥体模型';
+                }   
+                if(key === 'createTorusModel'){
+                    return 'createTorusModel(side, sideFrom, sideTo, from, to, radius, resolution)构建圆环体模型';
+                }   
+                if(key === 'createSmoothTorusModel'){
+                    return 'createSmoothTorusModel(radius, tubeRadius, hResolution, vResolution, start, arc)构建光滑圆环体模型';
+                }   
+                if(key === 'createRoundRectModel'){
+                    return 'createRoundRectModel(top, bottom)构建圆角矩形体模型';
+                }   
+                if(key === 'createStarModel'){
+                    return 'createStarModel(top, bottom)构建星形体模型';
+                }   
+                if(key === 'createRectModel'){
+                    return 'createRectModel(top, bottom)构建矩形体模型';
+                }                   
+                if(key === 'createTriangleModel'){
+                    return 'createTriangleModel(top, bottom)构建三角形体模型';
+                }   
+                if(key === 'createRightTriangleModel'){
+                    return 'createRightTriangleModel(top, bottom)构建直角三角形体模型';
+                }   
+                if(key === 'createParallelogramModel'){
+                    return 'createParallelogramModel(top, bottom)构建平行四边形体模型';
+                }   
+                if(key === 'createTrapezoidModel'){
+                    return 'createTrapezoidModel(top, bottom)构建梯形体模型';
+                }   
+                if(key === 'createExtrusionModel'){
+                    return 'createExtrusionModel(array, segments, top, bottom, resolution, repeatUVLength, tall, elevation)根据xz平面多边形，挤压形成3D模型';
+                }   
+                if(key === 'createRingModel'){
+                    return 'createRingModel(array, segments, resolution, top, bottom, side, sideFrom, sideTo, from, to)根据xy平面的曲线，环绕一周形成3D模型';
+                }   
+                if(key === 'createSmoothRingModel'){
+                    return 'createSmoothRingModel(array, segments, vResolution, start, arc, hResolution)根据xy平面的曲线，环绕一周形成光滑3D模型';
+                }                                  
+                if(key === 'getLineLength'){
+                    return 'getLineLength(cacheInfo)根据缓存线信息计算线总长度';
+                }                
+                if(key === 'getLineOffset'){
+                    return 'getLineOffset(cache, offset)根据缓存线信息计算在offset偏移位置的顶点信息';
+                }                 
+                if(key === 'getLineCacheInfo'){
+                    return 'getLineCacheInfo(points, segments, resolution, radius)根据线参数计算出线相关的缓存信息';
+                }                                
+                if(key){
+                    //throw '[[[' + key + ']]]';     
+                    console.log(key);
+                }                                
+                return '[[[' + value + ']]]';  
+            }
+            
+            function init(){ 
+                var json = {};
+                for(var key in ht.Default){
+                    json[key] = toComment(key, ht.Default[key]);
+                }                
+                document.getElementById('output').innerHTML = JSON.stringify(json, null, 4);                
+                
+            }     
+            
+        </script>
+    </head>
+    <body onload="init();">
+        <pre id="output">
+        </pre>            
+    </body>
+</html>

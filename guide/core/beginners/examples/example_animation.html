@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Animation</title>
+        <meta charset="UTF-8">       
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="easing.js"></script> 
+        <script>                                        
+            
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                graphView.addToDOM();  
+                view = graphView.getView();
+         
+                var toy = new ht.Node();
+                toy.setImage('res/ball.png');
+                toy.setPosition(180, 140);
+                dataModel.add(toy);                         
+         
+                var select = document.createElement('select');
+                select.style.position = 'absolute';
+                select.style.top = '10px';
+                select.style.right = '10px';
+                view.appendChild(select);
+                for(var name in Easing){
+                    var option = document.createElement('option');
+                    option.innerHTML = name;
+                    if(name === 'easeOut'){
+                        option.setAttribute('selected', 'true');
+                    }
+                    select.appendChild(option);
+                }                  
+         
+                graphView.setInteractors(null);
+                var type = "ontouchend" in document ? 'touchstart' : 'mousedown';                                
+                
+                isAnimating = false;
+                view.addEventListener(type, function(e){                    
+                    if(isAnimating || e.target === select || !ht.Default.isLeftButton(e)){
+                        return;
+                    }
+                    e.preventDefault();
+                    isAnimating = true;
+                    var data = graphView.getDataAt(e);
+                    var easing = Easing[select.value];
+                    var finishFunc = function(){
+                        isAnimating = false;
+                    };
+                    if(data === toy){
+                        var size = toy.getSize();
+                        ht.Default.startAnim({
+                            frames: 30, 
+                            interval: 16,
+                            easing: easing,
+                            finishFunc: finishFunc,                            
+                            action: function(v){
+                                toy.setRotation(Math.PI * v);
+                                var r = Math.abs(v - 0.5) * 2;
+                                toy.setSize(size.width * r, size.height * r);
+                            }
+                        });                        
+                    }else{
+                        var p2 = graphView.getLogicalPoint(e);
+                        var p1 = toy.getPosition();
+                        anim = ht.Default.startAnim({  
+                            duration: 500,
+                            easing: easing,
+                            finishFunc: finishFunc,
+                            action: function(v){
+                                toy.setPosition(
+                                    p1.x + (p2.x - p1.x) * v,
+                                    p1.y + (p2.y - p1.y) * v
+                                );
+                            }
+                        });                        
+                    }
+                }, false);
+                
+                view.style.background = '#FCFCFC';
+                graphView.addTopPainter(function(g){
+                    ht.Default.drawText(g, 'click anywhere you want ..', '24px Arial', 'lightgray', 50, 100, 0, 0, 'left');
+                });      
+                graphView.addBottomPainter(function(g){
+                    ht.Default.drawText(g, 'click anywhere you want ..', '24px Arial', 'lightblue', 200, 180, 0, 0, 'left');
+                });                 
+                
+            }
+                        
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Equipment</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                background: #426AA1;
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-modeling.js"></script>
+        <script>
+
+            function init(){ 
+                dataModel = new ht.DataModel();                
+                g3d = new ht.graph3d.Graph3dView(dataModel);                  
+                
+                view = g3d.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function (e) {
+                    g3d.invalidate();
+                }, false);  
+                
+                g3d.setEye([0, 500, 1000]);
+                g3d.setCenter([0, 200, 0]);
+                g3d.setGridVisible(true); 
+                g3d.setGridColor('#74AADA');
+                 
+                loadObj('E1', -600, {r3: [0, Math.PI/2, 0], s3: [2, 1.5, 1]});
+                loadObj('E2', -300, {ignoreNormal: true});                
+                loadObj('E3', 0, {ignoreColor: true, ignoreImage: true});
+                loadObj('E4', 300, {ignoreNormal: true, ignoreImage: true});
+                loadObj('E5', 600, {ignoreColor: true, ignoreImage: true, r3: [0, -Math.PI/2, 0], s3: [2, 1.5, 1]});
+            } 
+
+            function loadObj(name, x, params){
+                params.prefix = 'obj/';
+                params.center = true;
+                params.cube = true;
+                params.shape3d = name;
+                params.finishFunc = function(modelMap, array, rawS3){
+                    var node = new ht.Node();
+                    node.s({
+                        'shape3d': name,
+                        'wf.visible': 'selected',
+                        'wf.width': 3,
+                        'wf.color': '#F7F691'
+                    });
+                    node.s3(rawS3);
+                    node.p3(x, rawS3[1]/2, 0);
+                    dataModel.add(node);                    
+                };
+                
+                ht.Default.loadObj('obj/equipment.obj', 'obj/equipment.mtl', params);            
+            }
+          
+        </script>
+    </head>
+    <body onload="init();">                         
+    </body>
+</html>

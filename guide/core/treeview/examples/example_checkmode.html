@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TreeView CheckMode</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script>
+
+            function init(){                                      
+                dataModel = new ht.DataModel();
+                treeView = new ht.widget.TreeView(dataModel);
+                toolbar = new ht.widget.Toolbar();
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(treeView);
+                
+                view = borderPane.getView();                                
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                         
+        
+                var map = {},
+                    classes = ht.Default.getClassMap();
+                for (var className in classes) {
+                    createData(className, classes[className], map);
+                }    
+                   
+                toolbar.setItems([
+                    {
+                        label: 'Check Mode:',
+                        unfocusable: true
+                    },                   
+                    {
+                        type: 'radio',
+                        label: 'all',
+                        selected: true,
+                        groupId: 'checkMode',
+                        action: function(){
+                            treeView.sm().cs();
+                            treeView.setCheckMode('all');
+                        }
+                    },
+                    {
+                        type: 'radio',
+                        label: 'descendant',
+                        groupId: 'checkMode',
+                        action: function(){
+                            treeView.sm().cs();
+                            treeView.setCheckMode('descendant');
+                        }
+                    },
+                    {
+                        type: 'radio',
+                        label: 'children',
+                        groupId: 'checkMode',
+                        action: function(){
+                            treeView.sm().cs();
+                            treeView.setCheckMode('children');
+                        }
+                    },
+                    {
+                        type: 'radio',
+                        label: 'default',
+                        groupId: 'checkMode',
+                        action: function(){
+                            treeView.sm().cs();
+                            treeView.setCheckMode('default');
+                        }
+                    },
+                    {
+                        type: 'radio',
+                        label: 'null',
+                        groupId: 'checkMode',
+                        action: function(){
+                            treeView.sm().cs();
+                            treeView.setCheckMode(null);
+                        }
+                    }
+                ]);   
+                   
+                treeView.setCheckMode('all');                   
+                treeView.enableToolTip();               
+                treeView.setSelectBackground('#34495E');
+                treeView.setExpandIcon('images/expand.gif');
+                treeView.setCollapseIcon('images/collapse.gif');
+                treeView.getIcon = function (data) {
+                    if(data.a('class')){
+                        return 'images/class.png';
+                    }else{
+                        if (this.isExpanded(data)) {
+                            return 'images/dir-open.gif';
+                        } else {
+                            return 'images/dir.gif';
+                        }                        
+                    }
+                };                                     
+                treeView.setSortFunc(function(d1, d2){
+                    if(d1.a('class') && !d2.a('class')){
+                        return 1;
+                    }
+                    if(!d1.a('class') && d2.a('class')){
+                        return -1;
+                    }
+                    return d1.getName().localeCompare(d2.getName());
+                });                 
+                
+                var data = dataModel.getDataByTag('ht.widget.TreeView');
+                treeView.checkData(data);
+                treeView.setFocusData(data);
+                treeView.makeVisible(data);                
+            }
+            
+            function createData(className, clazz, map){
+                var ss = className.split('.'),
+                    c = window,
+                    p = '',
+                    data;
+                for (var i = 0; i < ss.length; i++) {
+                    var s = ss[i];                    
+                    if(i === ss.length-1){
+                        data = new ht.Data();
+                        data.setName(s);
+                        data.setToolTip(className);
+                        data.setTag(className);
+                        data.a('class', clazz);    
+                        data.setParent(map[p]);
+                        dataModel.add(data);
+                        map[p + '.' + s] = data;                          
+                    }else if(!map[p + '.' + s]){
+                        data = new ht.Data();
+                        data.setName(s);    
+                        data.setParent(map[p]);
+                        dataModel.add(data);
+                        map[p + '.' + s] = data;                            
+                    }                    
+                    p += '.' + s;
+                    c = c[s];
+                }                                                 
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">                     
+    </body>
+</html>

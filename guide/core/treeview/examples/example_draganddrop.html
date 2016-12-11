@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TreeView Drag And Drop</title>
+        <meta charset="UTF-8">
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;
+            }
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script>
+
+            function init(){
+                dataModel = new ht.DataModel();
+                treeView = new ht.widget.TreeView(dataModel);
+                graphView = new ht.graph.GraphView();
+                splitView = new ht.widget.SplitView(treeView, graphView, 'h', 0.4);
+
+                view = splitView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);
+
+
+                var COLORS = {
+                    'HT for Web': [],
+                    'Default': ['#ef6f1c', '#e24b17', '#5a4b43', '#ededed'],
+                    'Blue Opal': ['#076186', '#7ed3f6', '#94c0d2', '#daecf4'],
+                    'Bootstrap': ['#3276b1', '#67afe9', '#ebebeb', '#ffffff'],
+                    'Silver': ['#298bc8', '#515967', '#bfc6d0', '#eaeaec'],
+                    'Uniform': ['#666666', '#cccccc', '#e7e7e7', '#ffffff'],
+                    'Metro': ['#8ebc00', '#787878', '#e5e5e5', '#ffffff'],
+                    'Black': ['#0167cc', '#4698e9', '#272727', '#000000'],
+                    'Metro Black': ['#00aba9', '#0e0e0e', '#333333', '#565656'],
+                    'High Contrast': ['#b11e9c', '#880275', '#664e62', '#1b141a'],
+                    'Moonlight': ['#ee9f05', '#40444f', '#2f3640', '#212a33'],
+                    'Flat': ['#363940', '#2eb3a6', '#10c4b2', '#ffffff']
+                };
+
+                for(var name in ht.Color){
+                    var color = ht.Color[name];
+                    if(typeof color === 'string'){
+                        COLORS['HT for Web'].push(color);
+                    }
+                }
+
+                ht.Default.setImage('multiColor', {
+                    width: { func: 'attr@iconWidth' },
+                    height: 16,
+                    comps: {
+                        func: function(data){
+                            var comps = [],
+                                x = 0;
+                            COLORS[data.getName()].forEach(function(color){
+                                comps.push({
+                                    type: 'rect',
+                                    background: color,
+                                    rect: [x, 0, 12, 16]
+                                });
+                                x += 12;
+                            });
+                            return comps;
+                        }
+                    }
+                });
+                ht.Default.setImage('color', {
+                    width: { func: 'attr@iconWidth' },
+                    height: 16,
+                    comps: [
+                        {
+                            type: 'rect',
+                            background: { func: 'getName' },
+                            rect: [0, 0, 24, 16]
+                        }
+                    ]
+                });
+
+                for(var name in COLORS){
+                    var parent = new ht.Data(),
+                        colors = COLORS[name];
+                    parent.setName(name);
+                    parent.setTag(name);
+                    parent.setIcon('multiColor');
+                    parent.a('iconWidth', colors.length*12);
+                    dataModel.add(parent);
+                    colors.forEach(function(color){
+                        var child = new ht.Data();
+                        child.setName(color);
+                        child.setIcon('color');
+                        child.setParent(parent);
+                        child.a('iconWidth', 24);
+                        dataModel.add(child);
+                    });
+                }
+
+                graphView.getView().style.background = '#FCFCFC';
+                graphView.addBottomPainter(function(g){
+                    ht.Default.drawText(g, 'Drag tree node to drop here ..', '24px Arial', 'lightgray', 50, 100, 0, 0, 'left');
+                });
+
+                treeView.getView().style.background = '#FCFCFC';
+                treeView.setIndent(24);
+                treeView.setRowHeight(24);
+                treeView.getIconWidth = function(data){
+                    return data.a('iconWidth');
+                };
+                treeView.expand(dataModel.getDataByTag('HT for Web'));
+                treeView.setAutoHideScrollBar(false);
+                currentDiv = null;
+                size = 24;
+                treeView.handleDragAndDrop = function(e, state){
+                    var data;
+                    if(state === 'prepare'){
+                        data = treeView.getDataAt(e);
+                        treeView.sm().ss(data);
+                        if(data && data.getIcon() === 'color'){
+                            if(!currentDiv){
+                                currentDiv = ht.Default.createElement('div');
+                                currentDiv.style.width = size + 'px';
+                                currentDiv.style.height = size + 'px';
+                            }
+                            currentDiv.style.background = data.getName();
+                        }
+                    }
+                    else if(state === 'begin'){
+                        if(currentDiv){
+                            var pagePoint = ht.Default.getPagePoint(e);
+                            currentDiv.style.left = pagePoint.x - size/2 + 'px';
+                            currentDiv.style.top = pagePoint.y - size/2 + 'px';
+                            document.body.appendChild(currentDiv);
+                        }
+                    }
+                    else if(state === 'between'){
+                        if(currentDiv){
+                            var pagePoint = ht.Default.getPagePoint(e);
+                            currentDiv.style.left = pagePoint.x - size/2 + 'px';
+                            currentDiv.style.top = pagePoint.y - size/2 + 'px';
+                        }
+                    }
+                    else{
+                        if(currentDiv){
+                            if(ht.Default.containedInView(e, graphView)){
+                                var node = new ht.Node();
+                                node.setSize(30, 30);
+                                node.setPosition(graphView.lp(e));
+                                node.s({
+                                    'select.type': 'circle',
+                                    'shape': 'circle',
+                                    'shape.background': currentDiv.style.backgroundColor,
+                                    'shape.gradient': 'radial.center'
+                                });
+                                graphView.dm().add(node);
+                            }
+                            document.body.removeChild(currentDiv);
+                            currentDiv = null;
+                        }
+                    }
+                };
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

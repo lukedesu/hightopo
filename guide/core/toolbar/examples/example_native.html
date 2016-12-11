@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Toolbar Native</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>              
+        <script src="../../../../lib/core/ht.js"></script>           
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());                              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+
+            }
+            function createToolbar(){
+                var input = document.createElement('input');   
+                input.value = 'HT for Web';
+                var toolbar = new ht.widget.Toolbar([
+                    {      
+                        id: 'nation',
+                        label: 'Nation',                        
+                        element: document.getElementById('sel')
+                    },
+                    'separator',   
+                    {
+                        id: 'text',
+                        element: input
+                    },
+                    'separator', 
+                    {
+                        label: 'Get Information',
+                        action: function(){                            
+                            alert('Nation:' + toolbar.getValue('nation') + '\n' +
+                                'Input:' + toolbar.getValue('text')
+                            );
+                        }
+                    }
+                ]);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <select id='sel' onchange="alert('Nation:' + document.getElementById('sel').value);">             
+            <option>Spain  </option>
+            <option>Sweden</option>
+            <option>Switzerland</option>
+        </select>         
+    </body>
+</html>

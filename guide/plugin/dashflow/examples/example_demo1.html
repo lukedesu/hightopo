@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .view {
+                background: black;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>        
+        <script type="text/javascript" src="../../../../lib/core/ht.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-dashflow.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-flow.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-xeditinteractor.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script type="text/javascript" src="contextmenu.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init() {
+                var graph = window.graph = new ht.graph.GraphView(),
+                    editInteractor = window.editInteractor = new ht.graph.XEditInteractor(graph),
+                    contextMenu = new ht.widget.ContextMenu([]),
+                    dm = window.dm = graph.dm(),
+                    view = graph.getView(),
+                    node1 = new ht.Node(),
+                    node2 = new ht.Node(),
+                    edge = new ht.Edge(node1, node2, edge);
+            
+                graph.setInteractors(new ht.List([
+                    new ht.graph.SelectInteractor(graph),
+                    editInteractor,
+                    new ht.graph.MoveInteractor(graph),
+                    new ht.graph.DefaultInteractor(graph),
+                    new ht.graph.TouchInteractor(graph , {editable: false})
+                ]));
+                
+                node1.setPosition(0, 100);
+                node2.setPosition(300, 300);
+                dm.add(node1);
+                dm.add(node2);
+                dm.add(edge);
+                edge.s("edge.dash", true);
+                edge.s("edge.dash.flow", true);
+                edge.s("edge.color", "yellow");
+                edge.s("edge.type", "points");
+                edge.s("edge.points", new ht.List([{x: 250, y: 150}]));
+                edge.s("edge.segments", new ht.List([1, 3]));
+                edge.s("edge.width", 5);
+                
+                var shape = new ht.Shape(),
+                    h = 10;
+                shape.setPoints(new ht.List([                                        
+                    {x: 0, y: 0},
+                    {x: 25, y: -h},
+                    {x: 50, y: 0},
+                    {x: 75, y: h},
+                    {x: 100, y: 0},                                     
+                    {x: 125, y: -h},
+                    {x: 150, y: 0},                    
+                    {x: 175, y: h},
+                    {x: 200, y: 0}
+                ]));                                
+                shape.setSegments(new ht.List([
+                    1, 3, 3, 3, 3
+                ]));
+                shape.setSize(500, 300);
+                shape.setPosition(600, 100);
+                shape.s("shape.dash", true);
+                shape.s("shape.dash.flow", true);
+                shape.s("shape.dash.flow.reverse", true);
+                shape.s("shape.dash.pattern", [20, 20, 10, 10]);
+                shape.s("shape.dash.color", "yellow");
+                shape.setStyle("shape.border.width", 6);
+                shape.setStyle("shape.border.color", "#3498DB");
+                dm.add(shape);
+                
+                var node3 = new ht.Node(),
+                    node4 = new ht.Node(),
+                    edge1 = new ht.Edge(node3, node4),
+                    edge2 = new ht.Edge(node3, node4),
+                    edge3 = new ht.Edge(node3, node4),
+                    edge4 = new ht.Edge(node3, node3);
+                
+                dm.add(node3);
+                dm.add(node4);
+                dm.add(edge1);
+                dm.add(edge2);
+                dm.add(edge3);
+                dm.add(edge4);
+                node4.setPosition(300, 0);
+                edge1.s("edge.dash", true);
+                edge1.s("edge.dash.flow", true);
+                edge1.s("edge.dash.color", "yellow");
+                edge1.s("edge.center", true);
+                
+                edge2.s("edge.dash", true);
+                edge2.s("flow", true);
+                edge2.s("edge.dash.color", "red");
+                edge2.s("edge.dash.flow", true);
+                edge2.s("edge.dash.flow.reverse", true);
+                edge2.s("edge.center", true);
+                
+                edge3.s("edge.dash", true);
+                edge3.s("edge.dash.flow", true);
+                edge3.s("edge.dash.color", "yellow");
+                edge3.s("edge.center", true);
+                
+                edge4.s("edge.dash", true);
+                edge4.s("edge.dash.color", "red");
+                edge4.s("edge.dash.flow", true);
+                edge4.s("edge.center", true);
+                
+                
+                view.className = "view";
+                document.body.appendChild(view);
+                
+                graph.translate(-40, 10);
+                graph.setZoom(0.8);
+             
+                contextMenu.addTo(view);
+                contextMenu.afterShow = function() {
+                    editInteractor._pause = true;
+                };
+                contextMenu.afterHide = function() {
+                    editInteractor._pause = false;
+                };
+                
+                contextMenu.beforeShow = function() {
+                    if (editInteractor._hoverSegmentIndex >= 0) {
+                        var segment = null,
+                            data = editInteractor._shape || editInteractor._edge;
+                        if (data instanceof ht.Shape) {
+                            var segments = data.getSegments(),
+                            segment = segments.get(editInteractor._hoverSegmentIndex);
+                        } else if (data instanceof ht.Edge) {
+                            var segments = data.s("edge.segments");
+                            if (!segments) {
+                                segments = editInteractor.getDefaultSegments(data);
+                            }
+                            segment = segments.get(editInteractor._hoverSegmentIndex);
+                        }
+                        contextMenuChangeToMove.selected = segment === 1;
+                        contextMenuChangeToLine.selected = segment === 2;
+                        contextMenuChangeToQuadratic.selected = segment === 3;
+                        contextMenuChangeToBezier.selected = segment === 4;
+                        contextMenu.setItems([contextMenuChangeToMove, contextMenuChangeToLine, contextMenuChangeToQuadratic, contextMenuChangeToBezier, contextMenuAddPoint]);
+                    } else if(editInteractor._removePointIndex >= 0) {
+                        contextMenu.setItems([contextMenuRemovePoint]);
+                    } else {
+                        contextMenu.setItems(null);
+                    }
+                };
+                
+                graph.enableFlow();
+                graph.enableDashFlow();
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

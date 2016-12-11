@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <meta name="viewport" content="user-scalable=no">
+        <title>Heatmap - 2D</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px; margin: 0px;                
+            }            
+            .main {
+                margin: 0px; padding: 0px; position: absolute; 
+                top: 0px; bottom: 0px; left: 0px; right: 0px; background: black;
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.7);
+            }             
+        </style>         
+    </head>    
+    <script src="../../../../lib/core/ht.js"></script> 
+    <script src="../../../../lib/plugin/ht-forcelayout.js"></script>   
+    <script src="../../../../lib/plugin/ht-form.js"></script>  
+    <script src="heatmap.js"></script>         
+    <script>                
+        
+        function init() {                           
+            config = {                
+                width: 1024,
+                height: 512,
+                radius: 50,
+                maxOpacity: 1,
+                minOpacity: 0,
+                blur: 0.85
+            };
+            
+            dataModel = new ht.DataModel();            
+            g2d = new ht.graph.GraphView(dataModel);              
+            
+            view = g2d.getView();            
+            view.className = 'main';
+            document.body.appendChild(view);    
+            window.addEventListener('resize', function (e) { 
+                g2d.invalidate(); 
+            }, false);                                    
+            
+            heatmap = h337.create(config);             
+            heatmap._renderer.canvas.dynamic = true;
+            
+            ht.Default.setImage('hm-floor', heatmap._renderer.canvas);            
+            floor = new ht.Node();
+            floor.setSize(config.width, config.height);
+            floor.setImage('hm-floor');
+            floor.s({
+                '2d.selectable': false,
+                'layoutable': false,
+                'border.width': 10,
+                'border.color': '#43AFF1'
+            });            
+            dataModel.add(floor);            
+            
+            for(var k=0; k<2; k++){
+                var root = createNode();                   
+                for (var i = 0; i < 3; i++) {
+                    var iNode = createNode();                       
+                    createEdge(root, iNode);
+                    for (var j = 0; j < 3; j++) {
+                        var jNode = createNode();                            
+                        createEdge(iNode, jNode);                                                         
+                    }
+                }                 
+            }      
+            
+            forceLayout = new ht.layout.ForceLayout(g2d);            
+            var bounds = floor.getRect();
+            ht.Default.grow(bounds, -50);
+            forceLayout.setLimitBounds(bounds);
+            forceLayout.start();            
+            forceLayout.onRelaxed = function(){
+                updateHeatmap();
+            };
+            
+            g2d.fitContent(true);
+            
+            createFormPane();
+            formPane.getView().className = 'formpane';
+            document.body.appendChild(formPane.getView());              
+        }
+        
+        function updateHeatmap(random){
+            var points = [];
+            dataModel.each(function(data){
+                if(data instanceof ht.Node && data !== floor){
+                    if(random){
+                       randomValue(data); 
+                    }                    
+                    var p = data.p();                     
+                    points.push({
+                        x: p.x + config.width/2,
+                        y: p.y + config.height/2,
+                        value: data.s('label'),
+                        radius: config.radius
+                    });
+                }
+            });
+            heatmap.setData({data: points, min: 0, max: 30});
+            g2d.invalidateData(floor);        
+        }
+        
+        function randomValue(data){
+            data.s('label', 20 + Math.floor(Math.random()*10));
+        }
+        
+        function createNode(){
+            var node = new ht.Node();             
+            node.s({
+                'label.position': 17,
+                'label.offset.y': 0,
+                'select.type': 'circle',
+                'select.padding': 0,
+                'select.color': 'black',
+                'shape': 'circle',
+                'shape.border.color': 'white',
+                'shape.border.width': 1,
+                'shape.background': 'rgba(0, 0, 0, 0.1)',
+                'opacity': 0.8                
+            });
+            randomValue(node);
+            node.setSize(20, 20);
+            dataModel.add(node);
+            return node;
+        }
+        
+        function createEdge(sourceNode, targetNode){
+            var edge = new ht.Edge(sourceNode, targetNode);
+            edge.s({
+                'edge.width': 1,
+                'edge.offset': 10                
+            });
+            dataModel.add(edge);
+            return edge;
+        }
+        
+        function createFormPane(){                                                
+            formPane = new ht.widget.FormPane();
+            formPane.setWidth(280);
+            formPane.setHeight(320);
+
+            formPane.addRow([{ element: 'Heatmap', font: 'bold 12px arial, sans-serif' }], [0.1]);
+            formPane.addRow([], [0.1], 1.01, {background: '#43AFF1'});   
+                        
+            gradients = [
+                { '0.25': "blue", '0.55': "green", '0.85': "yellow", '1.0': "red"},
+                { '.5': 'blue', '.8': 'red', '.95': 'white' }
+            ];
+            formPane.addRow(['Gradient',
+                {                        
+                    comboBox: {
+                        values: gradients,
+                        labels: ['blue-green-yellow-red', 'blue-red-white'],
+                        value: gradients[0],
+                        onValueChanged: function(){
+                            config.gradient = this.getValue();
+                            heatmap.configure(config); 
+                            updateHeatmap();
+                        }
+                    }                        
+                }
+            ], [100, 0.1]);                         
+            formPane.addRow(['Radius', 
+                {                    
+                    slider: {                    
+                        min: 10,
+                        max: 100,
+                        value: config.radius,
+                        onValueChanged: function(){
+                            config.radius = this.getValue();
+                            updateHeatmap();
+                        }
+                    }
+                }
+            ], [100, 0.1]); 
+            formPane.addRow(['Blur', 
+                {                    
+                    slider: {                    
+                        min: 0,
+                        max: 1,
+                        value: config.blur,
+                        onValueChanged: function(){
+                            config.blur = this.getValue();
+                            heatmap.configure(config);                            
+                            updateHeatmap();
+                        }
+                    }
+                }
+            ], [100, 0.1]); 
+            formPane.addRow(['Min Opacity', 
+                {                    
+                    slider: {                    
+                        min: 0,
+                        max: 1,
+                        value: config.minOpacity,
+                        onValueChanged: function(){
+                            config.minOpacity = this.getValue();
+                            heatmap.configure(config);                            
+                            updateHeatmap();
+                        }
+                    }
+                }
+            ], [100, 0.1]);            
+            formPane.addRow(['Max Opacity', 
+                {                    
+                    slider: {                    
+                        min: 0,
+                        max: 1,
+                        value: config.maxOpacity,
+                        onValueChanged: function(){
+                            config.maxOpacity = this.getValue();
+                            heatmap.configure(config);                            
+                            updateHeatmap();
+                        }
+                    }
+                }
+            ], [100, 0.1]);             
+            
+            formPane.addRow([
+                {
+                    button: {
+                        label: 'Random Value',
+                        onClicked: function() {
+                            updateHeatmap(true);
+                        }
+                    }
+                },
+                {
+                    button: {
+                        label: 'Fit Content',
+                        onClicked: function() {
+                            g2d.fitContent(true);
+                        }
+                    }
+                }                
+            ], [0.1, 0.1]);  
+            
+            formPane.addRow([{ element: 'ForceLayout', font: 'bold 12px arial, sans-serif' }], [0.1]);
+            formPane.addRow([], [0.1], 1.01, {background: '#43AFF1'}); 
+            formPane.addRow(['Edge Repulsion', 
+                {                    
+                    slider: {                    
+                        min: 0.1,
+                        max: 2,
+                        value: forceLayout.getEdgeRepulsion(),
+                        onValueChanged: function(){
+                            forceLayout.setEdgeRepulsion(this.getValue());                               
+                        }
+                    }
+                }
+            ], [100, 0.1]);
+            formPane.addRow(['Node Repulsion', 
+                {                    
+                    slider: {                    
+                        min: 0.1,
+                        max: 1.5,
+                        value: forceLayout.getNodeRepulsion(),
+                        onValueChanged: function(){
+                            forceLayout.setNodeRepulsion(this.getValue());                               
+                        }
+                    }
+                }
+            ], [100, 0.1]);            
+            formPane.addRow([
+                {
+                    checkBox: {
+                        label: 'Node Visible',
+                        selected: true,
+                        onValueChanged: function(){
+                            var value = this.getValue();
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Node && data !== floor){
+                                    data.s('2d.visible', value);
+                                }
+                            });                                
+                        }
+                    }
+                },
+                {
+                    checkBox: {
+                        label: 'Edge Visible',
+                        selected: true,
+                        onValueChanged: function(){
+                            var value = this.getValue();
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('2d.visible', value);
+                                }
+                            });                                
+                        }
+                    }
+                }
+            ], [0.1, 0.1]);             
+        }    
+            
+    </script>
+    <body onload="init();">
+    </body>
+</html>

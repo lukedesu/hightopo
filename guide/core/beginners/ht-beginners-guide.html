@@ -1,0 +1,1713 @@
+<!doctype html>
+<html>
+    <head>
+        <title>HT for Web 入门手册</title>
+        <meta charset="UTF-8">    
+        <meta name="viewport" content="user-scalable=yes, width=1024">
+        <style type="text/css">
+            .sideNav{
+                width:195px;
+                background:white;
+                position:fixed;
+                top:10px;
+                left:5px;
+                bottom:10px;
+                border:1px solid rgb(230,230,230);
+            }
+            .sideNav .header,.contactable{
+                background:rgb(61,74,94);
+                color:white;
+                line-height: 28px;
+                height: 28px;
+                padding:0 5px;
+                margin:0;
+                position:relative;
+            }
+            .sideNav .navContainer{
+                width:100%;
+                position: absolute;
+                top:28px;
+                bottom:0;
+                overflow:auto;
+            }
+            .sideNav ul{
+                padding-left:15px;
+                list-style-position:inside;
+            }
+            .navContainer>ul{
+                margin-top: 10px;
+                background-position: 0px 100px;
+                background-size: 0 0;
+
+                background-image: -moz-linear-gradient(top, rgb(105,187,156), rgb(105,187,156)); 
+                background-image: -webkit-linear-gradient(left, rgb(105,187,156), rgb(105,187,156));
+                background-image: linear-gradient(left, rgb(105,187,156), rgb(105,187,156));
+                background-image: -ms-linear-gradient(left, rgb(105,187,156), rgb(105,187,156));
+                background-repeat: no-repeat;
+            }
+            .contactable{
+                -webkit-transform: rotate(90deg);
+                -webkit-transform-origin:0 100%;
+                -moz-transform: rotate(90deg);
+                -moz-transform-origin:0 100%;
+                -ms-transform: rotate(90deg);
+                -ms-transform-origin:0 100%;
+                transform: rotate(90deg);
+                transform-origin:0 100%;
+
+                position:fixed;
+                left:0;
+                top:10px;
+                cursor: pointer;
+            }
+            .anim{
+                -webkit-transition: all .3s;
+                -moz-transition: all .3s;
+                -o-transition: all .3s;
+                transition: all .3s;
+            }
+            h1, h2, h3, h4, h5, h6, p, blockquote {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+                font-size: 13px;
+                line-height: 18px;
+                color: #737373;
+                background-color: white; 
+                margin: 10px 13px 10px 13px;
+            }
+            table {
+                margin: 10px 0 15px 0;
+                border-collapse: collapse;
+            }
+            td,th {	
+                border: 1px solid #ddd;
+                padding: 3px 10px;
+            }
+            th {
+                padding: 5px 10px;	
+            }
+            a {
+                color: #0069d6;
+            }
+            a:hover {
+                color: #0050a3;
+                text-decoration: none;
+            }
+            a img {
+                border: none;
+            }
+            p {
+                margin-bottom: 9px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #404040;
+                line-height: 36px;
+            }
+            h1 {
+                margin-bottom: 18px;
+                font-size: 30px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 18px;
+            }
+            h4 {
+                font-size: 16px;
+            }
+            h5 {
+                font-size: 14px;
+            }
+            h6 {
+                font-size: 13px;
+            }
+            hr {
+                margin: 0 0 19px;
+                border: 0;
+                border-bottom: 1px solid #ccc;
+            }
+            blockquote {
+                padding: 13px 13px 21px 15px;
+                margin-bottom: 18px;
+                font-family:georgia,serif;
+                font-style: italic;
+            }
+            blockquote:before {
+                content:"\201C";
+                font-size:40px;
+                margin-left:-10px;
+                font-family:georgia,serif;
+                color:#eee;
+            }
+            blockquote p {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 18px;
+                margin-bottom: 0;
+                font-style: italic;
+            }
+            code, pre {
+                font-family: Monaco, Andale Mono, Courier New, monospace;
+            }
+            code {
+                background-color: #fee9cc;
+                color: rgba(0, 0, 0, 0.75);
+                padding: 1px 3px;
+                font-size: 12px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+            }
+            pre {
+                display: block;
+                padding: 14px;
+                margin: 0 0 18px;
+                line-height: 16px;
+                font-size: 11px;
+                border: 1px solid #d9d9d9;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            pre code {
+                background-color: #fff;
+                color:#737373;
+                font-size: 11px;
+                padding: 0;
+            }
+            sup {
+                font-size: 0.83em;
+                vertical-align: super;
+                line-height: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact;
+            }
+            @media screen and (min-width: 914px) {
+                body {
+                    width: 854px;
+                    margin:10px auto;
+                }
+            }
+            @media print {
+                body,code,pre code,h1,h2,h3,h4,h5,h6 {
+                    color: black;
+                }
+                table, pre {
+                    page-break-inside: avoid;
+                }
+            }                        
+            iframe{
+                width: 100%;
+                border: 1px solid #34495E;
+                margin: 0;                
+            }            
+            .logo{
+                vertical-align: middle;
+            }
+
+        </style>        
+        <script>
+            var sideNav, contactable, sideNavUL, navContainer;
+            if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) { //test for MSIE x.x;
+                var ieversion = new Number(RegExp.$1);
+            }
+            document.addEventListener("click",function(e){
+                if(sideNav){
+                    var bounds=sideNav.getBoundingClientRect();
+                    if(sideNav.style.opacity==1&&(e.clientX<bounds.left||e.clientX>bounds.left+bounds.width||e.clientY<bounds.top||e.clientY>bounds.top+bounds.height)){
+                        toggleNav();
+                    };
+                }
+            });
+            document.addEventListener("DOMContentLoaded",function(e){
+                sideNav = document.getElementById("sideNav");
+                contactable = document.getElementById("contactable");
+                sideNavUL = document.getElementById("sideNavUL");
+                navContainer = document.getElementById("navContainer");
+                sideNav.addEventListener("webkitTransitionEnd", handleTransitionEnd, false);
+                sideNav.addEventListener("transitionend", handleTransitionEnd, false);
+                
+                //wheel mouse to imitate scrolling
+                navContainer.addEventListener("mousewheel", function(e) {
+                    var scrollTo = null;
+                    scrollTo = (e.wheelDelta * -1);
+                    if (scrollTo) {
+                        e.preventDefault();
+                        this.scrollTop += scrollTo;
+                    }
+                });
+                //wheel mouse to imitate scrolling(firefox)
+                navContainer.addEventListener("DOMMouseScroll", function(e) {
+                    var scrollTo = null;
+                    scrollTo = 40 * e.detail;
+                    if (scrollTo) {
+                        e.preventDefault();
+                        this.scrollTop += scrollTo;
+                    }
+                });
+                
+                //draw background of sideNav
+                var navMap = {}, refMap = {}, anchors = ["overview", 'what', 'characteristic', 'sdk', 'tool', 
+                    'environment', 'abbreviation', 'model', 'designpattern', 
+                    'classes', 'util', 'list', 'notifier', 'default', 'style', 'color', 'jsonserializer',
+                    'datatype', 'data', 'node', 'edge', 'group', 'shape', 'polyline', 'grid', 'subgraph', 'tab', 'column', 'property', 'datamodel', 'selectionmodel', 
+                    'view', 'viewstructure', 'config', 'image', 'animation', 'graphview', 'graphviewzoom', 'graphviewinteraction',
+                    'filter', 'graphviewstyle', 'styleshape', 'styleposition', 'styleselect', 'stylelabel', 'stylenote','styleicon',
+                     'styleborder', 'stylegroup', 'styleedge', 'propertyview', 'listview',
+                    'treeview', 'tableview', 'treetableview', 'toolbar', 'splitview', 'borderpane', 'accordionview',
+                    'tabview', 'recommendation', 'book', 'subscribe'];
+                anchors.forEach(function(element) {
+                    refMap[element] = document.getElementById("ref_" + element);
+                    navMap[element] = document.getElementById("nav_" + element);
+                });
+                var visibleAnchor = "overview";
+                window.addEventListener("scroll", function(e) {
+                    //ignore scroll event which is delivered from navContainer                    
+                    if (e.target == navContainer || e.srcElement == navContainer) {
+                        return;
+                    }
+                    for (var i = 0; i < anchors.length; i++) {
+                        var refEle = refMap[anchors[i]];
+                        var top = refEle.getBoundingClientRect().top;
+                        if (top > -5 && top < 200) {
+                            if (ieversion == 9) {
+                                navMap[visibleAnchor].style.background = "white";
+                            }
+                            navMap[visibleAnchor].style.color = "rgb(0, 105, 214)";
+                            visibleAnchor = anchors[i];
+                            break;
+                        }
+                    }
+                    var aEle = navMap[visibleAnchor];
+                    var aTop = aEle.getBoundingClientRect().top;
+                    var aHeight = aEle.getBoundingClientRect().height;
+                    var aBottom = aEle.getBoundingClientRect().bottom;
+                    var navULTop = sideNavUL.getBoundingClientRect().top;
+                    var aToULGap = aTop - navULTop;
+                    if (aTop < navContainer.scrollTop + navULTop) {
+                        navContainer.scrollTop -= (navContainer.scrollTop + navULTop - aTop);
+                    } else if (aBottom > document.documentElement.clientHeight) {
+                        navContainer.scrollTop += (aBottom - document.documentElement.clientHeight) + aHeight;
+                    }
+                    if (ieversion == 9) {
+                        aEle.style.background = "rgb(105,187,156)";
+                    }
+                    aEle.style.color = "white";
+                    sideNavUL.style.setProperty("background-size", "100% 16px", null);
+                    sideNavUL.style.setProperty("background-position", "0 " + aToULGap + "px", null);
+                }, true);
+            });
+            
+            function toggleNav() {
+                if (sideNav.style.opacity == 1) {
+                    sideNav.style.opacity = 0;
+                    sideNav.style.left = "-200px";
+                    if (ieversion == 9) {
+                        contactable.style.display = "block";
+                    }
+                } else {
+                    contactable.style.display = "none";
+                    sideNav.style.opacity = 1;
+                    sideNav.style.left = "5px";
+                }
+                
+            }
+            function handleTransitionEnd(e) {
+                if(e.propertyName!="opacity")return;
+                if (sideNav.style.opacity < 1)
+                    contactable.style.display = "block";
+            }
+
+            function init() {
+                var logoSrc = 'data:image/png;base64,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',
+                        logos = document.querySelectorAll('.logo'),
+                        i = 0;
+                for (; i < logos.length; i++) {
+                    logos[i].src = logoSrc;
+                }
+
+                var iframes = document.querySelectorAll('iframe'),
+                        func = function() {
+                };
+                for (i = 0; i < iframes.length; i++) {
+                    var iframe = iframes[i];
+
+                    // a small hack to make it work on android
+                    iframe.ontouchstart = func;
+
+                    var div = document.createElement('div');
+                    div.innerHTML = '<a href="' + iframe.src + '" target="_blank">独立运行→</a>';
+                    iframe.parentNode.insertBefore(div, iframe);
+                }
+            }
+        </script>    
+    </head>
+    <body onload="init();">
+        <a href="http://www.hightopo.com"><img class="logo"></a>HT for Web 入门手册
+        <hr style="margin: 1px 0 20px 0">
+        <div class="anim sideNav" id="sideNav" style="opacity: 0;left:-200px;">
+            <p class="header">索引<span style="position:absolute;right:5px;display:inline-block;width:20px;height:20px;text-align: center;cursor:pointer" onclick="toggleNav()"><</span></p>
+            <div class="navContainer" id="navContainer">
+                <ul id="sideNavUL">
+                    <li>
+                        <a id="nav_overview" href="#ref_overview">概述</a>
+                        <ul>
+                            <li><a id="nav_what" href="#ref_what">HT for Web 是什么</a></li>
+                            <li><a id="nav_characteristic" href="#ref_characteristic">产品特点</a></li>
+                            <li><a id="nav_sdk" href="#ref_sdk">开发类库</a></li>
+                            <li><a id="nav_tool" href="#ref_tool">开发工具</a></li>
+                            <li><a id="nav_environment" href="#ref_environment">运行环境</a></li>
+                            <li><a id="nav_abbreviation" href="#ref_abbreviation">函数简写</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="nav_model" href="#ref_model">模型</a>
+                        <ul>
+                            <li><a id="nav_designpattern" href="#ref_designpattern">设计模式</a></li> 
+                            <li><a id="nav_classes" href="#ref_classes">类包层次</a></li>                            
+                            <li>
+                                <a id="nav_util" href="#ref_util">工具类</a>
+                                <ul>                            
+                                    <li><a id="nav_list" href="#ref_list">List</a></li>
+                                    <li><a id="nav_notifier" href="#ref_notifier">Notifier</a></li>
+                                    <li><a id="nav_default" href="#ref_default">Default</a></li>
+                                    <li><a id="nav_style" href="#ref_style">Style</a></li>
+                                    <li><a id="nav_color" href="#ref_color">Color</a></li>
+                                    <li><a id="nav_jsonserializer" href="#ref_jsonserializer">JSONSerializer</a></li>
+                                </ul>
+                            </li>                                                        
+                            <li>
+                                <a id="nav_datatype" href="#ref_datatype">数据类型</a>
+                                <ul>
+                                    <li><a id="nav_data" href="#ref_data">Data</a></li>
+                                    <li><a id="nav_node" href="#ref_node">Node</a></li>
+                                    <li><a id="nav_edge" href="#ref_edge">Edge</a></li>
+                                    <li><a id="nav_group" href="#ref_group">Group</a></li>
+                                    <li><a id="nav_shape" href="#ref_shape">Shape</a></li>
+                                    <li><a id="nav_polyline" href="#ref_polyline">Polyline</a></li>
+                                    <li><a id="nav_grid" href="#ref_grid">Grid</a></li>
+                                    <li><a id="nav_subgraph" href="#ref_subgraph">SubGraph</a></li>
+                                    <li><a id="nav_tab" href="#ref_tab">Tab</a></li>
+                                    <li><a id="nav_column" href="#ref_column">Column</a></li>
+                                    <li><a id="nav_property" href="#ref_property">Property</a></li>
+                                </ul>
+                            </li>
+                            <li><a id="nav_datamodel" href="#ref_datamodel">数据容器</a></li>
+                            <li><a id="nav_selectionmodel" href="#ref_selectionmodel">选择模型</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="nav_view" href="#ref_view">组件</a>
+                        <ul>
+                            <li><a id="nav_viewstructure" href="#ref_viewstructure">构成</a></li>
+                            <li><a id="nav_config" href="#ref_config">配置</a></li>
+                            <li><a id="nav_image" href="#ref_image">图片</a></li>
+                            <li><a id="nav_animation" href="#ref_animation">动画</a></li>
+                            <li><a id="nav_propertyview" href="#ref_propertyview">属性组件</a></li>
+                            <li><a id="nav_listview" href="#ref_listview">列表组件</a></li>
+                            <li><a id="nav_treeview" href="#ref_treeview">树组件</a></li>
+                            <li><a id="nav_tableview" href="#ref_tableview">表格组件</a></li>
+                            <li><a id="nav_treetableview" href="#ref_treetableview">树表组件</a></li>  
+                            <li><a id="nav_toolbar" href="#ref_toolbar">工具条组件</a></li>
+                            <li><a id="nav_splitview" href="#ref_splitview">分割组件</a></li>
+                            <li><a id="nav_borderpane" href="#ref_borderpane">边框面板</a></li>
+                            <li><a id="nav_accordionview" href="#ref_accordionview">折叠组件</a></li>
+                            <li><a id="nav_tabview" href="#ref_tabview">页签组件</a></li>                              
+                            <li>
+                                <a id="nav_graphview" href="#ref_graphview">拓扑图形组件</a>
+                                <ul>
+                                    <li><a id="nav_graphviewzoom" href="#ref_graphviewzoom">缩放</a></li>
+                                    <li><a id="nav_graphviewinteraction" href="#ref_graphviewinteraction">交互</a></li>                                    
+                                    <li><a id="nav_filter" href="#ref_filter">过滤</a></li>
+                                    <li><a id="nav_graphviewstyle" href="#ref_graphviewstyle">style</a></li>
+                                    <li><a id="nav_styleselect" href="#ref_styleselect">select</a></li>
+                                    <li><a id="nav_styleborder" href="#ref_styleborder">border</a></li>
+                                    <li><a id="nav_styleshape" href="#ref_styleshape">shape</a></li>
+                                    <li><a id="nav_styleposition" href="#ref_styleposition">position</a></li>                                    
+                                    <li><a id="nav_stylelabel" href="#ref_stylelabel">label</a></li>
+                                    <li><a id="nav_stylenote" href="#ref_stylenote">note</a></li>
+                                    <li><a id="nav_styleicon" href="#ref_styleicon">icon</a></li>                                                                        
+                                    <li><a id="nav_stylegroup" href="#ref_stylegroup">group</a></li>
+                                    <li><a id="nav_styleedge" href="#ref_styleedge">edge</a></li>
+                                </ul>
+                            </li>                                                                                  
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="nav_recommendation" href="#ref_recommendation">推荐</a>
+                        <ul>
+                            <li><a id="nav_book" href="#ref_book">书籍</a></li>
+                            <li><a id="nav_subscribe" href="#ref_subscribe">订阅</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <p style="height:100px;"></p>
+            </div>
+        </div>
+
+        <div id="contactable" class="contactable" style="display: block;" onmouseover="toggleNav()">索引</div>
+<div id="ref_overview"></div>
+
+<h2>概述</h2>
+
+<div id="ref_what"></div>
+
+<h3>HT 是什么</h3>
+
+<p><code>HT</code>是基于<a href="http://dev.w3.org/html5/spec/">HTML5</a>标准的企业应用图形界面一站式解决方案，
+其包含通用组件、拓扑组件和3D渲染引擎等丰富的图形界面开发类库，提供了完全基于<code>HTML5</code>的矢量编辑器、拓扑编辑器及
+3D场景编辑器等多套可视化设计工具，和完善的类库开发手册、工具使用手册、及针对<code>HTML5</code>技术如何进行大规模团队开发的客户深度培训手册。</p>
+
+<p><iframe src="examples/example_overview.html" style="height:410px"></iframe></p>
+
+<div id="ref_characteristic"></div>
+
+<h3>产品特点</h3>
+
+<blockquote><p>易用、轻量、高性能和跨平台四原则是我们永不停止的追求</p></blockquote>
+
+<ul><li>易用：易学易用，数小时的学习即可上手，几天的使用即可精通</li><li>轻量：包含通用组件、2D拓扑和3D引擎的核心包仅有300k左右</li><li>高性能：所有组件均可承载万以上的数据量，并能保持操作流畅</li><li>跨平台：可运行于桌面平台和移动终端所有支持的HTML5浏览器</li></ul>
+
+<div id="ref_sdk"></div>
+
+<h3>开发类库</h3>
+
+<pre><code>&lt;script src=&quot;ht.js&quot;&gt;&lt;/script&gt; </code></pre>
+
+<p><code>HT</code>的核心开发类库只有一个<code>ht.js</code>的<code>JavaScript</code>（以下简称<code>js</code>）文件，调用<code>ht.Default.getVersion()</code>可获得当前版本号。
+我们将确保所有版本向下兼容，这意味着升级产品时，只需要跟新<code>ht.js</code>文件，无需修改任何代码即可完成升级。</p>
+
+<p>核心<code>ht.js</code>类库包含了数据模型、树表等通用组件、2D拓扑组件、矢量和3D渲染引擎等核心功能组件，
+同时<code>HT</code>提供了众多扩展插件，如对话框、菜单和表单等，可满足其他需求的类库或组件供用户选择使用。</p>
+
+<div id="ref_tool"></div>
+
+<h3>开发工具</h3>
+
+<p>无限制，任意文本编辑器皆可。</p>
+
+<div id="ref_environment"></div>
+
+<h3>运行环境</h3>
+
+<p>任何支持<code>HTML5</code>标准的浏览器。多年前的<code>Chrome</code>、<code>Firefox</code>、<code>Safari</code>和<code>Opera</code>版本都已经支持<code>HTML5</code>，
+<code>iOS</code>和<code>Android</code>等主流移动设备的浏览器也都已支持<code>HTML5</code>，<code>IE</code>需要<code>IE9</code>及以上的版本，
+如果采用<a href="../3d/ht-3d-guide.html">HT for Web 3D</a>则需要<code>IE11</code>及以上版本支持，建议尽量采用最新版本浏览器。</p>
+
+<p>如果项目环境必须使用<code>IE6</code>，<code>IE7</code>和<code>IE8</code>等老版IE浏览器，或因采用<a href="../3d/ht-3d-guide.html">HT for Web 3D</a>，
+而现场环境无法升级到<code>IE11</code>，则可以考虑安装<a href="http://www.chromium.org/developers/how-tos/chrome-frame-getting-started/chrome-frame-faq#TOC-For-Developers">Google Chrome Frame</a>插件，
+在页面嵌入以下<code>Tag</code>代码片段，该页面就会采用<code>Chrome</code>来渲染。</p>
+
+<pre><code>&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;chrome=1&quot;&gt; </code></pre>
+
+<p>使用<code>Google Chrome Frame</code>还需要注意一下几点：</p>
+
+<ul><li><code>Google Chrome Frame</code>不支持直接从本地<code>local file</code>方式打开页面，必须把页面部署到<code>Web</code>服务器发布方式打开</li><li><code>Google Chrome Frame</code>不支持64位的浏览器：<a href="http://www.chromium.org/developers/how-tos/chrome-frame-getting-started/chrome-frame-faq#TOC-Does-Google-Chrome-Frame-work-on-64-bit-IE-">Currently, 64-bit versions of IE are not supported. It&#39;s worth pointing out that 32-bit IE is the default on 64-bit Windows 7.</a></li><li><code>Google Chrome Frame</code>不支持<code>iframe</code>方式： <a href="http://stackoverflow.com/questions/2465322/opening-an-iframe-for-ie-while-using-chrome-frame">At this point ChromeFrame only supports the meta tag detection on top level URLs.</a></li></ul>
+
+<p>可采用嵌入<code>OBJECT</code>元素的<a href="http://src.chromium.org/viewvc/chrome/trunk/src/chrome_frame/host.html">解决方案</a>，绕开<code>Google Chrome Frame</code>不支持<code>iframe</code>的问题    </p>
+
+<pre><code>&lt;OBJECT ID=&quot;ChromeFrame&quot; WIDTH=500 HEIGHT=500 CODEBASE=&quot;http://www.google.com&quot;
+        CLASSID=&quot;CLSID:E0A900DF-9611-4446-86BD-4B1D47E7DB2A&quot;&gt;
+    &lt;PARAM NAME=&quot;src&quot; VALUE=&quot;http://www.google.com&quot;&gt;
+    &lt;embed ID=&quot;ChromeFramePlugin&quot; WIDTH=500 HEIGHT=500 NAME=&quot;ChromeFrame&quot;
+        SRC=&quot;http://www.google.com&quot; TYPE=&quot;application/chromeframe&quot;&gt;
+    &lt;/embed&gt;
+&lt;/OBJECT&gt;</code></pre>
+
+<p><code>Google Chrome Frame</code>已于<code>2014</code>年<code>1</code>月停止支持和更新，目前<code>Google Chrome Frame</code>以发展到<code>31</code>的版本，
+这个版本已满足<code>HT</code>的<code>2D</code>和<code>3D</code>所需的<code>Canvas</code>功能，因此<code>HT</code>的客户可采用<code>Google Chrome Frame</code>解决兼容<code>IE</code>老版本问题。
+其他问题可参考<code>Google Chrome Frame</code>的<a href="http://www.chromium.org/developers/how-tos/chrome-frame-getting-started">Developer Guide</a>
+和<a href="http://www.chromium.org/developers/diagnostics/gcf_troubleshooting">Troubleshooting</a></p>
+
+<p>部分老版本的<code>Android</code>终端系统，对<code>canvas</code>的支持存在<code>bug</code>会出现没擦除干净有残影，以下是段<code>workaround</code>代码：</p>
+
+<pre><code>ht.Default.viewListener = function(view, kind){
+    var canvas = view._canvas;
+    if(canvas &amp;&amp; kind === &#39;beginValidate&#39;){
+        canvas.width = 0;
+        canvas.height = 0;
+        canvas.style.width = 0;
+        canvas.style.height = 0;                    
+    }
+};</code></pre>
+
+<div id="ref_abbreviation"></div>
+
+<h3>函数简写</h3>
+
+<p><code>HT</code>基于<code>JavaScript</code>语言，由于<code>JavaScript</code>动态语言的灵活性，开发工具在拼写和错误提示方面功能较弱，
+因此<code>HT</code>为一些常用的函数提供了简写的命名方式，熟记以下常用函数简写可提高编码效率。</p>
+
+<p><code>HT</code>简写的几个字母有如下含义：</p>
+
+<ul><li><code>m</code>: <code>monitor</code>、<code>model</code></li><li><code>um</code>: <code>unmonitor</code></li><li><code>f</code>: <code>fire</code></li></ul>
+
+<p><code>HT</code>简写函数列表如下：</p>
+
+<ul><li><code>GraphView#addInteractorListener</code> = <code>GraphView#mi</code></li><li><code>GraphView#removeInteractorListener</code> = <code>GraphView#umi</code></li><li><code>GraphView#fireInteractorEvent</code> = <code>GraphView#fi</code></li><li><code>Graph3dView#addInteractorListener</code> = <code>Graph3dView#mi</code></li><li><code>Graph3dView#removeInteractorListener</code> = <code>Graph3dView#umi</code></li><li><code>Graph3dView#fireInteractorEvent</code> = <code>Graph3dView#fi</code></li><li><code>SelectionModel#addSelectionChangeListener</code> = <code>SelectionModel#ms</code></li><li><code>SelectionModel#removeSelectionChangeListener</code> = <code>SelectionModel#ums</code></li><li><code>SelectionModel#getFirstData</code> = <code>SelectionModel#fd</code></li><li><code>SelectionModel#getLastData</code> = <code>SelectionModel#ld</code></li><li><code>SelectionModel#contains</code> = <code>SelectionModel#co</code></li><li><code>SelectionModel#setSelection</code> = <code>SelectionModel#ss</code></li><li><code>SelectionModel#appendSelection</code> = <code>SelectionModel#as</code></li><li><code>SelectionModel#selectAll</code> = <code>SelectionModel#sa</code></li><li><code>SelectionModel#removeSelection</code> = <code>SelectionModel#rs</code>  </li><li><code>SelectionModel#clearSelection</code> = <code>SelectionModel#cs</code>  </li><li><code>DataModel#getSelectionModel</code> = <code>DataModel#sm</code></li><li><code>DataModel#addDataModelChangeListener</code> = <code>DataModel#mm</code></li><li><code>DataModel#removeDataModelChangeListener</code> = <code>DataModel#umm</code>  </li><li><code>DataModel#addDataPropertyChangeListener</code> = <code>DataModel#md</code></li><li><code>DataModel#removeDataPropertyChangeListener</code> = <code>DataModel#umd</code></li><li><code>DataModel#addHierarchyChangeListener</code> = <code>DataModel#mh</code> </li><li><code>DataModel#removeHierarchyChangeListener</code> = <code>DataModel#umh</code> </li><li><code>firePropertyChange</code> = <code>fp</code>  </li><li><code>addPropertyChangeListener</code> = <code>mp</code></li><li><code>removePropertyChangeListener</code> = <code>ump</code></li><li><code>getPosition</code> = <code>p</code></li><li><code>setPosition</code> = <code>p</code></li><li><code>getTranslateX</code> = <code>tx</code></li><li><code>setTranslateX</code> = <code>tx</code></li><li><code>getTranslateY</code> = <code>ty</code></li><li><code>setTranslateY</code> = <code>ty</code></li><li><code>getStyle</code> = <code>s</code></li><li><code>setStyle</code> = <code>s</code></li><li><code>getAttr</code> = <code>a</code></li><li><code>setAttr</code> = <code>a</code></li><li><code>invalidate</code> = <code>iv</code></li><li><code>invalidateModel</code> = <code>ivm</code></li><li><code>getSelectionModel</code> = <code>sm</code></li><li><code>getLogicalPoint</code> = <code>lp</code></li><li><code>Toolbar#setValue</code> = <code>v</code></li><li><code>Toolbar#getValue</code> = <code>v</code></li><li><code>FormPane#setValue</code> = <code>v</code></li><li><code>FormPane#getValue</code> = <code>v</code></li></ul>
+
+<p>以下为常见简写示例：</p>
+
+<p><code>graphView.getDataModel().getSelectionModel().setSelection(data)</code> = <code>graphView.dm().sm().ss(data)</code>
+<code>graphView.getDataModel().getSelectionModel().addSelectionChangeListener(func)</code> = <code>graphView.dm().sm().ms(func)</code>
+<code>dataModel.getSelectionModel().getLastData().setAttr(&#39;age&#39;, 35)</code> = <code>dataModel.sm().ld.a(&#39;age&#39;, 35)</code></p>
+
+<div id="ref_model"></div>
+
+<h2>模型</h2>
+
+<div id="ref_designpattern"></div>
+
+<h3>设计模式</h3>
+
+<p>详见<a href="../datamodel/ht-datamodel-guide.html#ref_designpattern">数据模型手册</a></p>
+
+<div id="ref_classes"></div>
+
+<h3>类包层次</h3>
+
+<p><code>HT</code>沿袭常规面对对象语言设计风格，对类和包采用<a href="http://en.wikipedia.org/wiki/CamelCase">骆驼式命名法</a>，类名以大写开头的，包名以小写开头。
+整个框架只占有全局变量<code>&#39;ht&#39;</code>，对于常规的前端页面开发意味着<code>ht.js</code>运行后会占用<code>window.ht</code>，
+如果<code>ht.js</code>运行在<a href="http://en.wikipedia.org/wiki/WebWork">WebWork</a>环境将占用<code>self.ht</code>变量，
+如果<code>ht.js</code>运行于<a href="http://nodejs.org/">Node.js</a>环境将占用<code>module.exports.ht</code>变量。</p>
+
+<p><code>HT</code>整体框架层次很“扁平化”，<code>ht.*</code>包含模型和系统相关类，<code>ht.widget.*</code>包含通用组件相关类，<code>ht.graph.*</code>包含2D图形组件相关类，
+<code>ht.graph3d.*</code>包含3D图形组件相关类，考虑到<code>js</code>语言以及<code>HTML5</code>应用特殊性，尽量减少类包层次，简短包函数命名是HT框架API设计的特点，
+这样能减少用户学习指数，降低编码工作量，有助于整体开发包精小。</p>
+
+<p><code>JavaScript</code>语言未提供严谨的面对对象类的语言级支持，为此<code>HT</code>设计了一套类封装体系供用户选择采用，
+详见<a href="../serialization/ht-serialization-guide.html#ref_classbasic">序列化手册</a></p>
+
+<p><iframe src="examples/example_classes.html" style="height:400px"></iframe></p>
+
+<div id="ref_util"></div>
+
+<h3>工具类</h3>
+
+<div id="ref_list"></div>
+
+<h4>List</h4>
+
+<p><code>HT</code>提供了<code>ht.List</code>的数组类，该类型对<code>Array</code>数组进行了封装，提供了更易记易用的函数接口：</p>
+
+<ul><li><code>new ht.List(array/list/object)</code>构造函数可传入<code>Array</code>和<code>ht.List</code>数组，也可以加入单个<code>object</code>元素</li><li><code>size()</code>返回数组元素总数</li><li><code>isEmpty()</code>判断数组是否为空</li><li><code>add(item, index)</code>添加元素，<code>index</code>指定插入位置，为空代表插入到最后</li><li><code>addAll(array)</code>添加<code>array</code>中的所有元素，支持<code>Array</code>和<code>ht.List</code>类型</li><li><code>get(index)</code>返回索引<code>index</code>位置的元素</li><li><code>slice(start, end)</code>返回从<code>start</code>为起始到<code>end</code>结束的新<code>ht.List</code>对象数组，<code>end</code>为空代表到最后一个元素         </li><li><code>remove(item)</code>删除指定元素，返回该元素所在的索引 </li><li><code>removeAt(index)</code>删除索引位置的元素，返回删除元素对象</li><li><code>set(index, item)</code>在指定索引位置插入元素</li><li><code>clear()</code>清除数组所有元素</li><li><code>contains(item)</code>判断元素是否在数组中</li><li><code>indexOf(item)</code>返回元素在数组中得索引，若不存在返回<code>-1</code></li><li><code>each(func, scope)</code>顺序遍历所有元素，可指定函数调用<code>scope</code>域 </li><li><code>reverseEach(func, scope)</code>反序遍历所有元素，可指定函数调用<code>scope</code>域         </li><li><code>toArray(matchFunc, scope)</code>根据<code>matchFunc</code>返回所有匹配元素的新<code>Array</code>数组，可指定函数调用<code>scope</code>域  </li><li><code>toList(matchFunc, scope)</code>根据<code>matchFunc</code>返回所有匹配元素的新<code>ht.List</code>数组，可指定函数调用<code>scope</code>域  </li><li><code>sort(sortFunc)</code>根据<code>sortFunc</code>比较逻辑重新排列数组元素位置</li><li><code>reverse()</code>对数组元素的顺序取反</li></ul>
+
+<div id="ref_notifier"></div>
+
+<h4>Notifier</h4>
+
+<p><code>HT</code>提供了事件通知管理器<code>ht.Notifier</code>类，可对其添加监听函数、删除监听函数，以及派发事件到所有监听函数：</p>
+
+<ul><li><code>add(listener, scope)</code>添加监听函数，<code>scope</code>域参数可选</li><li><code>remove(listener, scope)</code>删除监听函数，<code>scope</code>域参数必须和<code>add</code>时的参数一致</li><li><code>contains(listener, scope)</code>判断是否包含指定监听函数，<code>scope</code>域参数必须和<code>add</code>时的参数一致</li><li><code>fire(event)</code>派发事件到所有监听函数</li></ul>
+
+<div id="ref_default"></div>
+
+<h4>Default</h4>
+
+<p><code>ht.Default</code>对象定义了所有组件的默认参数值，以及一系列的工具类函数，详见<a href="../theme/ht-theme-guide.html#ref_default">风格手册</a> </p>
+
+<div id="ref_style"></div>
+
+<h4>Style</h4>
+
+<p><code>ht.Style</code>对象定义了<code>ht.Data</code>类型的默认<code>style</code>属性值，详见<a href="../theme/ht-theme-guide.html#ref_style">风格手册</a> </p>
+
+<div id="ref_color"></div>
+
+<h4>Color</h4>
+
+<p><code>ht.Color</code>对象定义了<code>HT</code>系统的所有默认颜色，详见<a href="../theme/ht-theme-guide.html#ref_color">风格手册</a></p>
+
+<div id="ref_jsonserializer"></div>
+
+<h4>JSONSerializer</h4>
+
+<p><code>ht.JSONSerializer</code>序列化类，提供了对<code>DataModel</code>数据模型的<code>JSON</code>格式序列化和反序列化功能，
+详见<a href="../serialization/ht-serialization-guide.html">序列化手册</a></p>
+
+<div id="ref_datatype"></div>
+
+<h3>数据类型</h3>
+
+<p><code>ht.Data</code>（简称为<code>Data</code>，下文中将以省去<code>ht.</code>包头的方式进行介绍）是<code>HT</code>最基础的数据类型，用户可将业务信息存储在<code>Data</code>对象属性上，
+目前<code>HT</code>提供了<code>Node</code>、<code>Edge</code>、<code>Tab</code>、<code>Column</code>等子类，这些类型在不同的视图组件中具有不同的显示效果：<code>TreeView</code>树形组件上<code>Data</code>代表一个树节点；
+<code>TableView</code>表格组件上<code>Data</code>代表一行记录，列代表<code>Data</code>对象的属性；<code>GraphView</code>图形组件上<code>Node</code>代表一个图形元素；
+定义页签时<code>TabView</code>采用<code>Tab</code>类型存储页签信息；定义表格列时<code>TableView</code>采用<code>Column</code>存储列信息。</p>
+
+<div id="ref_data"></div>
+
+<h4>Data</h4>
+
+<p>详见<a href="../datamodel/ht-datamodel-guide.html#ref_data">数据模型手册</a></p>
+
+<div id="ref_node"></div>
+
+<h4>Node</h4>
+
+<p><code>ht.Node</code>类型是<code>GraphView</code>和<code>Graph3dview</code>呈现节点图元的基础类，继承于<code>Data</code>类。
+以下为<code>Node</code>的<code>GraphView</code>拓扑图相关函数属性，与<code>Graph3dView</code>相关函数属性详见<a href="../3d/ht-3d-guide.html">3D手册</a>。
+<code>Node</code>除了显示图片外，还能显示多种预定义图形，详见<a href="#ref_styleshape">shape章节</a>。</p>
+
+<ul><li><code>getPosition()</code>和<code>setPosition({x:100, y:200})</code>获取和设置图元中心点坐标</li><li><code>getImage()</code>和<code>setImage(image)</code>获取和设置图片信息，在<code>GraphView</code>拓扑图中图片一般以<code>position</code>为中心绘制</li><li><code>getWidth()</code>和<code>setWidth(width)</code>获取和设置图元宽度，若未设置则为<code>image</code>对应的图片宽度</li><li><code>getHeight()</code>和<code>setHeight(height)</code>获取和设置图元高度，若未设置则为<code>image</code>对应的图片高度</li><li><code>getSize()</code>和<code>setSize(10, 20 | {width:10, height:20})</code>获取和设置图元宽高尺寸信息</li><li><code>getRect()</code>和<code>setRect(x,y,width,height | {x:10,y:20,width:30,height:40})</code>获取和设置图元矩形区域</li><li><code>getRotation()</code>和<code>setRotation(Math.PI/2)</code>获取和设置图元的旋转角度，围绕中心点顺时针旋转</li><li><code>getAttaches()</code>获取吸附到自身的所有节点的<code>ht.List</code>类型数组</li><li><code>getEdges()</code>获取所有和节点模型上关联的连线<code>ht.List</code>类型数组</li><li><code>getSourceEdges()</code>获取所有模型上起始于该节点的连线<code>ht.List</code>类型数组</li><li><code>getTargetEdges()</code>获取所有模型上结束于该节点的连线<code>ht.List</code>类型数组</li><li><code>getAgentEdges()</code>获取当前节点图形上代理关联的连线<code>ht.List</code>类型数组</li><li><code>getSourceAgentEdges()</code>获取所有图形上代理起始于该节点的连线<code>ht.List</code>类型数组</li><li><code>getTargetAgentEdges()</code>获取所有图形上代理结束于该节点的连线<code>ht.List</code>类型数组</li><li><code>hasAgentEdges()</code>判断当前节点是否图形上有代理连线，有返回<code>true</code>，无返回<code>false</code></li><li><code>getHost()</code>和<code>setHost(host)</code>获取和设置吸附宿主对象，当节点吸附上宿主图元时，宿主移动或旋转时会带动所有吸附者</li><li><code>onHostChanged(oldHost, newHost)</code>当吸附宿主对象发生变化时回调该函数，可重载做后续处理</li><li><code>handleHostPropertyChange(event)</code>当吸附宿主对象属性发生变化时回调该函数，可重载做后续处理</li><li><code>isHostOn(node)</code>判断该图元是否吸附到指定图元对象上</li><li><code>isLoopedHostOn(node)</code>判断是否与指定图元形成环状吸附，如<code>A</code>吸附<code>B</code>，<code>B</code>吸附<code>C</code>，<code>C</code>吸附回<code>A</code>，则<code>A</code>，<code>B</code>和<code>C</code>图元相互环状吸附</li></ul>
+
+<p><iframe src="examples/example_node.html" style="height:150px"></iframe>  </p>
+
+<p>以上示例中创建了<code>air11</code>图元吸附上了<code>air13</code>图元，<code>air11</code>改变了尺寸，<code>air13</code>设置了旋转：</p>
+
+<pre><code>ht.Default.setImage(&#39;mac&#39;, &#39;res/mac-air.png&#39;);            
+
+air11 = new ht.Node();
+air11.setName(&#39;11-inch MacBook Air&#39;);
+air11.setImage(&#39;mac&#39;);
+air11.setSize(80, 43);
+air11.setPosition(100, 70);                
+dataModel.add(air11);
+
+air13 = new ht.Node();
+air13.setName(&#39;13-inch MacBook Air&#39;);                
+air13.setImage(&#39;res/mac-air.png&#39;);
+air13.setPosition(260, 70);
+air13.setRotation(Math.PI/2);
+dataModel.add(air13);
+
+air11.setHost(air13);   </code></pre>
+
+<p>代码将<code>GraphView</code>设置为可编辑，同时只允许<code>air11</code>能编辑大小，<code>air13</code>能旋转，该功能通过设置<a href="#ref_filter">过滤器</a>实现</p>
+
+<pre><code>graphView.setEditable(true);
+graphView.setRectEditableFunc(function(data){
+    return data === air11;
+});
+graphView.setRotationEditableFunc(function(data){
+    return data === air13;
+});</code></pre>
+
+<div id="ref_edge"></div>
+
+<h4>Edge</h4>
+
+<p><code>ht.Edge</code>类型用于连接起始和目标两个<code>Node</code>节点，两个节点间可以有多条<code>Edge</code>存在，也允许起始和目标为同一节点。
+连线的<code>agent</code>指的是目前图形上真正代理连接该连线的节点，当节点位于关闭的<code>Group</code>之内时，<code>Group</code>将代理内部的节点进行连接。
+<code>Edge</code>的更多样式属性参见<a href="#ref_styleedge">连线风格</a>。        </p>
+
+<ul><li><code>getSource()</code>和<code>setScource(node)</code>获取和设置起始节点</li><li><code>getTarget()</code>和<code>setTarget(node)</code>获取和设置目标节点</li><li><code>isLooped()</code>判断连线的起始和目标是否为同一节点</li><li><code>getSourceAgent()</code>获取图形上连接的起始节点</li><li><code>getTargetAgent()</code>获取图形上连接的目标节点</li><li><code>getEdgeGroup()</code>获取<code>ht.EdgeGroup</code>类型对象，起始和目标节点间有多条连线时才有值</li><li><code>toggle()</code>实现对当前起始和目标节点之间多条连线的展开合并的切换，影响<code>edge.expanded</code>的<code>style</code>属性</li><li><code>isEdgeGroupHidden()</code>判断当前连线是否在连线组中被隐藏</li><li><code>getEdgeGroupSize()</code>返回当前连线所在连线组的连线数 </li><li><code>getEdgeGroupIndex()</code>返回当前连线所在连线组的索引</li><li><code>isEdgeGroupAgent()</code>判断当前连线是否为所在连线组的代理 </li></ul>
+
+<p><iframe src="examples/example_edge.html" style="height:150px"></iframe></p>
+
+<p>可通过<code>new ht.Edge(source, target)</code>直接在构造函数中传入<code>source</code>和<code>target</code>节点对象，
+也可构建<code>Edge</code>对象之后再分别设置，该示例重载了<code>graphView.getLabel</code>函数，自定义了图元文字标签，
+实现同组多连线合并时，代理连线文字能体现连线组信息：</p>
+
+<pre><code>var edge = new ht.Edge();
+edge.setSource(source);
+edge.setTarget(target);
+dataModel.add(edge);               
+
+edge = new ht.Edge(source, target);
+edge.toggle();
+dataModel.add(edge);                               
+
+edge = new ht.Edge(source, source);
+dataModel.add(edge);                 
+
+graphView.getLabel = function(data){
+    if(data instanceof ht.Edge){
+        if(data.isEdgeGroupAgent()){
+            return data.getEdgeGroupSize() + &#39; become 1&#39;;
+        }
+    }
+    return data.getName();
+};</code></pre>
+
+<div id="ref_group"></div>
+
+<h4>Group</h4>
+
+<p><code>ht.Group</code>类型用于作为父容器包含孩子图元，在<code>GraphView</code>拓扑图上可通过双击进行展开合并，合并时会自定隐藏子孙图元节点，
+如果有子节点有连线连接到外部时，合并的<code>Group</code>将代理进行连接。<code>Group</code>的移动会带动孩子节点跟随，
+孩子的位置和大小变化也会影响<code>Group</code>的展开图形和<code>position</code>位置。参见<a href="#ref_stylegroup">Group样式属性</a>。</p>
+
+<ul><li><code>isExpanded()</code>和<code>setExpanded(true/false)</code>获取和设置<code>Group</code>对象的展开和关闭状态</li><li><code>toggle()</code>函数可对展开合并状态进行切换</li><li>孩子图元<code>style</code>的<code>ingroup</code>属性决定是否能被<code>Group</code>包含，默认为<code>true</code></li></ul>
+
+<p><iframe src="examples/example_group.html" style="height:230px"></iframe></p>
+
+<p>示例中创建了<code>Group</code>对象，通过<code>group.setExpanded(true)</code>设置为展开状态，并未对<code>Group</code>对象指定位置，
+而是由后续添加的孩子节点位置来自动影响<code>Group</code>位置。添加孩子通过<code>addChild</code>或<code>setParent</code>都是可选的：</p>
+
+<pre><code>var group = new ht.Group();
+group.setName(&#39;Double click on me&#39;); 
+group.setExpanded(true);
+dataModel.add(group);
+
+var node1 = new ht.Node();
+node1.setName(&#39;Node1&#39;);
+node1.setPosition(80, 80);
+group.addChild(node1);
+dataModel.add(node1);
+
+var node2 = new ht.Node();
+node2.setName(&#39;Node2&#39;);              
+node2.setPosition(180, 80);
+node2.setParent(group);
+dataModel.add(node2);</code></pre>
+
+<p>构建了一个<code>style</code>的<code>ingroup</code>属性为<code>false</code>的图元，该图元将游离于<code>Group</code>之外，<code>Group</code>移动会带动其跟随，
+但该节点位置或大小变化不会影响<code>Group</code>对象：</p>
+
+<pre><code>var node4 = new ht.Node();
+node4.setName(&#39;The Special One&#39;);   
+node4.setStyle(&#39;ingroup&#39;, false);
+node4.setPosition(290, 100);
+group.addChild(node4);
+dataModel.add(node4);</code></pre>
+
+<p>以下代码构建了一个<code>label</code>文字不影响<code>Group</code>的孩子图元，为实现该功能重载了<code>graphView.getBoundsForGroup</code>函数，
+对于<code>node3</code>的图元仅返回其<code>node3.getRect()</code>大小，其他图元继续保持原始函数的逻辑，
+该例先缓存了默认函数<code>var oldFunc = graphView.getBoundsForGroup</code>，
+然后在重载函数中通过<code>oldFunc.call(this, child)</code>的方式进行调用，这使用<code>HT</code>常见的重载技巧，
+这样的方式无需定义新类就可以进行函数重载，且可以根据需要调用原始函数逻辑：</p>
+
+<pre><code>var node3 = new ht.Node();
+node3.setPosition(130, 140);
+node3.s({
+    &#39;label.font&#39;: &#39;bold 21px arial&#39;,
+    &#39;label.color&#39;: &#39;white&#39;,
+    &#39;label.offset.y&#39;: 8,
+    &#39;label.background&#39;: &#39;#E74C3C&#39;
+});                
+node3.setName(&#39;HT for Web&#39;);
+node3.setParent(group);
+dataModel.add(node3);
+
+var oldFunc = graphView.getBoundsForGroup;
+graphView.getBoundsForGroup = function(child){
+    if(child === node3){
+        return node3.getRect();
+    }
+    return oldFunc.call(this, child);
+};</code></pre>
+
+<div id="ref_shape"></div>
+
+<h4>Shape</h4>
+
+<p>详见<a href="../shape/ht-shape-guide.html">形状手册</a></p>
+
+<div id="ref_polyline"></div>
+
+<h4>Polyline</h4>
+
+<p>详见<a href="../shape/ht-shape-guide.html">形状手册</a></p>
+
+<div id="ref_grid"></div>
+
+<h4>Grid</h4>
+
+<p><code>ht.Grid</code>类型一般用于作为容器，对附属节点(<code>attachNode.setHost(grid)</code>)进行网格布局，附属节点可为<code>Grid</code>类型，进而实现嵌套式布局。</p>
+
+<ul><li><code>setStyle(&#39;grid.row.count&#39;, 1)</code>设置行数</li><li><code>setStyle(&#39;grid.column.count&#39;, 1)</code>设置列数</li><li><code>setStyle(&#39;grid.row.percents&#39;, [0.1, 0.2, 0.3, 0.4])</code>设置每行高度百分比，默认为<code>null</code>代表均分</li><li><code>setStyle(&#39;grid.column.percents&#39;, [0.1, 0.2, 0.3, 0.4])</code>设置每列宽度百分比，默认为<code>null</code>代表均分</li><li><code>setStyle(&#39;grid.border&#39;, 1)</code>设置容器四边缘的厚度，如果四边厚度不均衡可以通过以下四个参数具体控制</li><li><code>setStyle(&#39;grid.border.left&#39;, 0)</code>设置容器左边缘的厚度</li><li><code>setStyle(&#39;grid.border.right&#39;, 0)</code>设置容器右边缘的厚度</li><li><code>setStyle(&#39;grid.border.top&#39;, 0)</code>设置容器上边缘的厚度</li><li><code>setStyle(&#39;grid.border.bottom&#39;, 0)</code>设置容器下边缘的厚度</li><li><code>setStyle(&#39;grid.gap&#39;, 1)</code>设置容器内单元格的间隙</li><li><code>setStyle(&#39;grid.background&#39;, &#39;#E5BB77&#39;)</code>设置容器背景色</li><li><code>setStyle(&#39;grid.depth&#39;, 1)</code>设置容器四边缘的深度，<code>0</code>代表平面效果，正值代表凸起效果，负值代表凹陷效果</li><li><code>setStyle(&#39;grid.cell.depth&#39;, -1)</code>设置单元格四边缘的深度，<code>0</code>代表平面效果，正值代表凸起效果，负值代表凹陷效果</li><li><code>setStyle(&#39;grid.cell.border.color&#39;, &#39;#868686&#39;)</code>设置单元格边框颜色，该属性在<code>grid.cell.depth</code>值为<code>0</code>时起效</li><li><code>setStyle(&#39;grid.block&#39;, &#39;undefined&#39;)</code>设置是否显示块边框，默认值为<code>undefined</code>代表不绘制，<code>v</code>代表绘制列块，<code>h</code>代表绘制行块</li><li><code>setStyle(&#39;grid.block.padding&#39;, 3)</code>设置块边框距离单元格内容间距</li><li><code>setStyle(&#39;grid.block.width&#39;, 1)</code>设置块边框绘制宽度 </li><li><code>setStyle(&#39;grid.block.color&#39;, &#39;#868686&#39;)</code>设置块边框绘制颜色       </li><li>作为附属节点的<code>Node</code>类型，可设置以下<code>attach</code>相关参数：<ul><li><code>setStyle(&#39;attach.row.index&#39;, 0)</code>设置节点所在单元格行位置</li><li><code>setStyle(&#39;attach.column.index&#39;, 0)</code>设置节点所在单元格列位置</li><li><code>setStyle(&#39;attach.row.span&#39;, 1)</code>设置节点行跨越数</li><li><code>setStyle(&#39;attach.column.span&#39;, 1)</code>设置节点列跨越数</li><li><code>setStyle(&#39;attach.padding&#39;, 0)</code>设置四边与单元格距离，正值代表超出单元格，负值代表小于单元格</li><li><code>setStyle(&#39;attach.padding.left&#39;, 0)</code>设置左边与单元格距离，正值代表超出单元格，负值代表小于单元格</li><li><code>setStyle(&#39;attach.padding.right&#39;, 0)</code>设置右边与单元格距离，正值代表超出单元格，负值代表小于单元格</li><li><code>setStyle(&#39;attach.padding.top&#39;, 0)</code>设置上边与单元格距离，正值代表超出单元格，负值代表小于单元格</li><li><code>setStyle(&#39;attach.padding.bottom&#39;, 0)</code>设置下边与单元格距离，正值代表超出单元格，负值代表小于单元格</li></ul></li></ul>
+
+<p><iframe src="examples/example_grid.html" style="height:290px"></iframe></p>
+
+<div id="ref_subgraph"></div>
+
+<h4>SubGraph</h4>
+
+<p><code>ht.SubGraph</code>类型与<code>Group</code>类型有相似之处，他们都会影响孩子图元的呈现方式，不同于<code>Group</code>类型与孩子节点在同层界面展示，
+<code>SubGraph</code>类型将其孩子包括子孙节点呈现于下一层界面，在<code>GraphView</code>组件上表现为双击<code>SubGraph</code>图元将进入新的界面内容，
+在新的界面内容下双击背景可以返回<code>SubGraph</code>图元所在的界面，<code>SubGraph</code>可无限制层层嵌套。</p>
+
+<p><code>GraphView</code>上与<code>SubGraph</code>相关函数如下：</p>
+
+<ul><li><code>getCurrentSubGraph()</code>和<code>setCurrentSubGraph(subGraph)</code>获取和设置当前子网，默认值为空代表处于最顶层</li><li><code>upSubGraph()</code>进入当前所在子网的上一层子网</li></ul>
+
+<p><iframe src="examples/example_subgraph.html" style="height:150px"></iframe></p>
+
+<div id="ref_tab"></div>
+
+<h4>Tab</h4>
+
+<p>详见<a href="../tabview/ht-tabview-guide.html">页签组件手册</a> </p>
+
+<div id="ref_column"></div>
+
+<h4>Column</h4>
+
+<p>详见<a href="../tableview/ht-tableview-guide.html">表格组件手册</a></p>
+
+<div id="ref_property"></div>
+
+<h4>Property</h4>
+
+<p>详见<a href="../propertyview/ht-propertyview-guide.html">属性组件手册</a></p>
+
+<div id="ref_datamodel"></div>
+
+<h3>数据容器</h3>
+
+<p>详见<a href="../datamodel/ht-datamodel-guide.html#ref_datamodel">数据模型手册</a></p>
+
+<div id="ref_selectionmodel"></div>
+
+<h3>选择模型</h3>
+
+<p>详见<a href="../datamodel/ht-datamodel-guide.html#ref_selectionmodel">数据模型手册</a></p>
+
+<div id="ref_view"></div>
+
+<h2>组件</h2>
+
+<div id="ref_viewstructure"></div>
+
+<h3>构成</h3>
+
+<p><code>HT</code>框架的组件指的是可视化可交互的视图控件，<code>HT</code>框架基于<code>HTML5</code>技术，因此<code>HT</code>组件的可视化部分本质就是<code>HTML</code>的元素，
+大部分<code>HT</code>组件与<code>DataModel</code>数据模型绑定，用户通过操作纯<code>js</code>的语言即可驱动可视化组件，这样屏蔽了<code>HTML</code>底层图形技术复杂性。
+<code>HT</code>对<code>HTML5</code>技术封装的目的在于提高开发效率和可维护性，但并不意味着不允许用户直接操作<code>HTML</code>原生元素，
+有<code>HTML5</code>开发经验的程序员，在了解<code>HT</code>系统机制的前提下，大可运用各种<code>HTML5</code>的技术对<code>HT</code>组件做自定义扩展。</p>
+
+<p>所有<code>HT</code>组件最根层都为一个<a href="http://www.w3.org/wiki/HTML/Elements/div">div</a>组件，可通过组件的<code>getView()</code>函数获得，
+默认和自定义交互事件监听一般添加在该<code>div</code>上(<code>getView().addEventListener(type ,func, false)</code>)，
+渲染层一般由<a href="http://www.w3.org/wiki/HTML/Elements/canvas">canvas</a>提供。
+用户可直接对根<code>div</code>和<code>cavnas</code>层设置<a href="http://www.w3.org/wiki/CSS">css</a>背景等样式，
+也可以添加新的<code>HTML</code>组件到根<code>div</code>层上，作为<code>canvas</code>的兄弟组件一起呈现。
+<code>HT</code>组件一般都以设置<code>position</code>为<code>absolute</code>的绝对定位方式，<code>box-sizing</code>属性都以设置为<code>border-box</code>。</p>
+
+<p><code>HT</code>的组件大部分都提供了<code>isDisabled()</code>和<code>setDisabled(true/false, iconURL)</code>函数可使整个组件处于不可用状态，
+一般用于远程加载数据过程暂时让组件处于不可操作状态，<code>iconURL</code>在这种情况下一般可设置代表正在加载状态的<code>gif</code>图片路径。
+处于<code>disabled</code>状态的组件会生成一个<code>div</code>遮挡住整个组件，通过<code>ht.Default.disabledBackground</code>可修改遮挡组件背景色。</p>
+
+<p><code>HT</code>的组件的渲染大部分由中间的<code>canvas</code>组件实现，具体的组件会提供相应的扩展函数供自定义，
+例如<code>ListView</code>提供<code>drawRow</code>供函数自定义行绘制，<code>GraphView</code>通过矢量机制自定义图元<code>image</code>在拓扑上的呈现等，
+基于<code>canvas</code>渲染的组件如<a href="#ref_listview">ListView</a>、<a href="#ref_propertyview">PropertyView</a>、<a href="#ref_treeview">TreeView</a>、
+<a href="#ref_tableview">TableView</a>、<a href="#ref_treetableview">TreeTableView</a>、<a href="#ref_graphview">GraphView</a>等组件，
+都提供了绘制<code>canvas</code>最底层和最顶层的画笔接口：</p>
+
+<ul><li><code>addTopPainter(function(g){})</code>和<code>removeTopPainter(func)</code>添加和删除绘制在最顶层的画笔</li><li><code>addBottomPainter(function(g){})</code>和<code>removeBottomPainter(func)</code>添加和删除绘制在最底层的画笔</li></ul>
+
+<p><code>HT</code>的所有组件都没有采用<code>HTML</code>自带的滚动条功能，完全由<code>HT</code>组件内部自绘制实现，滚动条可自动隐藏，
+在组件平移或鼠标滑过边界时动态出现，默认透明的滚动条<code>cover</code>在内容之上，不会影响组件界面布局：</p>
+
+<ul><li><code>getScrollBarColor()</code>和<code>setScrollBarColor(color)</code>获取和设置滚动条颜色</li><li><code>getScrollBarSize()</code>和<code>setScrollBarSize(6)</code>获取和设置滚动条宽度</li><li><code>isAutoHideScrollBar()</code>和<code>setAutoHideScrollBar(true/false)</code>获取和设置是否自动隐藏滚动条，默认为<code>true</code></li></ul>
+
+<p><code>HT</code>组件的坐标原点默认在左上角，大部分组件都有平移功能，平移的可视化效果就是滚动，
+分为水平横坐标平移<code>translateX</code>属性，和垂直纵坐标平移<code>translateY</code>属性，两者默认值都为<code>0</code>。</p>
+
+<p>有些组件只能水平平移，例如<code>TabView</code>和<code>TableHeader</code>；有些组件只能垂直平移，例如<code>ListView</code>和<code>TreeView</code>；
+而<code>GraphView</code>和<code>TableView</code>等则水平和垂直皆可；可重载<code>adjustTranslateX</code>和<code>adjustTranslateY</code>函数改变平移逻辑：</p>
+
+<ul><li><code>setTranslate(x, y, anim)</code>设置新的水平平移和垂直平移值，<code>anim</code>代表是否动画参见<a href="#ref_animation">动画章节</a></li><li><code>getTranslateX()</code>和<code>setTranslateX(10)</code>获取和设置当前水平平移值，简写为<code>tx()</code>和<code>tx(10)</code></li><li><code>getTranslateY()</code>和<code>setTranslateY(10)</code>获取和设置当前垂直平移值，简写为<code>ty()</code>和<code>ty(10)</code></li><li><code>translate(tx, ty)</code>在当前值基础上增加水平和垂直平移值</li><li><code>adjustTranslateX(value)</code>该函数传入即将设置的水平平移值，返回最终设置值，可重载限制水平平移范围</li><li><code>adjustTranslateY(value)</code>该函数传入即将设置的垂直平移值，返回最终设置值，可重载限制垂直平移范围</li></ul>
+
+<p><code>HT</code>的组件一般都会嵌入<code>BorderPane</code>、<code>SplitView</code>和<code>TabView</code>等容器中使用，而最外层的<code>HT</code>组件则需要用户手工将<code>getView()</code>
+返回的底层<code>div</code>元素添加到页面的<code>DOM</code>元素中，这里需要注意的是，当父容器大小变化时，如果父容器是<code>BorderPane</code>和<code>SplitView</code>
+等这些<code>HT</code>预定义的容器组件，则<code>HT</code>的容器会自动递归调用孩子组件<code>invalidate</code>函数通知更新。但如果父容器是原生的<code>html</code>元素，
+则<code>HT</code>组件无法获知需要更新，因此最外层的<code>HT</code>组件一般需要监听<code>window</code>的窗口大小变化事件，调用最外层组件<code>invalidate</code>函数进行更新。</p>
+
+<p>为了最外层组件加载填充满窗口的方便性，<code>HT</code>的所有组件都有<code>addToDOM</code>函数，其实现逻辑如下，其中<code>iv</code>是<code>invalidate</code>的简写：</p>
+
+<pre><code>addToDOM = function(){   
+    var self = this,
+        view = self.getView(),   
+        style = view.style;
+    document.body.appendChild(view);            
+    style.left = &#39;0&#39;;
+    style.right = &#39;0&#39;;
+    style.top = &#39;0&#39;;
+    style.bottom = &#39;0&#39;;      
+    window.addEventListener(&#39;resize&#39;, function () { self.iv(); }, false);            
+}</code></pre>
+
+<div id="ref_config"></div>
+
+<h3>配置</h3>
+
+<p>改变<code>HT</code>系统默认属性，需要通过全局的<code>htconfig</code>变量名指定，<code>HT</code>系统只在初始化时读取<code>htconfig</code>的配置信息，
+因此该属性必须在引入<code>ht.js</code>包之前初始化好，运行状态时修改<code>htconfig</code>变量不会再起作用，示例代码如下：</p>
+
+<pre><code>&lt;script&gt;
+    htconfig = {
+        Color: {       
+            label: &#39;#000&#39;,
+            labelSelect: &#39;#FFF&#39;          
+        },
+        Default: {
+            toolTipDelay: 100,
+            toolTipContinual: true
+        },                
+        Style: {
+            &#39;select.color&#39;: &#39;#E74C3C&#39;,
+            &#39;select.width&#39;: 3
+        }
+    };
+&lt;/script&gt;           
+&lt;script src=&quot;ht.js&quot;&gt;&lt;/script&gt;   </code></pre>
+
+<p>可配置的参数分为三大类，具体属性说明参见<a href="../theme/ht-theme-guide.html">风格手册</a></p>
+
+<ul><li>配置全局的默认颜色主题，最终设置到<code>ht.Color</code>对象属性上</li><li>配置全局的、组件的默认参数，最终设置到<code>ht.Default</code>对象属性上</li><li>配置图元的默认参数，最终设置到<code>ht.Style</code>对象属性上</li></ul>
+
+<div id="ref_image"></div>
+
+<h3>图片</h3>
+
+<p>图片是图形组件的重要资源，树上的图标，拓扑上图元等都可用图片来绘制，<code>HT</code>支持<code>PNG</code>和<code>JPG</code>等常规图片格式，
+如<a href="#ref_node">Node</a>章节的示例所示，图片有两种使用方式：</p>
+
+<ul><li>直接将图片相对或绝对路径，设置到数据模型的相应属性上，<code>air13.setImage(res/mac-air.png)</code></li><li>先通过<code>ht.Default.setImage(&#39;mac&#39;, &#39;res/mac-air.png&#39;)</code>进行注册，再将注册名称设置到模型上<code>air11.setImage(&#39;mac&#39;)</code></li></ul>
+
+<p>直接设置路径方式开发方便，无需提前注册图片，但数据模型<a href="../serialization/ht-serialization-guide.html">序列化</a>
+时图片路径占用内存较多，将来图片路径变化后不利于管理维护，两种方式都是正确的使用方式，可根据项目情况选中不同方式或混合使用。
+如果采用<code>url</code>的路径方式<code>HT</code>内部会自动加载图片，并在<code>onload</code>之后自动更新相应的视图组件。</p>
+
+<p><code>HT</code>的框架下图片被赋予了更广泛的含义，<code>HT</code>提供了自定义<code>JSON</code>格式的矢量描述形式，以<code>HT</code>标准定义的<code>JSON</code>矢量格式，
+也可以作为图片进行注册和使用，<code>HT</code>的矢量方式比传统图片格式更节省空间，缩放不失真，最强大之处在于矢量的所有图形参数，
+皆可与<code>Data</code>模型上的数据动态绑定，具体说明参见<a href="../vector/ht-vector-guide.html">矢量手册</a>。</p>
+
+<p><code>ht.Default.setImage</code>函数有以下几种调用方式：</p>
+
+<ul><li><code>setImage(&#39;hightopo&#39;, &#39;www.hightopo.com/logo.png&#39;)</code>通过url方式注册</li><li><code>setImage(&#39;hightopo&#39;, &#39;data:image/png;base64,iVBORw...Jggg==&#39;)</code>通过<code>base64</code>方式注册</li><li><code>setImage(&#39;www.hightopo.com/logo.png&#39;)</code>只用<code>url</code>一个参数，该方式图片的<code>name</code>和<code>url</code>路径一样</li><li><code>setImage(&#39;hightopo&#39;, 200, 80, &#39;www.hightopo.com/logo.png&#39;)</code>通过url方式注册，指定图片宽高</li><li><code>setImage(&#39;hightopo&#39;, 200, 80, &#39;data:image/png;base64,iVBORw...Jggg==&#39;)</code>通过<code>base64</code>方式注册，指定图片宽高</li><li><code>setImage(&#39;hightopo&#39;, img|canvas)</code>直接注册<code>img</code>和<code>canvas</code>可绘制<code>html</code>元素方式</li></ul>
+
+<p>采用直接注册<code>img</code>的<code>html</code>元素的方式，用户需确保img资源已加载，这种方式下<code>HT</code>不会监听其<code>onload</code>事件，
+因此不会自动通知视图组件更新。</p>
+
+<p><code>ht.Default.getImage(name, color)</code>可获取对应的图片元素，在图片加载过程该函数返回空，只有<code>onload</code>之后才能得到相应图元元素，
+<code>color</code>为颜色参数，一般为空，如果有颜色值则<code>HT</code>内部会构建出对图片进行<code>color</code>染色后的新图片</p>
+
+<p><code>HT</code>还提供了以下几种针对图片的绘制函数，以下参数中<code>image</code>为可绘制的<code>img</code>或<code>canvas</code>元素，也可为矢量的<code>json</code>格式，
+由于矢量可动态绑定数据模型具有染色功能，因此绘制矢量时可传入<code>data</code>数据、<code>view</code>组件和<code>color</code>染色参数：</p>
+
+<ul><li><code>ht.Default.drawImage(g, image, x, y, width, height, data, view, color)</code>将图片<code>image</code>以填充满的方式绘制在指定矩形区域内</li><li><code>ht.Default.drawCenterImage(g, image, x, y, data, view, color)</code>以<code>x</code>和<code>y</code>为中心位置绘制<code>image</code>图片</li><li><code>ht.Default.drawStretchImage(g, image, stretch, x, y, w, h, data, view, color)</code>在矩形位置内绘制图片，<code>stretch</code>类型如下：<ul><li><code>fill</code>图片填充满整个矩形区域，如果图片宽高比例和矩形不一致会导致图片拉伸失真</li><li><code>uniform</code>图片始终保持原始宽高比例不变化，并尽量填充满矩形区域</li><li><code>centerUniform</code>当矩形区域大于图片尺寸时图片以原始大小绘制在中心位置，空间不够时采用<code>uniform</code>的绘制方式</li></ul></li></ul>
+
+<div id="ref_animation"></div>
+
+<h3>动画</h3>
+
+<p>在<code>HT</code>的数据模型驱动图形组件的设计架构下，动画可理解为将某些属性由起始值逐渐变到目标值的过程，
+<code>HT</code>提供了<code>ht.Default.startAnim</code>的动画函数，其示例代码如下。</p>
+
+<pre><code>ht.Default.startAnim({
+    frames: 12, // 动画帧数
+    interval: 10, // 动画帧间隔毫秒数
+    easing: function(t){ return t * t; }, // 动画缓动函数，默认采用`ht.Default.animEasing`
+    finishFunc: function(){ console.log(&#39;Done!&#39;) }, // 动画结束后调用的函数。
+    action: function(v, t){ // action函数必须提供，实现动画过程中的属性变化。
+        node.setPosition( // 此例子展示将节点`node`从位置`p1`动画到位置`p2`。
+            p1.x + (p2.x - p1.x) * v,
+            p1.y + (p2.y - p1.y) * v
+        );
+    }
+});</code></pre>
+
+<p><code>ht.Default.startAnim</code>支持<code>Frame-Based</code>和<code>Time-Based</code>两种方式的动画，以上代码为<code>Frame-Based</code>方式，
+这种方式用户通过指定<code>frames</code>动画帧数，以及<code>interval</code>动画帧间隔参数控制动画效果。</p>
+
+<p>以下代码为<code>Time-Based</code>方式，该方式用户只需要指定<code>duration</code>的动画周期的毫秒数即可，<code>HT</code>将在指定的时间周期内完成动画，
+不同于<code>Frame-Based</code>方式有明确固定的帧数，即<code>action</code>函数被调用多少次，<code>Time-Based</code>方式帧数或<code>action</code>函数被调用次数取决于系统环境，
+一般来说系统配置更好的机器，更高效的浏览器则调用帧数越多，动画过程更平滑。由于<code>js</code>语言无法精确控制<code>interval</code>时间间隔，
+采用<code>Frame-Based</code>不能精确控制动画时间周期，即使相同的<code>frames</code>和<code>interval</code>参数在不同的环境，可能会出现动画周期差异较大的问题，
+因此<code>HT</code>默认采用<code>Time-Based</code>的方式，如果不设置<code>duration</code>和<code>frames</code>参数，则<code>duration</code>参数将被系统自动设置为<code>ht.Default.animDuration</code>值。</p>
+
+<pre><code>ht.Default.startAnim({
+    duration: 500, // 动画周期毫秒数，默认采用`ht.Default.animDuration`
+    action: function(v, t){ 
+        ... 
+    }
+});</code></pre>
+
+<p><code>startAnim</code>函数会返回一个<code>anim</code>对象，可调用<code>anim.stop(true)</code>终止动画，其中的参数<code>shouldBeFinished</code>代表是否完全未达到的目标改变，
+如果为<code>true</code>则会调用<code>anim.action(anim.easing(1))</code>。同时<code>anim</code>还具有<code>anim.pause()</code>和<code>anim.resume()</code>可中断和继续动画功能，
+以及<code>anim.isRunning()</code>函数判断动画是否正在进行。</p>
+
+<p><code>action</code>函数的第一个参数<code>v</code>代表通过<code>easing(t)</code>函数运算后的值，<code>t</code>代表当前动画进行的进度<code>[0~1]</code>，一般属性变化根据<code>v</code>参数进行。</p>
+
+<p><iframe src="examples/example_animation.html" style="height:280px"></iframe></p>
+
+<p>以上示例展示了点击背景图元动画移动到点击位置，点击图元自身进行旋转和缩放的动画效果，
+<code>ht.Default.startAnim</code>中得<code>easing</code>参数是用于让用户定义函数，通过数学公式控制动画，
+如匀速变化、先慢后快等效果，可参考<a href="http://easings.net/">http://easings.net/</a>，
+示例代码<a href="examples/easing.js">easing.js</a>定义了一系列的动画函数可供选用：</p>
+
+<pre><code>var Easing = {
+    swing: function (t) {
+        return ( -Math.cos(t * PI) / 2 ) + 0.5;
+    },
+    /**
+    * Begins slowly and accelerates towards end. (quadratic)
+    */
+    easeIn: function (t) {
+        return t * t;
+    },
+    /**
+    * Begins quickly and decelerates towards end.  (quadratic)
+    */
+    easeOut: function (t) {
+        return ( 2 - t) * t;
+    },
+    // ... 
+}</code></pre>
+
+<p>示例中构建通过<code>graphView.setInteractors(null)</code>去掉所有默认交互功能，通过<code>view.addEventListener</code>添加监听器，
+同时构建了<code>html</code>的<code>select</code>元素用于选择不同<code>easing</code>效果，将其添加到<code>graphView.getView()</code>的<code>div</code>组件上，
+因此在自定义交互事件中需要对点击在<code>select</code>元素做过滤处理，其中<code>graphView.getLogicalPoint(e)</code>根据交互事件返回逻辑坐标位置。</p>
+
+<p>该例子点击图元时触发图元围绕自身中心旋转一周，同时图元由大变小再恢复原尺寸，该逻辑通过设置<code>frames</code>为<code>30</code>帧和<code>interval</code>为<code>16</code>毫秒间隔的
+<code>Frame-Based</code>方式完成动画；点击背景区域触发图元移动到指定的点击位置，该移动过程通过设置<code>duration</code>为<code>500</code>周期的<code>Time-Based</code>方式完成动画。</p>
+
+<pre><code>var select = document.createElement(&#39;select&#39;);
+select.style.position = &#39;absolute&#39;;
+select.style.top = &#39;10px&#39;;
+select.style.right = &#39;10px&#39;;
+view.appendChild(select);
+for(var name in Easing){
+    var option = document.createElement(&#39;option&#39;);
+    option.innerHTML = name;
+    if(name === &#39;easeOut&#39;){
+        option.setAttribute(&#39;selected&#39;, &#39;true&#39;);
+    }
+    select.appendChild(option);
+}                  
+
+graphView.setInteractors(null);
+var type = &quot;ontouchend&quot; in document ? &#39;touchstart&#39; : &#39;mousedown&#39;;                                
+
+isAnimating = false;
+view.addEventListener(type, function(e){
+    e.preventDefault();
+    if(isAnimating || e.target === select || !ht.Default.isLeftButton(e)){
+        return;
+    }
+    isAnimating = true;
+    var data = graphView.getDataAt(e);
+    var easing = Easing[select.value];
+    var finishFunc = function(){
+        isAnimating = false;
+    };
+    if(data === toy){
+        var size = toy.getSize();
+        ht.Default.startAnim({
+            frames: 30, 
+            interval: 16,
+            easing: easing,
+            finishFunc: finishFunc,                            
+            action: function(v){
+                toy.setRotation(Math.PI * v);
+                var r = Math.abs(v - 0.5) * 2;
+                toy.setSize(size.width * r, size.height * r);
+            }
+        });                        
+    }else{
+        var p2 = graphView.getLogicalPoint(e);
+        var p1 = toy.getPosition();
+        anim = ht.Default.startAnim({  
+            duration: 500,
+            easing: easing,
+            finishFunc: finishFunc,
+            action: function(v){
+                toy.setPosition(
+                    p1.x + (p2.x - p1.x) * v,
+                    p1.y + (p2.y - p1.y) * v
+                );
+            }
+        });                        
+    }
+}, false);</code></pre>
+
+<p>示例直接修改了底层<code>div</code>组件的style背景色，同时增加了顶部和底部的画笔，绘制了<code>click anywhere you want ..</code>的文字信息，
+通过移动图元可发现<code>topPainter</code>绘制的内容呈现在图元之上，<code>bottomPainter</code>绘制的内容呈现在图元之下。</p>
+
+<pre><code>view.style.background = &#39;#FCFCFC&#39;;
+graphView.addTopPainter(function(g){
+    ht.Default.drawText(g, &#39;click anywhere you want ..&#39;, &#39;24px Arial&#39;, &#39;lightgray&#39;, 50, 100, 0, 0, &#39;left&#39;);
+});      
+graphView.addBottomPainter(function(g){
+    ht.Default.drawText(g, &#39;click anywhere you want ..&#39;, &#39;24px Arial&#39;, &#39;lightblue&#39;, 200, 180, 0, 0, &#39;left&#39;);
+}); </code></pre>
+
+<p><code>HT</code>很多组件的函数也带有动画功能，如<code>setTranslate(x, y, anim)</code>、
+<code>zoomIn(anim)</code>、<code>rotate(leftRight, upDown, anim)</code>等函数都带有<code>anim</code>的参数选项，该参数可传入两种类型：</p>
+
+<ul><li><code>true</code>和<code>false</code>的<code>boolean</code>类型，<code>true</code>代表启动动画，并采用默认动画效果，<code>false</code>代表不启动动画</li><li><code>json</code>的对象结构，采用该类型参数代表启动动画，而<code>json</code>结构的属性与<code>ht.Default.startAnim</code>类型，
+可传人<code>duration</code>、<code>frames</code>、<code>interval</code>、<code>easing</code>和<code>finishFunc</code>等动画控制参数。</li></ul>
+
+<blockquote><p>除了通过<code>ht.Default.startAnim</code>调用启动动画外，<code>DataModel</code>上也具有启动调度任务的函数，
+可扩展实现为流动、闪烁、大小变化等动画效果，详见<a href="../../core/schedule/ht-schedule-guide.html">调度手册</a>，
+如需更强大的描述性动画控制可参考<a href="../../plugin/animation/ht-animation-guide.html">动画插件</a>。</p></blockquote>
+
+<div id="ref_propertyview"></div>
+
+<h3>属性组件</h3>
+
+<p>详见<a href="../propertyview/ht-propertyview-guide.html">属性组件手册</a>和<a href="../../plugin/propertypane/ht-propertypane-guide.html">属性面板插件</a></p>
+
+<div id="ref_listview"></div>
+
+<h3>列表组件</h3>
+
+<p>详见<a href="../listview/ht-listview-guide.html">列表组件手册</a></p>
+
+<div id="ref_treeview"></div>
+
+<h3>树形组件</h3>
+
+<p>详见<a href="../treeview/ht-treeview-guide.html">树组件手册</a></p>
+
+<div id="ref_tableview"></div>
+
+<h3>表格组件</h3>
+
+<p>详见<a href="../tableview/ht-tableview-guide.html">表格组件手册</a></p>
+
+<div id="ref_treetableview"></div>
+
+<h3>树表组件</h3>
+
+<p>详见<a href="../treetableview/ht-treetableview-guide.html">树表组件手册</a></p>
+
+<div id="ref_toolbar"></div>
+
+<h3>工具条组件</h3>
+
+<p>详见<a href="../toolbar/ht-toolbar-guide.html">工具条手册</a></p>
+
+<div id="ref_splitview"></div>
+
+<h3>分割组件</h3>
+
+<p>详见<a href="../splitview/ht-splitview-guide.html">分割组件手册</a></p>
+
+<div id="ref_borderpane"></div>
+
+<h3>边框面板</h3>
+
+<p>详见<a href="../borderpane/ht-borderpane-guide.html">边框面板手册</a></p>
+
+<div id="ref_accordionview"></div>
+
+<h3>折叠组件</h3>
+
+<p>详见<a href="../accordionview/ht-accordionview-guide.html">折叠组件手册</a></p>
+
+<div id="ref_tabview"></div>
+
+<h3>页签组件</h3>
+
+<p>详见<a href="../tabview/ht-tabview-guide.html">页签组件手册</a></p>
+
+<div id="ref_graphview"></div>
+
+<h3>拓扑图形组件</h3>
+
+<p>拓扑图形组件<code>ht.graph.GraphView</code>(以下简称<code>GraphView</code>)是<code>HT</code>框架中<code>2D</code>功能最丰富的组件，其相关类库都在<code>ht.graph</code>包下。
+<code>GraphView</code>具有基本图形的呈现和编辑功能，拓扑节点连线及自动布局功能，电力和电信等行业预定义对象，具有动画渲染等特效，
+因此其应用面很广泛，可作为监控领域的绘图工具和人机界面，可作为一般性的图形化编辑工具，可扩展成工作流和组织图等企业应用。</p>
+
+<div id="ref_graphviewzoom"></div>
+
+<h4>缩放</h4>
+
+<p>改变<code>zoom</code>属性值（默认为<code>1</code>）可实现<code>GraphView</code>的缩放功能，以放大或缩小的方式查看拓扑图形组件的全貌或细节。
+默认鼠标滚轮和平板上的双指头<code>pinch</code>手势可改变<code>zoom</code>的值。按空格键可重置<code>zoom</code>到默认值<code>1</code>
+（该操作同时也重置了<code>translateX</code>和<code>translateY</code>为<code>0</code>）。</p>
+
+<p>以下为缩放相关默认全局参数，可通过 <a href="#ref_config">htconfig</a> 自定义：</p>
+
+<ul><li><code>ht.Default.zoomIncrement = 1.3</code>调用<code>zoomIn</code>和<code>zoomOut</code>函数的缩放步进</li><li><code>ht.Default.scrollZoomIncrement = 1.05</code>鼠标滚轮缩放步进</li><li><code>ht.Default.pinchZoomIncrement = 1.08</code>触屏双指缩放步进</li><li><code>ht.Default.zoomMax = 20</code>最大放大值</li><li><code>ht.Default.zoomMin = 0.01</code>最小缩小值 </li></ul>
+
+<p>以下为<code>GraphView</code>缩放相关函数，以下函数中的<code>point</code>参数代表进行缩放的中心基准，
+一般会传入<code>graphView.getLogicalPoint(event)</code>的返回值，即已当前鼠标点为中心进行缩放，
+该参数为空时则以当前可见矩形区域的中心进行缩放。</p>
+
+<ul><li><code>zoomIn(anim, point)</code>放大</li><li><code>zoomOut(anim, point)</code>缩小 </li><li><code>zoomReset(anim, point)</code>设置缩放值为<code>1</code> </li><li><code>scrollZoomIn(point)</code>滚轮放大时调用</li><li><code>scrollZoomOut(point)</code>滚动缩小时调用</li><li><code>pinchZoomIn(point)</code>触屏双指放大时调用</li><li><code>pinchZoomOut(point)</code>触屏双指缩小时调用</li><li><code>getZoom()</code>和<code>setZoom(value, anim, point)</code>获取和设置缩放值、最终设置的值会调用<code>adjustZoom</code>进行控制</li><li><code>adjustZoom(value)</code>传入即将修改的缩放值，返回最终运行设置的缩放值，可重载进行自定义</li></ul>
+
+<p><code>ajustZoom</code>函数默认实现如下，对<code>ht.Default</code>上配置的最大值和最小值进行了限制：</p>
+
+<pre><code>adjustZoom = function(value){
+    if(value &lt; ht.Default.zoomMin){
+        return ht.Default.zoomMin;
+    }
+    if(value &gt; ht.Default.zoomMax){
+        return ht.Default.zoomMax;
+    }
+    return value;                
+}; </code></pre>
+
+<div id="ref_graphviewinteraction"></div>
+
+<h4>交互</h4>
+
+<p><code>GraphView</code>默认内置了一些交互器，以实现基本的选择、单双击、缩放、平移和编辑等交互功能，内置的交互器有：</p>
+
+<ul><li><code>Interactor</code>交互器基类，提供了基础功能函数，如交互事件派发，监听函数添加和清除，拖拽操作封装，自动平移滚动等功能</li><li><code>DefaultInteractor</code>实现<code>Group</code>、<code>Edge</code>和<code>SubGraph</code>图元的默认双击响应，手抓图平移，滚轮缩放，键盘响应等功能</li><li><code>SelectInteractor</code>实现图元可单选和框选功能。默认拖动背景是平移，按<code>Ctrl</code>键可以进行框选（<code>Mac</code>下为<code>Command</code>键）</li><li><code>MoveInteractor</code>实现被选中图元的移动功能</li><li><code>EditInteractor</code>实现对图元的大小改变和角度旋转，以及<code>Shape</code>和<code>Edge</code>类型图元的多点编辑等功能</li><li><code>TouchInteractor</code>实现移动设备上的<code>Touch</code>交互功能</li></ul>
+
+<p>可通过<code>GraphView#setInteractors(list)</code>组合这些交互器，用户也可以基于<code>Interactor</code>扩展自己的交互器，
+以下代码为<code>GraphView#setEditable(false/true)</code>的实现，<code>GraphView</code>构造函数会调用<code>setEditable(false)</code>，
+因此默认只有基本的操作功能不具备编辑功能，需要编辑功能可调用<code>setEditable(true)</code>实现。                   </p>
+
+<pre><code>setEditable: function (editable) {
+    var self = this;
+    if (editable) {
+        self.setInteractors([
+            new SelectInteractor(self),
+            new EditInteractor(self),
+            new MoveInteractor(self),
+	new DefaultInteractor(self),
+            new TouchInteractor(self)
+        ]);
+    } else {
+        self.setInteractors([
+            new SelectInteractor(self),
+            new MoveInteractor(self),
+	new DefaultInteractor(self),
+            new TouchInteractor(self, {editable: false})
+        ]);
+    }
+},</code></pre>
+
+<p><code>TouchInteractor</code>该类的第二个参数可传入<code>json</code>对象控制部分功能的开启和关闭，默认为开启</p>
+
+<ul><li><code>selectable</code>是否允许选中</li><li><code>movable</code>是否允许移动</li><li><code>pannable</code>是否允许平移</li><li><code>pinchable</code>是否允许缩放</li><li><code>editable</code>是否允许编辑</li></ul>
+
+<p>内置的<code>Interactor</code>在交互过程会派发出事件，可通过<code>GraphView#addInteractorListener</code>进行监听，简写为<code>mi</code></p>
+
+<pre><code>graphView.addInteractorListener(function (e) {
+    if(e.kind === &#39;clickData&#39;){
+        console.log(e.data + &#39;被单击&#39;);
+    }
+    else if(e.kind === &#39;doubleClickData&#39;){
+        console.log(e.data + &#39;被双击&#39;);
+    }            
+    else if(e.kind === &#39;clickBackground&#39;){
+        console.log(&#39;单击背景&#39;);
+    }  
+    else if(e.kind === &#39;doubleClickBackground&#39;){
+        console.log(&#39;双击背景&#39;);
+    }     
+    else if(e.kind === &#39;beginRectSelect&#39;){
+        console.log(&#39;开始框选图元&#39;);
+    }              
+    else if(e.kind === &#39;betweenRectSelect&#39;){
+        console.log(&#39;正在框选图元&#39;);
+    }             
+    else if(e.kind === &#39;endRectSelect&#39;){
+        console.log(&#39;结束框选图元&#39;);
+    }           
+    else if(e.kind === &#39;beginMove&#39;){
+        console.log(&#39;开始移动图元&#39;);
+    }              
+    else if(e.kind === &#39;betweenMove&#39;){
+        console.log(&#39;正在移动图元&#39;);
+    }             
+    else if(e.kind === &#39;endMove&#39;){
+        console.log(&#39;结束移动图元&#39;);
+    } 
+    else if(e.kind === &#39;beginPan&#39;){
+        console.log(&#39;开始手抓图平移&#39;);
+    }              
+    else if(e.kind === &#39;betweenPan&#39;){
+        console.log(&#39;正在手抓图平移&#39;);
+    }             
+    else if(e.kind === &#39;endPan&#39;){
+        console.log(&#39;结束手抓图平移&#39;);
+    }     
+    else if(e.kind === &#39;beginEditRect&#39;){
+        console.log(&#39;开始编辑图元大小和位置&#39;);
+    }              
+    else if(e.kind === &#39;betweenEditRect&#39;){
+        console.log(&#39;正在编辑图元大小和位置&#39;);
+    }             
+    else if(e.kind === &#39;endEditRect&#39;){
+        console.log(&#39;结束编辑图元大小和位置&#39;);
+    } 
+    else if(e.kind === &#39;beginEditPoint&#39;){
+        console.log(&#39;开始编辑多边形Shape或多点Edge的points&#39;);
+    }              
+    else if(e.kind === &#39;betweenEditPoint&#39;){
+        console.log(&#39;正在编辑多边形Shape或多点Edge的points&#39;);
+    }             
+    else if(e.kind === &#39;endEditPoint&#39;){
+        console.log(&#39;结束编辑多边形Shape或多点Edge的points&#39;);
+    } 
+    else if(e.kind === &#39;beginEditRotation&#39;){
+        console.log(&#39;开始旋转图元&#39;);
+    }              
+    else if(e.kind === &#39;betweenEditRotation&#39;){
+        console.log(&#39;正在旋转图元&#39;);
+    }             
+    else if(e.kind === &#39;endEditRotation&#39;){
+        console.log(&#39;结束旋转图元&#39;);
+    }               
+    else if(e.kind === &#39;moveLeft&#39;){
+        console.log(&#39;左方向键左移图元一个像素&#39;);
+    }       
+    else if(e.kind === &#39;moveRight&#39;){
+        console.log(&#39;右方向键右移图元一个像素&#39;);
+    } 
+    else if(e.kind === &#39;moveUp&#39;){
+        console.log(&#39;上方向键上移图元一个像素&#39;);
+    } 
+    else if(e.kind === &#39;moveDown&#39;){
+        console.log(&#39;下方向键下移图元一个像素&#39;);
+    } 
+    else if(e.kind === &#39;toggleNote&#39;){
+        console.log(&#39;切换node标注的展开合并&#39;);
+    }             
+    else if(e.kind === &#39;toggleNote2&#39;){
+        console.log(&#39;切换node2标注的展开合并&#39;);
+    }             
+});</code></pre>
+
+<p>关于交互还有个逻辑坐标点（<code>LogicalPoint</code>）概念，可平移和缩放的组件一般都具有<code>getLogicalPoint(event)</code>函数，
+根据交互事件返回相应坐标点信息，简单的理解逻辑坐标点和用户设置<code>model</code>的坐标是一致的，而真正显示在屏幕的坐标点，
+需要通过<code>zoom</code>和<code>translate</code>的转换，在<code>GraphView</code>改变<code>zoom</code>和<code>translate</code>的过程，图元模型的数据并未改变，
+也就是逻辑坐标值不变，仅仅是视图组件的呈现效果变化，<code>DataModel</code>中所有图元的逻辑坐标信息如<code>position</code>、<code>points</code>、
+<code>width</code>和<code>height</code>等保持不变，因此当自定义交互事件处理时，常需要调用以下交互相关的屏幕坐标和逻辑坐标转换函数：</p>
+
+<ul><li><code>getLogicalPoint(event)</code>传入交互<code>event</code>事件参数，返回对应的逻辑坐标点，简写为<code>lp</code></li><li><code>getDataAt(pointOrEvent, filter)</code>传入逻辑坐标点或者交互<code>event</code>事件参数，返回当前点下的图元，<code>filter</code>可进行过滤</li><li><code>getSelectedDataAt(pointOrEvent)</code>传入逻辑坐标点或者交互<code>event</code>事件参数，返回当前点下已选中的图元。</li><li><code>getDatasInRect(rect, intersects, selectable)</code>获取逻辑坐标区域内的图元。<ul><li><code>rect</code>代表逻辑坐标区域。</li><li><code>intersects</code>指定是相交选中还是包含选中，<code>true</code>表示相交，<code>false</code>表示包含。</li><li><code>selectable</code>指定图元是否要求可选中，为空代表不要求，可否选中通过<code>GraphView.isSelectable</code>函数判断</li></ul></li><li><code>moveSelection(xOffset, yOffset)</code>将选中图元水平移动<code>xOffset</code>，垂直移动<code>yOffset</code></li></ul>
+
+<p><code>GraphView</code>上有一系列<code>on*</code>类型的回调函数，可重载做后续处理或改变默认实现逻辑：</p>
+
+<ul><li><code>onDataClicked(data, event)</code>图元被点击时回调</li><li><code>onDataDoubleClicked(data, event)</code>图元被双击时回调</li><li><code>onEdgeDoubleClicked(edge, event)</code>连线图元被双击时回调，默认实现调用<code>edge.toggle()</code></li><li><code>onGroupDoubleClicked(group, event)</code>组类型图元被双击时回调，默认实现调用<code>group.toggle()</code></li><li><code>onSubGraphDoubleClicked(subGraph, event)</code>子网图元被双击时回调，默认实现进入子网<code>graphView.setCurrentSubGraph(subGraph)</code></li><li><code>onBackgroundClicked(event)</code>背景单击时回调</li><li><code>onBackgroundDoubleClicked(event)</code>背景双击时回调，默认实现调用<code>upSubGraph()</code>进入上一层子网</li><li><code>onCurrentSubGraphChanged(event)</code>当前子网变化时回调，默认实现调用<code>reset()</code>恢复默认缩放和平移值</li><li><code>onAutoLayoutEnded()</code>自动布局动画结束后时回调</li><li><code>onMoveEnded()</code>移动图元位置结束时回调</li><li><code>onPanEnded()</code>手抓图平移拓扑图结束时回调</li><li><code>onRectSelectEnded()</code>框选结束时回调</li><li><code>onTranslateEnded()</code>平移动画结束时回调</li><li><code>onZoomEnded()</code>缩放拓扑图动画结束时回调</li><li><code>onPinchEnded()</code>触屏进行双指缩放结束时回调</li><li><code>onSelectionChanged()</code>选中变化时回调，默认实现会使得该选中图元出现在拓扑图上的可见范围</li></ul>
+
+<p>除了调用<code>GraphView</code>封装的函数外，用户也可以直接添加原生的<code>html</code>组件监听事件，如<a href="#ref_node">Node</a>章节的例子，
+通过<code>graphView.getView().addEventListener</code>直接对底层<code>div</code>添加监听，以下代码有几点需要注意：</p>
+
+<ul><li>通过<code>ht.Default.isTouchable ? &#39;touchend&#39; : &#39;mouseup&#39;</code>判断为桌面及触屏终端做周全的事件类型考虑</li><li>通过<code>graphView.getDataAt(e)</code>直接查找到事件下的图元</li><li>通过<code>ht.Default.isDoubleClick(e)</code>判断单击和双击的事件区分</li></ul>
+
+<p>在前面提到的<code>HT</code>封装的<code>onDataClicked</code>和<code>on**Clicked</code>等事件，都是在<code>mousedown</code>和<code>touchstart</code>时触发，
+如果需要监听在<code>mouseup</code>和<code>touchend</code>的放手后事件处理，可通过对<code>html</code>原生的事件进行监听，
+应用较多的是在点击图元需要弹开对话框的情况，如果直接在<code>HT</code>封装的<code>on*Clicked</code>事件处理内直接调用弹出对话框之类操作，
+会影响<code>HT</code>后续的交互事件处理，所以交互事件内影响界面的功能，可选择监听在<code>mouseup</code>和<code>touchend</code>里面处理，
+有些情况下甚至需要再调用<code>ht.Default.callLater(function(){})</code>的方式进行处理：</p>
+
+<pre><code>var eventType = ht.Default.isTouchable ? &#39;touchend&#39; : &#39;mouseup&#39;;
+graphView.getView().addEventListener(eventType, function(e){
+    var data = graphView.getDataAt(e);
+    if(data &amp;&amp; ht.Default.isDoubleClick(e)){
+        alert(data.getName() + &#39; is double clicked.&#39;);
+    }
+});</code></pre>
+
+<p>以下示例自定义了创建<code>Node</code>、<code>Edge</code>和<code>Shape</code>的三种继承于<code>ht.graph.Interactor</code>交互器：</p>
+
+<p><iframe src="examples/example_editor.html" style="height:400px"></iframe></p>
+
+<div id="ref_filter"></div>
+
+<h4>过滤</h4>
+
+<p>过滤机制贯穿<code>HT</code>框架，而<code>GraphView</code>对过滤机制的运用尤为集中，合理运用这些过滤器可以灵活控制是否允许图元可见、移动、编辑等逻辑。</p>
+
+<pre><code>isMovable: function (data) {
+    if(data instanceof ht.Edge){
+        return false;                
+    }
+    return this._movableFunc ? this._movableFunc(data) : true;
+},</code></pre>
+
+<p>以上代码是<code>GraphView.isMovable(data)</code>函数的简化版，<code>MoveInteractor</code>类在处理拖动时会调用此函数来决定图元是否可移动，
+<code>this._movableFunc</code>属性是通过<code>GraphView.setMovableFunc(func)</code>设置的，由代码可知默认情况下<code>Edge</code>是不允许拖动的，
+然后判断是否设置过<code>movableFunc</code>函数属性，如果设置了则以该函数的逻辑决定是否可移动，最后才返回<code>true</code>。</p>
+
+<p>因此要自定义可否移动逻辑，有两个途径：</p>
+
+<pre><code>* 设置`GraphView.setMovableFunc(func)`函数属性。
+* 重载`GraphView.isMovable(data)`，这种方式客户需要考虑原始`isMovable`的实现逻辑。</code></pre>
+
+<p>下面列表是常见的过滤器函数：</p>
+
+<ul><li>图元是否可见：<ul><li><code>GraphView.isVisible(data)</code></li><li><code>GraphView.setVisibleFunc(data)</code></li></ul></li><li>图元是否可选：<ul><li><code>GraphView.isSelectable(data)</code>，默认实现返回<code>GraphView.getSelectionModel().isSelectable(data)</code>   </li><li><code>GraphView.getSelectionModel().setFilterFunc(func)</code></li><li>也可采用<code>GraphView.setSelectableFunc(func)</code>，该函数内部调用<code>GraphView.getSelectionModel().setFilterFunc(func)</code></li></ul></li><li>图元是否可编辑，这是个编辑的总开关<ul><li><code>GraphView.isEditable(data)</code></li><li><code>GraphView.setEditableFunc(func)</code></li><li>图元是否可编辑大小<ul><li><code>GraphView.isRectEditable(data)</code></li><li><code>GraphView.setRectEditableFunc(func)</code></li></ul></li><li>图元是否可旋转<ul><li><code>GraphView.isRotationEditable(data)</code></li><li><code>GraphView.setRotationEditableFunc(func)</code></li></ul></li><li>图元是否可编辑点<ul><li><code>GraphView.isPointEditable(data)</code></li><li><code>GraphView.setPointEditableFunc(func)</code></li></ul></li></ul></li></ul>
+
+<p>不少刚开始使用<code>HT</code>的用户对过滤器设置在视图组件上而不是数据模型上不解，如果将过滤器控制在模型上，
+则所有共享同一模型的组件只能具有相同的过滤逻辑，<code>HT</code>这样的设计思想能使得不同的组件具有不同的过滤逻辑。</p>
+
+<p>除在视图组件上设置过滤器外，<code>GraphView</code>的内置过滤机制也参考了以下<code>style</code>属性，用户可直接改变以下<code>style</code>达到对单个图元的控制效果：</p>
+
+<ul><li><code>2d.visible</code>：默认值为<code>true</code>，控制图元在<code>GraphView</code>上是否可见</li><li><code>2d.selectable</code>：默认值为<code>true</code>，控制图元在<code>GraphView</code>上是否可选中</li><li><code>2d.movable</code>：默认值为<code>true</code>，控制图元在<code>GraphView</code>上是否可移动</li><li><code>2d.editable</code>：默认值为<code>true</code>，控制图元在<code>GraphView</code>上是否可编辑</li><li><code>2d.move.mode</code>：默认值为空，控制图元移动范围，可设置为如下参数：    <ul><li><code>xy</code>：可在<code>xy</code>平面移动 </li><li><code>x</code>：仅沿<code>x</code>轴移动 </li><li><code>y</code>：仅沿<code>y</code>轴移动 </li><li>任何其他非空值代表不可移动</li></ul></li></ul>
+
+<p>同样对于<code>Graph3dView</code>也有类似的控制参数</p>
+
+<ul><li><code>3d.visible</code>：默认值为<code>true</code>，控制图元在<code>Graph3dView</code>上是否可见</li><li><code>3d.selectable</code>：默认值为<code>true</code>，控制图元在<code>Graph3dView</code>上是否可选中</li><li><code>3d.movable</code>：默认值为<code>true</code>，控制图元在<code>Graph3dView</code>上是否可移动</li><li><code>3d.editable</code>：默认值为<code>true</code>，控制图元在<code>Graph3dView</code>上是否可编辑</li><li><code>3d.move.mode</code>：默认值为空，控制图元移动范围，可设置为如下参数：<ul><li><code>xyz</code>：可在三维空间移动</li><li><code>xy</code>：仅在<code>xy</code>平面移动 </li><li><code>xz</code>：仅在<code>xz</code>平面移动</li><li><code>yz</code>：仅在<code>yz</code>平面移动</li><li><code>x</code>：仅沿<code>x</code>轴移动 </li><li><code>y</code>：仅沿<code>y</code>轴移动 </li><li><code>z</code>：仅沿<code>z</code>轴移动 </li><li>任何其他非空值代表不可移动</li></ul></li></ul>
+
+<div id="ref_graphviewstyle"></div>
+
+<h4>style</h4>
+
+<p><code>HT</code>的数据<code>Data</code>可分为三种属性类型：</p>
+
+<ul><li><code>get/set</code>或<code>is/set</code>类型，例如<code>getName()</code>、<code>setName(&#39;ht&#39;)</code>和<code>isExpaned()</code>，用于常用属性操作</li><li><code>attr</code>类型，通过<code>getAttr(name)</code>和<code>setAttr(key, value)</code>存取，该类型是<code>HT</code>预留给用户存储业务数据</li><li><code>style</code>类型，通过<code>getStyle(name)</code>和<code>setStyle(name, value)</code>进行操作，<code>GraphView</code>上图元样式由该类型属性控制</li></ul>
+
+<p>以下代码为<code>HT</code>内部对<code>style</code>相关函数实现，默认图元的<code>_styleMap</code>为空，查询值时会参考<code>ht.Style</code>的全局默认值：</p>
+
+<pre><code>getStyleMap: function(){
+    return this._styleMap;
+},
+getStyle: function (name, checkDefault) {
+    if (checkDefault === undefined) {
+        checkDefault = true;
+    }
+    var value = this._styleMap ? this._styleMap[name] : undefined;
+    if (value === undefined &amp;&amp; checkDefault) {
+        return ht.Style[name];
+    } else {
+        return value;
+    }
+},
+setStyle: function (name, newValue) {        
+    if (!this._styleMap) {
+        this._styleMap = {};
+    }
+    var oldValue = this._styleMap[name];
+    if(newValue === undefined){
+        delete this._styleMap[name];               
+    }else{
+        this._styleMap[name] = newValue;               
+    }        
+    if (this.fp(&#39;s:&#39; + name, oldValue, newValue)) {
+        this.onStyleChanged(name, oldValue, newValue);
+    }
+},</code></pre>
+
+<p>以下为部分<code>style</code>属性说明，更多属性由后续章节介绍：</p>
+
+<ul><li><code>image.stretch</code>绘制图片的拉伸类型，默认为<code>fill</code>，可设为<code>uniform</code>或<code>centerUniform</code>，参见<a href="#ref_image">image</a></li><li><code>ingroup</code>决定图元是否要包含在展开的<code>Group</code>内部，默认为<code>true</code></li><li><code>opacity</code>属性用于控制整个图元的透明度，可取值为<code>0~1</code></li><li><code>body.color</code>设置该颜色将改变图元中心渲染，可重载<code>GraphView.getBodyColor(data)</code>函数自定义：<ul><li>对于显示<code>image</code>图片的<code>Node</code>，将自动绘制成被<code>body.color</code>染色后的图片</li><li>对于设置了<code>shape</code>的矢量，如需要填充背景，则<code>shape.background</code>被<code>body.color</code>替代</li><li>对于设置了<code>shape</code>的矢量，如无需填充背景，则<code>shape.border.color</code>被<code>body.color</code>替代</li><li>对于<code>Edge</code>的连线类型，<code>edge.color</code>会被<code>body.color</code>替代</li></ul></li></ul>
+
+<p><iframe src="examples/example_bodycolor.html" style="height:200px"></iframe></p>
+
+<div id="ref_styleselect"></div>
+
+<h4>select</h4>
+
+<p><code>GraphView</code>的图元被选中时默认会显示一个选中边框，选中边框的效果可以通过<code>style</code>上的<code>select.*</code>相关属性控制。</p>
+
+<ul><li><code>select.color</code>选中边框颜色</li><li><code>select.width</code>选中边框宽度，默认值为1，此属性为<code>0</code>表示不绘制选中边框</li><li><code>select.padding</code>选中边框与<code>Node.getRect()</code>的间距，默认值为<code>2</code>，可为负值，此属性对<code>ht.Shape</code>和<code>ht.Edge</code>图元无意义。</li><li><code>select.type</code>选中边框的形状，默认值为<code>rect</code>，可选值参见<a href="#ref_styleshape">shape章节</a>，设置成<code>shadow</code>则显示为阴影效果。<ul><li><code>shadow.offset.x</code>阴影水平偏移，默认值为<code>3</code></li><li><code>shadow.offset.y</code>阴影垂直偏移，默认值为<code>3</code></li><li><code>shadow.blur</code>阴影模糊级别，默认值为<code>6</code></li><li><code>shadow.color</code>阴影颜色</li></ul></li></ul>
+
+<div id="ref_styleborder"></div>
+
+<h4>border</h4>
+
+<p><code>boder</code>样式在图元的边缘绘制边框效果，用于告警或提示的作用，可通过重载<code>GraphView.getBorderColor(data)</code>函数自定义。</p>
+
+<ul><li><code>border.color</code>边框颜色，默认值为空代表不绘制</li><li><code>border.width</code>边框宽度，默认值为<code>2</code></li><li><code>border.padding</code>边框离<code>Node.getRect()</code>的间距，默认值为<code>2</code>，可为负值，该属性对<code>ht.Shape</code>和<code>ht.Edge</code>类型图元无意义</li><li><code>border.type</code>边框的形状，默认值为<code>rect</code>，可选值参见<a href="#ref_styleshape">shape</a></li></ul>
+
+<p><iframe src="examples/example_bordercolor.html" style="height:300px"></iframe></p>
+
+<div id="ref_styleshape"></div>
+
+<h4>shape</h4>
+
+<p><code>GraphView</code>上的<code>Node</code>图元除了通过<code>image</code>属性设置显示为图片外，还可以设置为<code>HT</code>框架内置的各种多边形类型进行矢量绘制。
+要显示成矢量格式可通过设置<code>Node</code>类型图元的<code>style</code>属性实现，相关<code>style</code>属性名说明如下：</p>
+
+<ul><li><code>shape</code>字符串类型，决定<code>shape</code>的形状，默认值为空，代表用<code>image</code>绘制，支持类型如下：<ul><li><code>rect</code>矩形</li><li><code>circle</code>圆形</li><li><code>oval</code>椭圆形</li><li><code>roundRect</code>四周圆角矩形</li><li><code>star</code>星形形</li><li><code>triangle</code>三角形</li><li><code>hexagon</code>六边形</li><li><code>pentagon</code>五边形</li><li><code>diamond</code>钻石形</li><li><code>rightTriangle</code>直角三角形</li><li><code>parallelogram</code>平行四边形</li><li><code>trapezoid</code>梯形</li><li><code>polygon</code>多边形</li><li><code>arc</code>圆弧形</li></ul></li><li><code>shape.border.width</code>边框宽度，默认值为<code>0</code>表示不绘制边框</li><li><code>shape.border.color</code>边框颜色</li><li><code>shape.border.cap</code>边框末端线帽的样式，可选参数为<code>butt|round|square</code>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcYAAABMCAMAAADA4OcRAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAD5UExURXt5/3t593t5e9bX1rW2tf/Pzv/HxnNxc8aenEIwMefn50I4OYSG/8bHxr2WlDEwMb2enGNhY1JRUqWmpYSGhJSWlDk4Ob2+ve/v74Rpa5yenFpZWggICBgYGBAQEM7PznthYyEYGO++vf/X1lJBQs6mpYyOjJx5e0pJSvfHxhAICN7f3oRhY//v762urTEgIWNRUnNZWrWOjPfn5ykoKWNJSpRxc1pJSpye//f39yEgIYxxc/fPztampf/3996ure/Hxr2+9ykgIWtpazkwMfe+vWtZWpyGhJR5e/fX1lpBQue+vffv762OjM6urdaurf/n5wAAAP///95+UUgAAAluSURBVHjaYmBkGIVDHloABBADQ9AoGPKAESCAGBhHA2HoAwaAAGLgGQ2EYRCNAAE0mhuHRTQCBNBo3Tgs6kaAABrNjcMiNwIE0GjdOCyiESCARnPjsIhGgAAarRuHRd0IEECjuXFY5EaAABqtG4dFNAIE0GhuHBbRCBBAo3XjsKgbAQJoNDcOi9wIEEB460axQJoCchys5ywmG0hjIKahpk2ca5gCBwgwoUUjQADhzY2DLRolmGToFU5i4kMqGgECCG/dOMiiUVyWniGlITF0opERIICGUG6UonNQmUgMndwIEEBDp26UontYEY7HQRONAAE0ZHKj/AAEltiQiUaAABoydaPsQISW2lCpGwECaKjkRqkBCS0ZiSGSGwECaKjUjbIDE1xSQyQaAQJoiORG+QEKLo0hEo0AAYSnbtRV9lO3oplD5BQ4lHWJjkY1hEZ9IwEjfdoFkCQfhw7RSQ0pGuXUOXxVaOcsFQ4+STncdSNAAOHOjbpsrGys9nK0chcf0HS2AGKjURquT1EJqE9JkVbOMgP52hrBlyc2GlVB/qFZPJqDTFfFnRsBAgh33agM1MnKasshwMFHA8wBNBtoPrHRiCjeJcH6vPlo5C42sLsQiVecyGg0BetT4qCRuzTB7uLGGY0AAYQ7NyqD0iWtIenRqADWp0kj97hCaE6So1GSHqHlgjMaAQIId93oCU5fCtycNIFe4LyuTHo0GoLTpQcnjdwFSh+sDoEkRyMn2D8cNHIVpz+4DFLEWTcCBBDu3GhpA9SpTrM6G5SrWH2IjUZEeGmpgmoJLVo5yxSU6s0RfG1i60Z1UJlKsyrbCdQiMMNdNwIEEJ5+o6WxOw2bXoGcksZ2ZPX+DRQMaOgsKx1JpMiQIb7DwSnpJkc7Z2kZ6nDj6XAABNAQ6TdqD1D/THqI9BsBAmiojKmKDUxwiQ+RMVWAABoqY6riAxJaYkFDJDcCBNCQmW/UGISZcfBEI0AADZn5RgmZAQ+sQRyNAAE0dNbiyNM9HqWHzlocgAAaQmtx5GUHWywOntwIEEBDaZ2qhDQdA0pGbygtcAQIoCG1TjVInF4RKasmETSUohEggPDWjVJMNAVkrXMXZ6I9kJIfRI7BCtCa0IwAATS6h2NY7OEACKDR/Y3DIhoBAmg0Nw6LaAQIoNH9jcMBMAIE0GhuHBa5ESCACNeNLCxAgpeFGNOYWZhp7WAuFl6y9IG1sbDQwklU8TW5/oJGI0AAEc6N4P4dO45OHjMXxBEQj7AEstA6GpkD2cnSB9ZG3s5YgimEGr4m11/QaAQIIMJ1o6AgnmiEWs4SCI5H3kBempcfgcLkRyPYK1QH1PE1mf6C1o0AAUQ4N7KzEx2NzIHMtI9GFvKjkZ2dNgUE88D5C5obAQKIcN0Ii0YuFmjxDS1IQRRzoCAzM3MQl2ggCzOQj+YhXqgOLiCDBa6JF8amwLtgu5khdQqsUoE4C1y8gwheeEUIVoIlGrlgrmJmgRkC1IgwkMRoZIZ7EmwE2DnQyoaLGdUaJPfDwggtGrEHHdBg7CmGASAAKVa0AjAIAh8KAiGich9W//8xm+dstT1ssKckyjtPtPC9GiFHaF5GefmqQHfgOh3wuYAldApTgmKSzUR2quISZ7F/dCGOoBBLE/UYGPHkY33Bt1oUGz1PTJBevjhKejOj0C3M778TiZqyuVsANcPoZfA8uPokDzWVAceTJrp9qDRJ11tmQ3imcReA9CpaARgEgYwFgRCHZB/W/v9j1hljLWIM9iIVoqd2Zh//jbFqc5Pd4F3GmY3PF0PJCeX97mE6e2vb7KjyswOhWsjSABGEQuYyIlBaxyGUcz9V6kuO1xDryj3Mss7Ve4JYHzc3OhzLmBKPAc8dUEI5BOpoJ2wCGksWxtS1+cyE6xUFtlMAEdlvhNaNQvyo0YhWNyIDsFKUaGWBhzUvpW27QH5IiQpziih6NIL9KgRytCA/ciWO6hzUaEXzJhl1L7JmjGiEAGGQCDM4pkHpBUyJoDU8RNFCkxcpqLnAyQ0jNwIEEJFjqlCHCIPsJSoauZBTNLBWYBdEisYgrG4hPdBgbUQhIfRohIcezB3o0SiKVCAAKyBRdv5ANG+SBoQCYRUjsoWo0cjLIswuBIlGSDAIgcoyZmb0aAN5ByPoYD4QxJbEGAACiLTcCHYWUdHIjEjt4JIeLRrZqRKNMGtBrsMRjbhsRMkgwJoRJRpZSG97cgHrOn52dC+iFKpgFSjRCJ8+ZMaRs5GCDiaKtc/AABBARNeN5EcjP6RxOVijkQVSwrFTFo3AaBJmBzXzcEUjF6R1w4ISjewECmikoMMbjYwAAURabgSX4sTVjfBykxnS0EKORi6K+rrIhSokOPgFSS5UEeUm1GvI0ShC7mgPeyAXrkIVWl+jRKMg9joYLowcdDAf8GNrRjMABBBJdSOkSQFubEGHoKBtcxbM9hM7JJy4uKBuQW7iiFDaYYZFCr8Q3CnQul8ELRqhLQ4u9GhkhiYzZljUITVxuMgoLJjhDRhkC6HjdEKIaBRFjkbYMB4X9tE9lKCD+hn7yB8DQABOrG0FYBCEDhSCQGJmH9b//8yOLVhbPWx7k5K8pZ3T624sQkDLsXliJBgg3LLGBCAdAdRJHhgnYSsnjwtCqWcZFczEfgD6dRnZ7XLVDjKos8nbk+QqOU2VMXBP4hCgYBC0fx1fYX70aEdg7K0yGvRJSp0ithSFOpYRdwe2ZWp+rQWHKY+pAzrPWFxz2u0QQETXjeywLjKkvywKSSLgOpgZ0kxA7/2AO8Sgvg5IjQg0Nwryw7qz1IjGIFAQBUIGHUDW8LOgF6rQFgxmvzFIGKQVGFQQBSzQQhXJmyQBUfBgh0gQtJ8vBB3qBrVrhHgRTRxhYZRoBGYJ0JAARqoGd/RBXW5E0AUFCglhBjKsbgQIIOLnG7kQ/XskZhAzbBCMGYsOZpgapIYPM3XHXZGGHXCZzMyFXyvCO6AxR2YyhyaQQoCZC5HSkByF1X3M2O2DCSP0gEbJcLmNASCA6LsWh5n2M1kUAXbqzWQFUnsYHp+BDAABRN/Z/9FopFE0AgQQfdficLHzDupoFKZe2LMLUzuJ4TGQESCARtfiDAfAABBAo+tUh0U0AgTQaG4cFtEIEECj61SHA2AECKDR3DgsciNAAI3WjcMiGgECaDQ3DotoBAig0bpxWNSNAAE0mhuHRW4ECCAGCwYGRp5RPLSxI0CAAQAszN0jZYiEZQAAAABJRU5ErkJggg=="></li><li><code>shape.border.join</code>边框当两条线交汇时创建边角的类型，可选参数为<code>bevel|round|miter</code>
+<img src="data:image/png;base64,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"></li><li><code>shape.border.pattern</code>显示虚线样式，<code>Array</code>类型，例如<code>[5, 5]</code></li><li><code>shape.depth</code>只对<code>rect</code>类型起作用，正值代表凸起，负值代表凹陷，默认值为<code>0</code></li><li><code>shape.background</code>背景填充颜色，为<code>null</code>代表不填充背景</li><li><code>shape.gradient</code>渐近色类型：<ul><li>为空代表不绘制渐近色效果，只用<code>shape.background</code>纯色填充背景。</li><li>支持类型：<code>&#39;linear.southwest&#39;,&#39;linear.southeast&#39;,&#39;linear.northwest&#39;,&#39;linear.northeast&#39;,
+&#39;linear.north&#39;,&#39;linear.south&#39;,&#39;linear.west&#39;,&#39;linear.east&#39;,
+&#39;radial.center&#39;,&#39;radial.southwest&#39;,&#39;radial.southeast&#39;,&#39;radial.northwest&#39;,&#39;radial.northeast&#39;,
+&#39;radial.north&#39;,&#39;radial.south&#39;,&#39;radial.west&#39;,&#39;radial.east&#39;,
+&#39;spread.horizontal&#39;,&#39;spread.vertical&#39;,&#39;spread.diagonal&#39;,&#39;spread.antidiagonal&#39;,
+&#39;spread.north&#39;,&#39;spread.south&#39;,&#39;spread.west&#39;,&#39;spread.east&#39;</code></li></ul></li><li><code>shape.gradient.color</code>背景渐近颜色 </li><li><code>shape.repeat.image</code>填充重复背景的图片，注意这里的图片不支持矢量</li><li><code>shape.dash</code>是否显示虚线，默认值为<code>false</code> </li><li><code>shape.dash.pattern</code>虚线样式，默认值为<code>[16, 16]</code></li><li><code>shape.dash.offset</code>虚线偏移，默认值为<code>0</code></li><li><code>shape.dash.color</code>虚线颜色</li><li><code>shape.dash.width</code>虚线宽度，默认为空代表采用<code>shape.border.width</code>值 </li><li><code>shape.dash.3d</code>虚线是否显示<code>3d</code>效果，默认值为<code>false</code></li><li><code>shape.dash.3d.color</code>虚线<code>3d</code>效果颜色，为空采用默认白色，呈现<code>3d</code>效果时连线的中间部分为该颜色</li><li><code>shape.dash.3d.accuracy</code>虚线<code>3d</code>效果精确度，该值越小<code>3d</code>渐进效果越好但影响性能，一般情况无需修改</li><li><code>shape.corner.radius</code>该参数指定<code>roundRect</code>类型的圆角半径，默认为空系统自动调节，可设置正数值</li><li><code>shape.polygon.side</code>多边形边数，该参数指定<code>polygon</code>类型的变数，默认值为<code>6</code></li><li><code>shape.arc.from</code>圆弧形起始弧度，默认值为<code>Math.PI</code></li><li><code>shape.arc.to</code>圆弧形结束弧度，默认值为<code>2*Math.PI</code></li><li><code>shape.arc.close</code>圆弧形是否闭合，默认为<code>true</code></li><li><code>shape.arc.oval</code>圆弧形是否为椭圆，默认为<code>false</code></li></ul>
+
+<p><iframe src="examples/example_styleshape.html" style="height:690px"></iframe></p>
+
+<p><iframe src="examples/example_gradient.html" style="height:320px"></iframe></p>
+
+<div id="ref_styleposition"></div>
+
+<h4>position</h4>
+
+<p>详见<a href="../position/ht-position-guide.html">位置手册</a></p>
+
+<div id="ref_stylelabel"></div>
+
+<h4>label</h4>
+
+<p><code>GraphView</code>的图元可以增加文字说明，如对图元<code>setName(&#39;hello HT&#39;)</code>，则图元下方将显示该<code>hello HT</code>文字。
+上章<code>position</code>的<a href="#ref_styleposition">例子</a>文字信息并非通过<code>setName</code>设置，
+而是通过<code>setStyle(&#39;label&#39;, &#39;hello HT&#39;);</code>的方式设置，最终显示文字由<code>GraphView.getLabel</code>函数决定：</p>
+
+<pre><code>getLabel: function (data) {
+    var label = data.getStyle(&#39;label&#39;);
+    return label === undefined ? data.getName() : label;        
+},</code></pre>
+
+<p>通过以上代码可知，<code>style</code>上的<code>label</code>属性优先级高于<code>name</code>属性，可重载<code>GraphView.getLabel</code>函数改变文字获取逻辑。</p>
+
+<p><code>*View.getLabel</code>的设计方式贯穿<code>HT</code>的所有组件，在<code>ht.widget.*</code>包下的<code>ListView</code>，<code>TreeView</code>，<code>TabView</code>等组件都采用类似的方式，
+与<code>GraphView</code>有所不同的是，其他组件默认的实现逻辑都是返回<code>data.toLabel()</code>值，以下是<code>Data#toLabel()</code>的默认实现。</p>
+
+<pre><code>toLabel: function(){
+    return this._displayName || this._name;
+}  </code></pre>
+
+<p>通过以上代码可知，<code>displayName</code>属性的优先级高于<code>name</code>属性，且<code>style</code>属性一般只用于<code>GraphView</code>组件，
+其他组件并不会考虑<code>style</code>上的<code>label</code>属性，当<code>Tree</code>和<code>GraphView</code>共享同一<code>DataModel</code>数据模型时，
+需要在<code>Tree</code>和<code>GraphView</code>上分别显示不一样的文字，这种情况下就可以通过设置<code>style</code>上的<code>label</code>属性，
+或者设置<code>displayName</code>属性即可达到不一样的效果，也可以直接重载组件的<code>getLabel</code>函数自定义逻辑。</p>
+
+<p><code>HT</code>默认除了<code>label.*</code>的属性外，还提供了<code>label2.*</code>的属性，用于满足一个图元需要显示双文字的情况，
+<code>label2</code>和<code>label</code>的属性意义是一一对应的：</p>
+
+<ul><li><code>label</code>文字内容，默认为空</li><li><code>label.font</code>文字字体类型，如：<code>10px sans-serif</code></li><li><code>label.color</code>文字颜色，可通过<code>GraphView.getLabelColor(data)</code>自定义</li><li><code>label.background</code>背景颜色，默认为空，可通过<code>GraphView.getLabelBackground(data)</code>自定义</li><li><code>label.opacity</code>文字透明度，值范围<code>0~1</code></li><li><code>label.position</code>文字显示位置，参见<a href="#ref_styleposition">position</a></li><li><code>label.offset.x</code>文字水平偏移，对于<code>Edge</code>意味着沿着连线方向水平偏移</li><li><code>label.offset.y</code>文字垂直偏移，对于<code>Edge</code>意味着沿着连线方向垂直偏移</li><li><code>label.rotation</code>文字旋转弧度，如<code>setStyle(&#39;label.rotation&#39;, Math.PI/2)</code></li><li><code>label.max</code>默认为空表示不限制最大宽度，如果设为正值，则文字最大显示宽度不会超过此值</li><li><code>label.align</code>文字水平对齐，可设置<code>left</code>，<code>center</code>或<code>right</code></li><li><code>label.position.fixed</code>默认为<code>false</code>，为<code>true</code>时对<code>Edge</code>类型的文字起作用，保持文字始终在连线之上或之下的位置</li><li><code>label.scale</code>文字缩放值，默认值为<code>1</code>，参见<a href="../../core/position/ht-position-guide.html#ref_offsetrotation">位置手册</a>例子</li></ul>
+
+<p><iframe src="examples/example_label.html" style="height:300px"></iframe></p>
+
+<div id="ref_stylenote"></div>
+
+<h4>note</h4>
+
+<p><code>note</code>一般作为图元的标注，有提示和警告的作用，以冒泡的形式呈现，也可缩小合并成一个小标注。
+<code>note</code>的参数通过<code>style</code>的<code>note.*</code>相关属性控制，与<a href="#ref_stylelabel">label</a>一样，
+为了满足一个图元双标注的需求，提供了<code>note2.*</code>第二个标注参数：</p>
+
+<ul><li><code>note</code>标注文字内容，可通过<code>GraphView.getNote(data)</code>自定义</li><li><code>note.expanded</code>标注是否展开，默认为<code>true</code>，设置为<code>false</code>则合并缩成小标注</li><li><code>note.font</code>标注文字字体类型，如：<code>10px sans-serif</code></li><li><code>note.color</code>标注文字颜色</li><li><code>note.background</code>标注背景填充颜色，可通过<code>GraphView.getNoteBackground(data)</code>自定义</li><li><code>note.border.width</code>标注边框宽度，默认值为<code>1</code></li><li><code>note.border.color</code>标注边框颜色</li><li><code>note.opacity</code>透明度，值范围<code>0~1</code></li><li><code>note.position</code>标注显示位置，参见<a href="#ref_styleposition">position</a></li><li><code>note.offset.x</code>标注显示位置水平偏移</li><li><code>note.offset.y</code>标注显示位置垂直偏移</li><li><code>note.max</code>默认为空代表不限制最大宽度，如果设为正值，则文字最大显示宽度不会超过此值</li><li><code>note.align</code>标注水平对齐，可设置<code>left</code>，<code>center</code>或<code>right</code></li><li><code>note.toggleable</code>默认值为<code>true</code>表示允许双击展开合并切换，如设为<code>false</code>，表示不响应双击</li><li><code>note.scale</code>标注缩放值，默认值为<code>1</code>，参见<a href="../../core/position/ht-position-guide.html#ref_offsetrotation">位置手册</a>例子</li></ul>
+
+<div id="ref_styleicon"></div>
+
+<h4>icon</h4>
+
+<p> <code>icon</code>和<code>note</code>类似，展示在图元周围，有提示和警告的作用，不同的是<code>note</code>展示文字，而<code>icon</code>展示图片或
+<a href="../vector/ht-vector-guide.html">矢量</a>。</p>
+
+<ul><li><code>addStyleIcon(name, icons)</code> 增加一组<code>icon</code>，<code>name</code>参数指定这组<code>icon</code>的名称，<code>icons</code>参数描述<code>icon</code>的内容</li><li><code>removeStyleIcon(name)</code> 删除<code>name</code>参数对应的<code>icons</code></li></ul>
+
+<p>以上为<code>ht.Data</code>提供的操作<code>icon</code>的函数，这两个方法实际修改了<code>style</code>的<code>icons</code>属性，
+用户也可以通过<code>setStyle(&#39;icons&#39;, icons)</code>和<code>getStyle(&#39;icons&#39;)</code>设置和获取<code>icons</code>。</p>
+
+<p><code>addStyleIcon</code>方法第二个参数<code>icons</code>为<code>json</code>格式对象，其属性含义如下：</p>
+
+<ul><li><code>names</code>包含多个字符串的数组，每个字符串对应一张图片或矢量</li><li><code>visible</code>表示该组图片是否显示</li><li><code>for3d</code>代表该组图片仅用于<code>Graph3dView</code>的组件显示，不显示于<code>GraphView</code>组件</li><li><code>position</code>指定<code>icons</code>的位置，参考<a href="#ref_styleposition">position</a></li><li><code>offsetX</code>将<code>icons</code>的位置在<code>position</code>的基础上，水平偏移<code>offsetX</code></li><li><code>offsetY</code>将<code>icons</code>的位置在<code>position</code>的基础上，垂直偏移<code>offsetY</code></li><li><code>direction</code>可取值为<code>west</code>、<code>east</code>、<code>north</code>、<code>south</code>之一，指定<code>icons</code>的排列方向</li><li><code>keepOrien</code>连线方向改变时，<code>icons</code>会自动调整方向以保持最好的阅读效果(比如文字)，此属性为<code>true</code>表示禁止自动调整方向</li><li><code>gap</code>指定`图标之间的距离</li><li><code>rotation</code>指定图标的旋转弧度</li><li><code>rotationFixed</code>该参数使得图标旋转不考虑<code>Edge</code>连线角度，只根据<code>rotation</code>决定，默认值为<code>false</code></li><li><code>width</code>指定每个图标的宽度</li><li><code>height</code>指定每个图标的高度</li><li><code>opacity</code>透明度，值范围<code>0~1</code></li><li><code>stretch</code>图标绘制拉伸方式，默认为<code>fill</code>，可设置为<code>uniform</code>和<code>centerUniform</code>的不失真方式</li><li><code>positionFixed</code>默认为<code>false</code>，为<code>true</code>时对<code>Edge</code>类型的图标起作用，保持图标始终在连线之上或之下的位置</li></ul>
+
+<p><iframe src="examples/example_styleicon.html" style="height:200px"></iframe></p>
+
+<pre><code>edge.addStyleIcon(&quot;flags&quot;, {
+    position: 17,
+    direction: &#39;east&#39;,
+    offsetX: -26,
+    gap: 10,
+    names: [&#39;china&#39;, &#39;spain&#39;, &#39;usa&#39;]
+});
+
+edge.addStyleIcon(&quot;arrow1&quot;, {
+    position: 2,
+    width: 50,
+    height: 25,
+    keepOrien: true,
+    names: [&#39;arrow&#39;]
+});
+
+edge.addStyleIcon(&quot;arrow2&quot;, {
+    position: 4,
+    width: 50,
+    height: 25,
+    positionFixed: true,
+    names: [&#39;arrow&#39;]
+}); </code></pre>
+
+<p>以上示例中<code>edge</code>对象通过<code>addStyleIcon</code>的方式，设置一排由<code>[&#39;china&#39;, &#39;spain&#39;, &#39;usa&#39;]</code>组合的三个国旗图标，
+以及两个<code>arrow</code>的矢量图标，以上代码可用以下代码替代：</p>
+
+<pre><code>edge.setStyle(&#39;icons&#39;, {
+    flags: {
+        position: 17,
+        direction: &#39;east&#39;,
+        offsetX: -26,
+        gap: 10,
+        names: [&#39;china&#39;, &#39;spain&#39;, &#39;usa&#39;]
+    },
+    arrow1: {
+        position: 2,
+        width: 50,
+        height: 25,
+        keepOrien: true,
+        names: [&#39;arrow&#39;]
+    },
+    arrow2: {
+        position: 4,
+        width: 50,
+        height: 25,
+        positionFixed: true,
+        names: [&#39;arrow&#39;]
+    }
+});</code></pre>
+
+<p>示例中<code>node1</code>通过<code>node1.setStyle(&quot;icons&quot;, ...)</code>注册了三个矢量圆球，通过重载<code>graphView.onDataClicked</code>，
+并结合<code>graphView.getIconInfoAt</code>函数能得到点击的具体<code>icon</code>图标信息，进而改变连线箭头颜色</p>
+
+<pre><code>graphView.onDataClicked = function(data, e) {
+    if(data === node1){
+        var info = this.getIconInfoAt(e, data);
+        if(info){
+            edge.a(&#39;arrow.color&#39;, info.name.comps[0].background);
+            node1.a(&#39;select.index&#39;, info.index);
+        } 
+    }                                       
+};</code></pre>
+
+<div id="ref_stylegroup"></div>
+
+<h4>group</h4>
+
+<p><code>Group</code>组类型图元可设置如下样式：</p>
+
+<ul><li><code>group.type</code>组类型，默认为空，组张开时显示为上部分<code>title</code>文字标题，下部分为矩形填充，
+还可设置为<code>oval</code>和<code>rect</code>等形状，可选值参见<a href="#ref_styleshape">shape</a>，
+设置为非空类型时<code>label</code>不再显示为<code>title</code>标题状态，采用普通<code>label</code>的<code>style</code>属性进行显示和控制</li><li><code>group.image</code>默认为空，用于显示组展开的呈现图片效果</li><li><code>group.image.stretch</code>组展开图片拉伸模式，默认值为<code>fill</code>，还可取值<code>uniform</code>和<code>centerUniform</code></li><li><code>group.repeat.image</code>填充重复背景的图片，注意这里的图片不支持矢量</li><li><code>group.position</code>组合并是的位置，默认值为<code>17</code>代表居中</li><li><code>group.toggleable</code>决定组是否允许双击进行展开和合并的切换，默认为<code>true</code></li><li><code>group.padding&#39;组展开后四边缘与孩子图元的间距，默认值为</code>8`</li><li><code>group.padding.left&#39;组展开后左边缘与孩子图元的间距，默认值为</code>0`</li><li><code>group.padding.right&#39;组展开后右边缘与孩子图元的间距，默认值为</code>0`</li><li><code>group.padding.top&#39;组展开后上边缘与孩子图元的间距，默认值为</code>0`</li><li><code>group.padding.bottom&#39;组展开后下边缘与孩子图元的间距，默认值为</code>0`</li><li><code>group.title.font</code>组展开后的<code>title</code>文字字体，仅对<code>group.type</code>为空的类型起作用</li><li><code>group.title.color</code>组展开后的<code>title</code>文字颜色，仅对<code>group.type</code>为空的类型起作用</li><li><code>group.title.background</code>组展开后的<code>title</code>背景颜色，仅对<code>group.type</code>为空的类型起作用</li><li><code>group.title.align</code>组展开后的<code>title</code>文字水平对齐方式，默认值为&#39;left&#39;，可设置为<code>center</code>和<code>right</code></li><li><code>group.depth</code>组展开后的边缘的深度，<code>0</code>代表平面效果，正值代表凸起效果，负值代表凹陷效果，默认值为<code>1</code></li><li><code>group.background</code>组展开后的背景颜色   </li><li><code>group.gradient</code>组展开后背景渐近类型，可选值参见<a href="#ref_styleshape">shape</a>，</li><li><code>group.gradient.color</code>组展开后背景渐近颜色 </li><li><code>group.border.color</code>组展开后的边框颜色</li><li><code>group.border.width</code>组展开后的边框宽度,</li><li><code>group.border.pattern</code>组展开后的边框显示虚线样式，<code>Array</code>类型，例如<code>[5, 5]</code></li><li><code>group.border.cap</code>组展开后的边框末端线帽的样式，可选参数为<code>butt|round|square</code></li><li><code>group.border.join</code>组展开后的边框当两条线交汇时创建边角的类型，可选参数为<code>bevel|round|miter</code></li></ul>
+
+<p><iframe src="examples/example_stylegroup.html" style="height:370px"></iframe></p>
+
+<div id="ref_styleedge"></div>
+
+<h4>edge</h4>
+
+<ul><li><code>edge.type</code>字符串类型，决定连线走向样式：<ul><li><code>undefined</code>默认值，代表连接成直线，多条时自动成组，自环时绘制成圆形</li><li><code>points</code>类型下连线的走向将由<code>edge.points</code>属性决定，用于绘制折线或曲线</li><li>更多连线类型以及如何自定义连线类型，请参考<a href="../../plugin/edgetype/ht-edgetype-guide.html">连线类型手册</a>。</li></ul></li><li><code>edge.points</code>默认值为空，可设置<code>ht.List</code>或<code>Array</code>类型的<code>{x:10, y:20}</code>格式点对象数组</li><li><code>edge.segments</code>用于描述点连接样式的<code>ht.List</code>或<code>Array</code>类型数组，需结合起始点和结束点考虑，数组元素为整型值:<ul><li>1: <code>moveTo</code>，占用<code>1</code>个点信息，代表一个新路径的起点</li><li>2: <code>lineTo</code>，占用<code>1</code>个点信息，代表从上次最后点连接到该点</li><li>3: <code>quadraticCurveTo</code>，占用<code>2</code>个点信息，第一个点作为曲线控制点，第二个点作为曲线结束点</li><li>4: <code>bezierCurveTo</code>，占用<code>3</code>个点信息，第一和第二个点作为曲线控制点，第三个点作为曲线结束点</li><li>5: <code>closePath</code>，不占用点信息，代表本次路径绘制结束，并闭合到路径的起始点</li></ul></li></ul>
+
+<p><img src="data:image/png;base64,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"></p>
+
+<ul><li><code>edge.color</code>连线颜色</li><li><code>edge.width</code>连线宽度，默认值为<code>2</code></li><li><code>edge.offset</code>连线端点和图元中心点的距离，默认值为<code>20</code></li><li><code>edge.group</code>对于成组的连线，可通过此属性归为不同的组，以达到独立展开合并的效果，默认值为<code>0</code></li><li><code>edge.gap</code>成组连线之间的间距，默认值为<code>12</code></li><li><code>edge.toggleable</code>决定是否响应双击进行展开合并的切换，默认值为<code>true</code></li><li><code>edge.center</code>决定连线是否聚集到中心，默认值为<code>false</code>  </li><li><code>edge.pattern</code>显示虚线样式，<code>Array</code>类型，例如<code>[5, 5]</code></li><li><code>edge.expanded</code>判断当前处于展开还是合并状态，一般只用于读取，设置可调用<code>Edge.toggle()</code>函数同步修改组中其他连线参数</li><li><code>edge.cap</code>连线末端线帽的样式，可选参数为<code>butt|round|square</code>
+<img src="data:image/png;base64,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"></li><li><code>edge.join</code>折线交汇时创建边角的类型，可选参数为<code>bevel|round|miter</code>
+<img src="data:image/png;base64,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"></li><li><code>edge.source.position</code>默认值为<code>17</code>，起始点相对于起始图元的相对位置</li><li><code>edge.source.offset.x</code>默认值为<code>0</code>，起始点的水平偏移</li><li><code>edge.source.offset.y</code>默认值为<code>0</code>，起始点的垂直偏移</li><li><code>edge.target.position</code>默认值为<code>17</code>，结束点相对于结束图元的相对位置</li><li><code>edge.target.offset.x</code>默认值为<code>0</code>，结束点的水平偏移</li><li><code>edge.target.offset.y</code>默认值为<code>0</code>，结束点的垂直偏移 </li><li><code>edge.dash</code>是否显示虚线，默认值为<code>false</code></li><li><code>edge.dash.pattern</code>虚线样式，默认值为<code>[16, 16]</code></li><li><code>edge.dash.offset</code>虚线偏移，默认值为<code>0</code></li><li><code>edge.dash.color</code>虚线颜色 </li><li><code>edge.dash.width</code>虚线宽度，默认为空代表采用<code>edge.width</code>值 </li><li><code>edge.dash.3d</code>虚线是否显示<code>3d</code>效果，默认值为<code>false</code></li><li><code>edge.dash.3d.color</code>虚线<code>3d</code>效果颜色，为空采用默认白色，呈现<code>3d</code>效果时连线的中间部分为该颜色</li><li><code>edge.dash.3d.accuracy</code>虚线<code>3d</code>效果精确度，该值越小<code>3d</code>渐进效果越好但影响性能，一般情况无需修改</li></ul>
+
+<blockquote><p>对于<code>edge.type</code>为<code>points</code>类型的连线，当<code>edge.center</code>为<code>false</code>，且<code>edge.offset</code>为<code>0</code>时，连线起始和结束线段将根据关联节点的矩形边缘进行裁剪。</p></blockquote>
+
+<p><iframe src="examples/example_styleedge.html" style="height:200px"></iframe></p>
+
+<div id="ref_recommendation"></div>
+
+<h2>推荐</h2>
+
+<div id="ref_book"></div>
+
+<h3>书籍</h3>
+
+<p><a href="http://www.amazon.com/Object-Oriented-JavaScript-high-quality-applications-libraries/dp/1847194141">Object-Oriented JavaScript</a><br/>开发<code>HTML5</code>应用，特别是企业应用，<code>JavaScript</code>几乎占据绝大部分代码量，所以需要掌握<code>js</code>语法，内置的类和函数，
+与其他面向对象语言不同的类继承模式，以及<code>DOM</code>的基本操作，对于这些方面知识此书是不错的选择。    <br/><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCACHAG0DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzCqDfeP1q/VBvvH60xiUUVYhsLq45igdh6gUKLlokJuxXqSJYmJ82Rk9CF3Vfi8P6nM21bV8+9Pl8NarD961b8BWnsKv8rFzx7lPyrL/n6k/78/8A16Ty7LaCLmXd3Hk//XqOa1nt2xLE6H3FRVm01oyhzhQ7BGLLngkYzTaKKQBRRRQAUUUUAaB4BPpXomg/DAziKa84R1D/ADe4zXnRGVI9RXf6j8TLuS3ittOi2COJU3n2UCurDOKbbMKyqNJQOsvfA3h+ygBk2jHUkip7e98LaTAqboAcfU15FdajrGqOTcXUrZ7Z4qJdJuZBk7j9a7faNqyT/I5/qrf8SZ7LF4x8MxSHDRj3Cir0Xirw7dD/AFkfPqK8LbSLhf4WqBori3ORuGKzlKa1lE0WFpPRM97l0jw/rCnCQtu/u4rl9c+F1lcIWsRsb2rzey8RXtjICszjHvXofhv4gE7Y7olge561UZqppv5MyqYepS1g9DzrXPCGpaIzGSJniH8QFc/X03OLLXrIgKrqwrxnxp4QbSZ2uLdcR9So/nWFXDK3ND7i6GK5nyT3OKooorhO0KKKKANCul0jQGuNrFeozXMn7p+ld/fa1b6PYw7CN3lr06k4Fd2CUbycuhz15SVlHdl1dHtLNQZSoNTfbdKgTBKZrzfUvEl7fucOUT0B5rJaaRzlpGP1NbTxsFpFXMVhZSV5s9cgu9LuGxleaLrQ7a7iJhw2a8ljuJoTmORlPsa7Twn4ime5W3mYk/zq6OKjUfLsyamHnBc0WZeuaK9mxYLxWPaXDwyjBr13xDpiXGmmXb95a8hkjKXLL6GscRDkmpROjD1faQ1PTfCniR4NqMCVPBrrdZgj1bTWJUHIyK8t0CcI6hhxXq+mTxT2AUdhXZHVKR5uNhyS5ongutWP2DUZIwuEPK1nV3HxAsPKufNAwA3864evKxVPkqNLY9ShPnpqQUUUVzmxoVBfXcl5OXckgcKPQCp6oMCGOfWqu0rIVle4lFFGKkYVu+FLeSbWYyoOB1rNs7CW7lCIp5r1fwf4XSziFxKuD1ye9dWGpvmU3sjKtJRg7m7rREOiBWPO2vGni8y6dgOrE16J4v1Td/o8be2BXHW9t84JFds/eaRlhafs6d31L+j2y5AIr0XSI1htztPauR0y1VsetdhawPBbE+1dK0Vjgxrumrnn3xBuRJuXHU4Fee12Hji68y5CAdW5rj68vGu9W3kejhY8tJIKKKK4zoL54U/SvQb7wDHPbxTQFSXjViFI6kCvPzyCK7CL4hXsUMcYsLYhFCglm5wMVM61Wmv3cFK/d2NKUKcn+8k4+iuVH8CXQbhGP4VatPAkxYeYhA9+KlHxIv1ziwteRj77U4fEvUAc/wBn2nfu3eojisSv+XMfvN3Tw/So/uOj07wtbabiRsMR2HNW9U1eZLYw2trOTjHyxmuQX4k36jA0+1x7sx7YpR8S9QH/ADD7Trnq3pitPr+Mt/CX3mP1TCuV5VG/kV5LDUbicySWtwST3jNaVnpc5ADW8o+qGqn/AAsrUP8AoH2vTH3m9MUp+JV+c/8AEvtBkY4LemKUcdjFr7JfebSpYZq3O/uOktNOkicEKR+FbF3eNb2BVI3d8dFXNcF/wsm/3Fv7PtMn/aahfiVqC5xp9ryQT8zdq0/tLG/8+l95x1Muwc3rUf3HO69Z6rqGotIum3hQdCIG/wAKy/7E1b/oF3v/AH4b/Cu3HxL1Af8ALha/99N/nvQPiVqAGPsFr/303piuOpXxk5OTgtfM640cLFWU39xxH9iat/0C73/vw3+FH9iat/0C73/vw3+FdqfiRfscmwtc+zNSf8LHv/8Anwtv++2qPaYv/n2vvL9nhf539xxlGR6ikIyCAcHHWu+h8WaOI9spmeJ4lSG2ktFaOxIgeNtvzfOGZgTjHAyea7jiOCorubzUPCC2RH2LzTJA7QIhJ8rLv8vX92xyrDrgcH3oahqnhySxura3s/ke4SWMRW/kOEAkG3eS3I3Jk4w2D9aAOVBB6HNFdtfeJ9FubWdZIHvAwL2dtcWwEdkRCUWMEN8yl8E4wPlBIJJpLzWvCMytMmlu9wXkbMyE5Oxgmfm5XOz5e20n6gHFUV27634QltzG+lABEmESiAjBZgw5DZ9gf4ce9Zur3+gahFptnbCW0tImmMjR2w3IHVNuct85BU5PGe1AHNUV213rXhG8eSWewmeWe6zI4hCukWCpKkNjONrAHuMe5LLXvDVn5Fxb2htb0TSNvW2LCNGEihchwTwY+QQwIJHTkA4nr0orsrrWfDE9490bJpi00sjrcW+5pSQ2wlg4wuduVxnjJPerFvrHhaOKzv7izjluBKm+LyCzjYIOeWwE4mwuDuyOmKAOFoqS4ZGupmjIKGRiuF2jGeOO30qOgAq6NJvnOI4C+Dg7SOvpVKtQDTVAb7fdNwOApB/yKAK7aXeo7I1u25VDHkcA8Z/SpP7E1HP/AB7MO3JHWn/8S0KD9tu956kL0FR5szKgN7dCIqS+Rlg3YehHSgCFdPu3aVVgYtEcOOMipho2osM/ZWA46kc5pynT94LXN1ynLdw2elOzppXBvb3kH+Hpz060AQppV7ISFgOQ21huHBzjmkGl3zHC2zn5tvGOtQvKYp5DbzybCSAxJBYH1pizSqu1ZHAznAYjn1oAsyaXeROivCQXIUcg8nsacuj35babdl92IAqp5smAPMfAOfvHrR5smc+Y/wD30aALJ0u9CM5gICglskcYGf6GqdP82TaV8x8HGRuPOOlMoAKKKKACivVf+EG0H/n3l/7/ALVI3gDRk+9ZXA7/AOtevNWaUXsn9x6Lyyst2vvPJqK9XHgLRSQBZ3HJAH716cfh/o4JBsbnIGT+9ej+1KPZ/cL+zavdfeeTUV6v/wAIHon/AD6XH/f16b/wg2g/8+0v/f8Aal/atHs/u/4I/wCzK3dfeeVUV6r/AMINoP8Az7zf9/2o/wCEG0H/AJ95f+/7Uf2rQ7P7v+CH9l1u6/r5HlVFeq/8INoP/PvL/wB/2o/4QbQf+feX/v8AtR/atDs/u/4If2XW7r+vkeVUV6r/AMIPoP8Az7y/9/2pk/gzw3bzNFIpDqASPtLcZGf5U1mlF7J/d/wRPLaq3a+88tor1KHwb4bnmEMaMZGBIX7Q3OBk0/8A4QbQf+faX/v+1DzSit0/u/4ILLar2a+86OrC31yuMSnAxgYGOKKK+eUnHZnvyjGW6Ee8uHADSkgcgceuad9vus585uuegoop+0n3ZPsodkIb66PWZqqspYcOV+lFFJzk3dspQilZIb5b/wDPZ/yFHltknzn+nFFFPnl/Vv8AIXJH+rjwMAAkn3NLRRUlh2qK6sLK9uHnlSUSNg5VhwQAP/ZaKKqM3HYicFLcktre2tJ/Oj85nJdm3EYJYYJ/l+VLRRSlNy3HGCjsf//Z"></p>
+
+<p><a href="http://www.amazon.com/Pro-JavaScript-Design-Patterns-Object-Oriented/dp/159059908X/">Pro JavaScript Design Patterns</a> <br/>设计模式已经在各种软件开发中被广泛运用，但是很多耳熟能详的设计模式，用js语言的实现方式与<code>Java</code>和<code>C#</code>等传统面对对象语言的实现方式还是有很多差异，
+导致很多初学者往往无从下手，或者设计出来的模式不是最佳的<code>js</code>实践，此书对接口、单类、继承、工厂等模式给出了<code>js</code>语言的可选择实现方式。<br/><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCACMAGkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDypApdQ5IUkZI6gVo/Y9NyuNTJB3ZzFgjA4H41mUtAGoLLScEnVH4OMCDr05HPT/Co1tdPZhnUCq7VPMfIJ6j8Mfjms+loA0XtNOVogNRLBmw7CL7o9f8A61SR2OmPkNqwU7iOYTgjsf8A61ZdFAGsLHSdik6s2SeR5HT9aT7FpQzu1VuuBth3dup545rLooA2Y7HTlcmLUDMwXKqIiMn0rvvC1o9zpshU7VAIGw4Zm9CPSvNLDPnYHXt7V6FoEt1Da3U1uEURnK+pPv6muDMFJ0vdKptc3mXL608jSrhogkV3yZ9oGVx/Dn361w97FM7LcSKEAfZnHLEdTzXoNhe2JhuLaZXWSSQ+YrL34wW5z6U260gXmhOhk2mLJKY4QdSc++BXFhcS6MmprqjqqQ5krdmecgMmokyOq5f5io7elSeZB/z3/Ra0Lm1sreBDCskjh/lJwN5/HtVD7PL/AM+R/I17ql5HLSfOnbuc3S06MBpUB6FgD+dd5qnhzS59Qn09Fs9OnW7kWAwSGVmgSNmYyJuOCCoA6Hk8Vz1cRGlJKXUcKbkro4Glrffw7btp7XFvfvJI1rJewxvBtDQo+0knPDHBOORgdawKuFSM78vQUouO4UtJS1oSLRSUtAE9q4SYE9K6ezvriO3LwLuQOGPJ5xxwPWuSBxWhaai0S7GAYehotF/EhpRekjsdN1HyrmRpEjmd2LtGwwzenH64rrtOvrW70ae2M0UcpUvcqHBPfAA6Yry/T5zHeecphG4fMG5OK2r3UE2RyRSQoVUhsLyTn2rnr5dRqx5ouzX4mKxdaFRQkuaPfa2n+ZY1mxaPTklaONcYHyDoM9hWRuj/AOerfk1VrrXpJ9NW1cghR271kfam/vtXRrZJ9C8Pemmn1ZRVirBh1BBrbgvNVudR1HxHDbxsybmuWAwieaCnTOe5x1rEVSzBVBLE4AA5Jrq9Ehli8I+LIZYnSVVt1ZGUhgfM6YPeufEyUY3td6L5NpM2ppt2/rYyI9duo9LFgI4DiBrZZyp8xYmbcUBzjBPfGeTWZXoWo2Fquk60JdM0u1ksYIpre1iw9xD8yg+a44O7PQnvTNU0jTrVdZ1CKwja3uo7RbCJV+603LbPQ4B/OuanjKaekbXflrt+jv20fqaSpS6s4CtqTwnrcVg169iwiWPzWXevmKn94pncB+FdRq+n250TWWbT9MtrmykgNvb2vzTW4LY2yuOGJ9MmluAmv6xfXmm3N3pXiFrZhc2NxH8sgCjcqt2yAOCPypPGyklKKsut9e3bprvZpP7wVFLR/wBb/wBWPPaltreW7uoraFd0srhEXIGSTgDJrr7k6bo8em6ZJo0V5Dc6as80iR5uDI4JDK3YLgcVOU06BvCtguk2bNqENs9xOyZc/vOQOwzg5PfNavGaXUXre23RPX8Nv6UqjrqzibiCS1uZbeZdssTlHGc4IOCM0+KzuZ7aa5igd4IColkA4TccDP1Ndndiw0fTbm8TSbGeUa5Nbr58W4LEBnaB/L0rQv47fRNO8X2VrY2jQQy27Iske7iTnB5525+X0rN456KMdXbt3Sf5lew7v+tf8jzqRZYJCkilXwDg+9NMrn+I0wcCivRRzi5pNtFJt+n5UAJG7RSJIjbXRgyn0I5BroNQ8ZXWoW1zElpZ20t3Ikt1NADumZOQTkkDnniufT76/wC8P516DqsZ1fUvEulypCEtZofsjiFVMJaRUwCACQQx4PpXHiZQjOLnG9uvbVL56u5tTUmnZmHc+NJ7r7eW0vTlbUIvLumVGzKeMN97gjGcDj1qnN4ov59K0zTj5Spp7iSJwPmYr93d2OM1tXHhvQob+OFr0RbZ5oGja9jYybVyjFgMRbmGCDnFPh8NxSmbTl+1Wkct9ZRtHLscrvVySGA+YcHaQQDnkVgqmFik1Hz6+nfsW41X1M278Yz3UWoRjTLCEagA1w0atuaQHIkyW4IPQdKdL41u5HmuRp9hHqU0Jhkv1RvMZSME4ztBIHXFWotB0S6tI72Jb6OAxXjtG0qs2YNuMHb3zz/9as280+0svEGki0WQW9yltcCOZg5XeRlScDI/CnBYWT5VDa/fott+yXlohP2i1bHW3i+6gs4YltbR7q3t2tYLwhvNjjORgYODwSASKqv4guXutIuDHCH0uOOOEYOGCHI3c/yxXW6utlqOpS6VdSx3lydScwx2EKrLDCobKMxVRycdc4wTVWPSdJ0+31B5LZ5kl0Y3QVblJPKPmbWCPtwTwMMOnI5qY1qFruGr/XTy7volvbuNwntzaL+v0II/FFsvhxjPbWd3dy6rJdPazK20ArkMCDxhuOv1rMHiu8eXVnure2uhqZBmSVThSv3SuDxjj8hW9qGiaVd3s9yLcwwW1nZkxfaUhDtIowdxXAIUHP8AePpVJ/D2iwtaxefc3Ju9SezhlikUJsDJhzxycNjjvzSpzw1m3F3evp179LX/AMxyVTv/AF/TOQ/Glrr/AOwNDdoJBLcQRG4urYrPcKBI8QBT59uEDE45zisDXLFNO1V7eOGeFQiN5c5DMCVBOGHDLnOD3FdtPEwqS5Ve5hKm4q7M+k5ooya6CBoOCCOxzWzf+KdT1BZQ5t4TNIsszW8CxtK6nKliOTg81i0VEqcJNOSvYak0rI25PFWoyTCQpaBS0jSRrbgJM0gw5cdyR9PbFEfia+NxGZWCQLLA+y3QIUEWQgTOQMAnrn3rEoqPq9L+VFe0l3Oq1fxZ50MMGnghVS4SR5LdI8rNjcAi8DgdepJJrCm1O5nuLSeRlMlpHHHFhcYVPu59apUtFPD06atFBKpKW7NGHWryDWn1ZWjN1I7u+5AVbfkMCvoQTxVn/hJ784HlWfli1a08sW42eUxztx6A9PSsWlpuhTeriJTkuptDxPfkjzI7SZfIjgdZIARIsZyhb1Ixwahl8QajNNbzSyq8kF012jFB/rGIJJ9R8o4rLooVCmtooOeXc1ofEd/CpQGB4zJNI8ckQKuZQA4I9Dgcdqp39/PqVyJ59gKosaLGu1URRhVA7ACqtFONKEXzJag5NqzYUZoozWhI2iiigAooooAK14rWBoYd8NtnaCW+17S2R3HY5rIooA2TBZoyA2sJMh+QC8Jz9eOB9cU5LO3RVZre2ZSuM/bhyR1P8qxOKKANY21vHHJIbaB1VckLe5IH4deapTy27oqwWpiOcljIWyPT2qtS0AFFFFABRRRQA3I9RRkeor6aaG3RSzRRBQMklBwKjX7E6BlFuVPQ4Wvnf7fv/wAu/wAf+Aej9Q/vHzTkeooyPUV9L/6HuK4t8r1GF4/zilC2h6Lbn8Fo/t//AKdv7/8AgC+of3j5nyPUUuR6j86+mHit0Us8USqBkkoOKj3WPlCTNtsPRsLihZ/fan+P/AD6h/ePmvI9RRkeor6UZrFNu77ON5wvC81Isds+dqQtj0VTR/b/AF9n+P8AwA+of3j5nyPUUZHqK+mvs8P/ADxj/wC+BR9nh/54x/8AfApf6wL/AJ9/j/wB/wBnv+Y+ZQQTwQaK+jL7w9o+pIUvNNtZc9zGAw/Ec1594l+F5hje60F3kA5a0kOW/wCAN3+h/OuvDZ1QqvlmuV+e33mVTBVIK61PNKKVlZHKspVgcEEYIPpSV7Bxn05IiyxtG33WBU/Q1mnw/YE52yD6P0rUor86jUnD4XY+icU9zPl0WyluPPZG3lixw3BOT1/OmjQrEOrqjArgjDehzWlRT9tU25mLkj2KX9lW/mO5MpZ92cvn7wIP8zUJ0KzZ9580tnOS/fuenc81p0UKtUWzDkj2M/8Ase08hYAHEYJOA2M5x1/75BqaysIbAOIS5Dnncc+vt7mrVFJ1JtWbGopa2CiiioKCiiigDzH4n+GEEf8Ab9pGFbIW7VR1zwH+vY/hXl9fSmpWSalpl1ZSAFJ4mjP4j/Gvnf8AsXUv+eZ/KvrclxfPRdOo9Y/l/wAA8jGUbT5orc+kqKKK+SPXCiiigApjTRIcPIqn0JxT6QorHJUE+4pq19RO/Qi+1W/P76Pjr8wpVuYGICzISemGFP2IOir+VARR0VR+FV7nn+AveHUUUVBRnXb6oLgLapCYmOAW5I4PLexOP8mo/wDidheDak+4x2/xrVorVVbK3KvuI5PMbEHEa+YQX7kDAzWT/YFr/wA81/KtiipjUlHYbinuf//Z"></p>
+
+<p><a href="http://www.amazon.com/CSS3-Missing-David-Sawyer-McFarland/dp/1449325947/">CSS3: The Missing Manual</a>  <br/>HT产品提供了丰富的企业应用组件，做出一个常规的案例仅用js也足够，但更美观的界面效果离不开<code>CSS</code>技术的掌握和运用，
+进行HT产品深度定制扩展很多时候也是离不开<code>CSS</code>技术。此书的第一二版就好评如潮，第三版更是针对<code>HTML5</code>进行了改版，
+删除了以前针对老版<code>IE</code>浏览器的章节，增加了针对<code>CSS3</code>新特性的章节篇幅，是一本非常值得前端程序员通读的经典读物。<br/><img src="data:image/jpeg;base64,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"></p>
+
+<p><a href="http://www.amazon.com/Responsive-Web-Design-HTML5-CSS3/dp/1849693188/">Responsive Web Design with HTML5 and CSS3</a> <br/><code>Responsive Web Design(RWD)</code>是前端技术的新领域，最早提出“响应式Web设计”概念的鼻祖文章是
+<a href="http://alistapart.com/article/responsive-web-design">Responsive Web Design</a>。
+一个优秀的页面不仅要在<code>PC</code>浏览器下良好呈现，也需要考虑用户采用手机或平板进行浏览时的呈现效果，
+因此程序员和设计师需要考虑不同屏幕尺寸等复杂情况，保持桌面鼠标以及移动设备手势操作都有较好的用户体验，
+此书起了抛砖引玉的作用，可以让大家了解目前常见的<code>RWD</code>的设计技巧，开始对这方面技术进行关注和运用。 <br/><img src="data:image/jpeg;base64,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"></p>
+
+<div id="ref_subscribe"></div>
+
+<h3>订阅</h3>
+
+<p>系统的学习一门技术我们还是推荐阅读书籍，但是写出一本优秀经典的书籍一般需要几个月甚至几年时间，
+对于紧跟前沿的程序员还需要一定的途径获取最新的技术资讯，在此强烈推荐三处针对前端技术开发的周刊订阅，
+每周只需看看这三封周刊邮件，基本不会错过地球上前端开发领域正在发生的有趣事件：</p>
+
+<ul><li><a href="http://javascriptweekly.com/">JavaScript Weekly</a>   </li><li><a href="http://html5weekly.com/">HTML5 Weekly</a>     </li><li><a href="http://appendto.com/modern-web-observer/">The Modern Web Observer</a> </li></ul>    <hr id="contact" style="margin: 20px 0 1px 0">
+    <a href="http://www.hightopo.com"><img class="logo"></a>欢迎交流 <a href="mailto:service@hightopo.com">service@hightopo.com</a>
+</body>
+</html>

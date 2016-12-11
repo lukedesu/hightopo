@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TabView Basic</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            ht.Default.setImage('edit', 'images/edit.png');
+            ht.Default.setImage('search', 'images/search.png');
+            ht.Default.setImage('settings', 'images/settings.png'); 
+            
+            function init(){                              
+                tabView1 = createTabView();
+                tabView2 = createTabView();
+                splitView = new ht.widget.SplitView(tabView1, tabView2, 'v', 0.8);
+                
+                splitView.setDraggable(false);
+                tabView1.setTabPosition('right-vertical');
+                tabView2.setTabPosition('bottom');
+                tabView2.select('SUN FLOWER');
+
+                view = splitView.getView();            
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);                         
+            }    
+            
+            function createTabView(){
+                var tabView = new ht.widget.TabView();
+                tabView.setSelectBackground('#D26911');
+                tabView.setTabBackground('#F5F5F5');                 
+                tabView.setLabelColor('#333333');     
+    
+                add(tabView, 'TURQUOISE', '#1ABC9C').setDisabled(true);
+                add(tabView, 'PETER RIVER', '#3498DB', true).setIcon('search');
+                add(tabView, 'AMETHYST', '#9B59B6');
+                add(tabView, 'WET ASPHALT', '#34495E').setClosable(true);
+                add(tabView, 'SUN FLOWER', '#F1C40F');
+                add(tabView, 'CLOUDS', '#ECF0F1').setIcon('edit');
+                add(tabView, 'ALIZARIN', '#E74C3C').setIcon('settings');  
+                
+                return tabView;
+            }            
+            
+            function add(tabView, name, color, selected){
+                // create view
+                var div = document.createElement('div');
+                div.style.background = color;
+                
+                // create tab
+                var tab = new ht.Tab();
+                tab.setName(name);
+                tab.setView(div);
+                
+                // add to model
+                var tabModel = tabView.getTabModel();
+                tabModel.add(tab);
+                if(selected){
+                    tabModel.getSelectionModel().setSelection(tab);
+                }
+                return tab;
+            }            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

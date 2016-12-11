@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pointlight</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                background: black;
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.5);
+            } 
+        </style>    
+                                       
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-modeling.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        
+        <script src="util.js"></script> 
+        <script src="scooter_obj.js"></script> 
+        <script src="scooter_mtl.js"></script>         
+                
+        <script>
+                                    
+            function init(){                                                                                                                                              
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);    
+                g3d.setEye([300, 700, 700]);
+                g3d.setHeadlightRange(200);
+                                                                      
+                createModel();                
+                
+                redLight = createLight('red', [-250, 50, 250]);
+                greenLight = createLight('green', [250, 120, -250]);
+                blueLight = createLight('blue', [250, 80, 250]);
+        
+                view = g3d.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    g3d.iv();
+                }, false);                                
+                
+                createFormPane();
+                formPane.v('floor', true); 
+                
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());                 
+            }                          
+            
+            function createLight(color, p3){
+                var light = new ht.Light();
+                light.s({
+                    'light.type': 'point',
+                    'light.color': color,
+                    'light.range': 700
+                });
+                light.p3(p3);
+                dataModel.add(light);   
+                return light;
+            }           
+            
+            function createFormPane(){                                                
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(200);
+                formPane.setHeight(410);
+                         
+                createTexturePane();                
+                createHeadlightPane();
+                
+                newLine('Pointlight');
+                createLightPane('red', redLight);               
+                createLightPane('green', greenLight);        
+                createLightPane('blue', blueLight);
+            }
+            
+            function createLightPane(color, light){
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Disable ' + color + ' light',                            
+                            onValueChanged: function(){
+                                light.s('light.disabled', this.getValue());
+                            }
+                        }
+                    }                       
+                ], [0.1]);                 
+                formPane.addRow([
+                    'Range',
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 3000,
+                            value: light.s('light.range'), 
+                            step: 10,
+                            leftBackground: color,
+                            onValueChanged: function(){     
+                                light.s('light.range', this.getValue());                                
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.15]);                                 
+                formPane.addRow([
+                    'Intensity',
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 3,
+                            value: light.s('light.intensity'), 
+                            step: 0.1,
+                            leftBackground: color,
+                            onValueChanged: function(){     
+                                light.s('light.intensity', this.getValue());                                
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.15]);                 
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>3D Helpers</title>
+        <meta charset="UTF-8">
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;
+            }
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-xeditinteractor.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <script>
+            function init() {
+                dataModel = new ht.DataModel();
+
+                g3d = new ht.graph3d.Graph3dView(dataModel);
+                g2d = new ht.graph.GraphView(dataModel);
+
+                toolbar = new ht.widget.Toolbar([{
+                    id: 'position',
+                    label: 'Helper Button Position:',
+                    unfocusable: true,
+                    comboBox: {
+                        width: 120,
+                        value: 'leftTop',
+                        labels: ['LeftTop', 'RightTop', 'LeftBottom', 'RightBottom'],
+                        values: ['leftTop', 'rightTop', 'leftBottom', 'rightBottom'],
+                        onValueChanged: function() {
+                            var value = this.getValue();
+                            if (value === 'leftTop') {
+                                g2d.setLeftTopHelpers(['parent', 'elevation', 'tall']);
+                                g2d.setRightTopHelpers(['host']);
+                                g2d.setLeftBottomHelpers(['edge']);
+                                g2d.setRightBottomHelpers(['remove']);
+                            } else if (value === 'rightTop') {
+                                g2d.setLeftTopHelpers(['parent']);
+                                g2d.setRightTopHelpers(['host', 'elevation', 'tall']);
+                                g2d.setLeftBottomHelpers(['edge']);
+                                g2d.setRightBottomHelpers(['remove']);
+                            } else if (value === 'leftBottom') {
+                                g2d.setLeftTopHelpers(['parent']);
+                                g2d.setRightTopHelpers(['host']);
+                                g2d.setLeftBottomHelpers(['edge', 'elevation', 'tall']);
+                                g2d.setRightBottomHelpers(['remove']);
+                            } else {
+                                g2d.setLeftTopHelpers(['parent']);
+                                g2d.setRightTopHelpers(['host']);
+                                g2d.setLeftBottomHelpers(['edge']);
+                                g2d.setRightBottomHelpers(['remove', 'elevation', 'tall']);
+                            }
+                        }
+                    }
+                }, {
+                    id: 'align',
+                    label: 'Align:',
+                    unfocusable: true,
+                    comboBox: {
+                        width: 120,
+                        value: 'h',
+                        labels: ['Horizontal', 'Vertical'],
+                        values: ['h', 'v'],
+                        onValueChanged: function() {
+                            var value = this.getValue();
+                            g2d.setLeftTopHelpersAlign(value);
+                            g2d.setRightTopHelpersAlign(value);
+                            g2d.setLeftBottomHelpersAlign(value);
+                            g2d.setRightBottomHelpersAlign(value);
+                        }
+                    }
+                }, ]);
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(g2d);
+                mainSplit = new ht.widget.SplitView(g3d, borderPane, 'v', 0.5);
+                view = mainSplit.getView();
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    mainSplit.invalidate();
+                }, false);
+
+                g3d.setGridVisible(true);
+                g3d.setEye(0, 400, 400);
+                g3d.setCenter(0, 0, -200);
+                g3d.setDashDisabled(false);
+
+                g2d.translate(500, 420);
+                g2d.setZoom(0.6, true);
+                g2d.setEditable(true);
+                g2d.setHelperEditableFunc(function(data, helper) {
+                    return true;
+                });
+                g2d.setLeftTopHelpers(['parent', 'elevation', 'tall']);
+
+                node1 = new ht.Node();
+                dataModel.add(node1);
+                node1.p3(-400, 0, -300);
+                node1.s3(50, 80, 50);
+                node1.s({
+                    'shape3d': 'cylinder',
+                    'shape3d.transparent': true,
+                    'shape3d.opacity': 0.8,
+                    'shape3d.reverse.cull': true
+                });
+
+                node2 = new ht.Node();
+                dataModel.add(node2);
+                node2.p3(400, 100, -300);
+                node2.s3(50, 80, 50);
+                node2.s({
+                    'shape3d': 'cylinder',
+                    'shape3d.transparent': true,
+                    'shape3d.opacity': 0.8,
+                    'shape3d.reverse.cull': true
+                });
+
+                edge = new ht.Edge(node1, node2);
+                dataModel.add(edge);
+                edge.s({
+                    'shape3d': 'cylinder',
+                    'shape3d.color': '#72C7FF',
+                    'shape3d.resolution': 50,
+                    'shape3d.top.cap': 'round',
+                    'shape3d.bottom.cap': 'round',
+                    'edge.width': 12,
+                    'edge.gap': 20,
+                    'edge.color': '#72C7FF',
+                    'edge.type': 'points',
+                    'edge.points': [{
+                        x: -300,
+                        y: -400,
+                        e: -200
+                    }, {
+                        x: 300,
+                        y: -200,
+                        e: -100
+                    }],
+                    'edge.segments': [1, 4]
+                });
+                g2d.sm().as(node1);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

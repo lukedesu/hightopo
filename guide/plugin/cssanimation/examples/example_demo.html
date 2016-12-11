@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            div {
+                width: 100px;
+                height: 100px;
+                border: 1px solid gray;
+                display: inline-block;
+            }
+            #div3 {
+                position: absolute;
+                left: 220px;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function animate1() {
+                ht.Default.animate('#div1')
+                    .set('box-shadow', '10px 10px 15px #888888')
+                    .end();
+            }
+            function animate2() {
+                ht.Default.animate('#div2')
+                    .set('box-shadow', '10px 10px 15px #888888')
+                    .then()
+                    .set('box-shadow', '')
+                    .pop()
+                    .end();
+            }
+
+            function animate3() {
+                ht.Default.animate('#div3')
+                    .duration(1000)
+                    .set('background', 'orange')
+                    .then()
+                        .duration(1000)
+                        .scale(2, 2)
+                        .rotate(360)
+                        .set('left', '700px')
+                        .then()
+                            .duration(1000)
+                            .set('transform', '')
+                            .set('-webkit-transform', '')
+                            .set('left', '220px')
+                            .set('background', '')
+                        .pop()
+                    .pop()
+                    .end();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="div1" onclick="animate1();"></div>
+        <div id="div2" onclick="animate2();"></div>
+        <div id="div3" onclick="animate3();"></div>
+    </body>
+</html>

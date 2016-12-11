@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Alarm on tree</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-telecom.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            var graphView = new ht.graph.GraphView(dataModel);
+            var treeView = new ht.widget.TreeView(dataModel);
+            var splitView = new ht.widget.SplitView(treeView, graphView, 'horizontal', .3);
+            
+            function init() {
+                // Add circle at left bottom corner represented new alarm
+                initTreeIcon();
+                
+                // Enable AlarmStatePropagator
+                dataModel.setEnableAlarmStatePropagator(true);
+                
+                // Add Group
+                var group = new ht.Group();
+                group.setExpanded(true);
+                group.setName('Group');
+                dataModel.add(group);
+                
+                // Iterate HT default AlarmSeverity, add node with related AlarmSeverity
+                var x = -50, y = 100;
+                ht.AlarmSeverity.each(function (severity) {
+                    var node = new ht.Node();
+                    node.setName(severity.name);
+                    node.setPosition(x += 100, 100);
+                    node.getAlarmState().increaseNewAlarm(severity);
+                    group.addChild(node);
+                    dataModel.add(node);
+                });
+                
+                // Expand all tree nodes
+                treeView.expandAll();
+                
+                // Add spliteView to document body
+                var style = splitView.getView().style;
+                style.left = '10px';
+                style.top = '10px';
+                style.right = '10px';
+                style.bottom = '10px';
+                document.body.appendChild(splitView.getView());
+                
+                // Invalidate splitView when window size changed
+                window.onresize = function () {
+                    splitView.iv();
+                };
+            }
+            
+            function initTreeIcon() {
+                ht.Default.getImage('__alarmIcon__').comps.push({
+                    type: 'circle',
+                    gradient: 'radial.center',
+                    gradientColor: '#FFFFFF',
+                    background: {
+                        func: function (data) {
+                            var severity = data.getAlarmState().getHighestNewAlarmSeverity();
+                            if (severity) {
+                                return severity.color;
+                            }
+                            return null;
+                        }
+                    },
+                    visible: {
+                        func: function (data) {
+                            return !!data.getAlarmState().getHighestNewAlarmSeverity();
+                        },
+                    },
+                    rect: [1, 8, 8, 8]
+                });
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

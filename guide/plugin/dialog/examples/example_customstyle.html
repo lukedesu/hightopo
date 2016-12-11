@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dialog</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            htconfig = {
+                Color: {
+                    titleBackground: '#076186',
+                    titleIconBackground: 'white',
+                    headerBackground: '#DAECF4'
+                },
+                Default: {
+                    dialogButtonBackground: 'rgb(231, 76, 60)',
+                    dialogButtonSelectBackground: 'rgb(196, 65, 51)',
+                    dialogButtonLabelColor: '#fff'
+                }
+            };
+        </script>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-autolayout.js"></script>
+        <script src="../../../../lib/plugin/ht-dialog.js"></script>
+
+        <script type="text/javascript">
+            function init() {
+                dialog = new ht.widget.Dialog();
+                dialog.setConfig({
+                    title: "Prompt",
+                    titleAlign: "left",
+                    closable: true,
+                    draggable: true,
+                    contentPadding: 20,
+                    content: "<p>Do you want to continue ?</p>",
+                    buttons: [{
+                        label: "Cancel"
+                    }, {
+                        label: "Yes",
+                        className: "button-yes"
+                    }],
+                    buttonsAlign: "right",
+                    action: function(item, e) {
+                        var alertDialog = new ht.widget.Dialog({
+                            title: "Alert",
+                            contentPadding: 20,
+                            content: "<p>You clicked '" + item.label + "'</p>",
+                            buttons: [{
+                                label: "OK"
+                            }],
+                            action: function() {
+                                alertDialog.hide();
+                            }
+                        });
+                        alertDialog.show();
+                        dialog.hide();
+                    }
+                });
+                dialog.show();
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

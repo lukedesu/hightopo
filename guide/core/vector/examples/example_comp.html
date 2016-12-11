@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Component Format</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init() {
+                var dataModel = new ht.DataModel(),
+                        graphView = new ht.graph.GraphView(dataModel),
+                        view = graphView.getView();
+
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    graphView.invalidate();
+                }, false);
+
+                var points = [
+                    96, 209, 43, 211, -1, 199, 7, 126,
+                    54, 127, 41, 89, 98, 60, 114, 95,
+                    159, -3, 290, 66, 251, 137, 296, 155,
+                    289, 199, 260, 213, 149, 213, 77, 261, 96, 209
+                ],
+                segments = [1, 2, 4, 4, 4, 4, 2, 2, 2];
+                
+                ht.Default.setImage('cloud-opacity', {
+                    width: 300,
+                    height: 300,
+                    comps: [
+                        {
+                            type: 'shape',
+                            points: points,
+                            segments: segments,
+                            background: '#d6f0fd',
+                            gradientColor: '#A6f0fd',
+                            gradient: 'linear.north',
+                            opacity: 0.5
+                        }                       
+                    ]
+                });
+                ht.Default.setImage('cloud-rotation', {
+                    width: 300,
+                    height: 300,
+                    comps: [
+                        {
+                            type: 'shape',
+                            points: points,
+                            segments: segments,
+                            background: '#d6f0fd',
+                            gradientColor: '#A6f0fd',
+                            gradient: 'linear.north',
+                            rotation: Math.PI/4
+                        }                       
+                    ]
+                });               
+                ht.Default.setImage('cloud-shadow', {
+                    width: 300,
+                    height: 300,
+                    comps: [
+                        {
+                            type: 'shape',
+                            points: points,
+                            segments: segments,
+                            background: '#d6f0fd',
+                            gradientColor: '#A6f0fd',
+                            gradient: 'linear.north',
+                            shadow: true,
+                            shadowColor: '#E74C3C',
+                            shadowBlur: 12,
+                            shadowOffsetX: 6,
+                            shadowOffsetY: 6
+                        }                       
+                    ]
+                }); 
+                ht.Default.setImage('cloud-all', {
+                    width: 300,
+                    height: 300,
+                    comps: [
+                        {
+                            type: 'shape',
+                            points: points,
+                            segments: segments,
+                            background: '#d6f0fd',
+                            gradientColor: '#A6f0fd',
+                            gradient: 'linear.north',
+                            opacity: 0.5,
+                            rotation: Math.PI/4,
+                            shadow: true,
+                            shadowColor: '#E74C3C',
+                            shadowBlur: 12,
+                            shadowOffsetX: 6,
+                            shadowOffsetY: 6
+                        }                       
+                    ]
+                }); 
+
+                var node = new ht.Node();
+                node.setPosition(100, 120);
+                node.setSize(160, 160);
+                node.setImage('cloud-opacity');
+                dataModel.add(node);
+                
+                node = new ht.Node();
+                node.setPosition(310, 120);
+                node.setSize(160, 160);
+                node.setImage('cloud-rotation');
+                dataModel.add(node);                
+
+                node = new ht.Node();
+                node.setPosition(500, 120);
+                node.setSize(160, 160);
+                node.setImage('cloud-shadow');
+                dataModel.add(node); 
+
+                node = new ht.Node();
+                node.setPosition(720, 120);
+                node.setSize(160, 160);
+                node.setImage('cloud-all');
+                dataModel.add(node); 
+
+                graphView.setEditable(true);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

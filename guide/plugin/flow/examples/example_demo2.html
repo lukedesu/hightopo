@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="../../../../lib/core/ht.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-flow.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            .view {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+        <script type="text/javascript">
+            ht.Default.setImage("title", {
+                "width": 150,
+                "height": 50,
+                "comps": [
+                    {
+                        "type": 'text',
+                        "text": "Bus route map",
+                        "rect": [0, 0, 150, 50],
+                        "color": '#34495E',
+                        "font": 'bold 18px Arial',
+                        "align": 'center',
+                        "shadow": true,
+                        "shadowColor": '#A6A0fd'
+                    }
+                ]
+            });
+            ht.Default.setImage("bus", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADuUlEQVR4Xu2XS2hcVRzGf+ec+8hMnaRJbNQkJVRIfZS0ahobRKHu+rIPROtK1AqSLmyrVhBcZKWb1EYXBdGF+NioEVqirlSM4itiKImVoNWpj5a2ah5tJ5nk3vN3LvfOIpQJc1dZmA+++z/nu/P9z8c5ZxZXiQhLCQ38vwMsB1gOoCJ2vTi02ck1fmpFEAEBkIW/UqTTtaqw3OylJ7493P06YAGciMH83D1rG33aGzMABFYIS5TYgtEqImEK3TMKrRRCAgFBODE6dwB4C5ghQaaj95O3j49NyrwVufXIqFyZF/lnRuRiIa7R/JaU+vr+Mdn3Xl4eeTcvj5XqXcdOiRWRpwb/kFXde5pJoAFH1VzT2ZhzuVwExzFcmoWpGVtiGNVojjEp9CIorenf3caRnW0c3dXG2qYV/PJvwN1r6mjd/fQLgFMO4OJlb26p9fj+7CwZX1MMKVEW1Jo0egCeq5megcmCMF2IA41fKHLn6hzZuoYHgZpyAANCa63DlTlLjWcIQ7BWlRjXIArgaoIq9cif8Q1zIYSR38b+/NQcjobN7Q2Zdc8ObAOUAyiNwgLnLs+T812UAqM1WgSlVImQq0mp+y77P8wjAq6JL2vWLUbh2NiaY7Cx5UnguAKaNvaPnn9oU3PpCApopeJ/gQhlGKXQCqxQlR71AHhnTysTBXj5u7/JTxVxtWJXez23NWe4/40xRg51rHQAMAa0Jus7gCCACAugVFmrTrciPDp4FgEcFd8JgA9OT+L7LmgD4DkABT/HrPHwvYD113rU+hpRigUQIQ2EhX5FfDyf/Rkw8BcUsg2U7wAjB1bT+7XgukV+mghAa0SXUwI2BBvEVQAqhVGgiH1X+xEB4+d47aLD9CGoA5xyO6vB91w0IGHI9GAf8+fGAXBvuInaHQdRno/YsPJuKIXSpqJfHBetDZwCASgHWPfKBfZqMNkVaKM4/2YvG1pX0r33GQC++WKIkyeOct3DvUgQIhUCqCiAYxb1GwuHHxDeb5mEffVxgOfsADIUNQZtHMbzP9Kx8yB9fS8B0NPTw+df9rPpq1exYbDYDlThD0Epnjeax8s7MH46DwgQNTAEVijMzOK6HkA0jjR+PvM7NlxsB6rzl9ciedYDa5IK4GzdtuNYV1fXjRtuvwOAkyM/MDw8/OvHHw3uBwIqIKV/AvgNwEtCNCVsA7q3bNl6Zvv2+yRiNI605F1TBab11wMeVwMXuB7oBO5N2JloLhWQyl9lkzpgVcK6FOY0/qXH8qfZkgdYDvAftC1Oc+4ypOMAAAAASUVORK5CYII=");
+            function init() {
+                var graph = window.graph = new ht.graph.GraphView(),
+                    dataModel = graph.dm(),
+                    view = graph.getView(),
+                    busLane = new ht.Shape(),
+                    busLanePath = new ht.Shape(),
+                    stationPoints = [
+                        {x: 7, y: 180, index: 0},
+                        {x: 53, y: 180, index: 1},
+                        {x: 107, y: 180, index: 2},
+                        {x: 151, y: 180, index: 3},
+                        {x: 198, y: 180, index: 4},
+                        {x: 250, y: 180, index: 5},
+                        {x: 289, y: 132, index: 9},
+                        {x: 348, y: 132, index: 10},
+                        {x: 430, y: 132, index: 11},
+                        {x: 475, y: 132, index: 12},
+                        {x: 523, y: 132, index: 13},
+                        {x: 557, y: 179, index: 14},
+                        {x: 591, y: 226, index: 15},
+                        {x: 626, y: 273, index: 16},
+                        {x: 675, y: 273, index: 17},
+                        {x: 716, y: 273, index: 18},
+                        {x: 761, y: 273, index: 19}
+                    ];
+                
+                busLane.setPoints([
+                    {x: 7, y: 180},
+                    {x: 53, y: 180},
+                    {x: 107, y: 180},
+                    {x: 151, y: 180},
+                    {x: 198, y: 180},
+                    {x: 250, y: 180},
+                    {x: 250.05, y: 164},
+                    {x: 250, y: 132},
+                    {x: 272, y: 132},
+                    {x: 289, y: 132},
+                    {x: 348, y: 132},
+                    {x: 430, y: 132},
+                    {x: 475, y: 132},
+                    {x: 523, y: 132},
+                    {x: 557, y: 179},
+                    {x: 591, y: 226},
+                    {x: 626, y: 273},
+                    {x: 675, y: 273},
+                    {x: 716, y: 273},
+                    {x: 761, y: 273}
+                ]);
+                busLane.setSegments(new ht.List([1, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]));
+                busLane.s("shape.background", null);
+                busLane.s("shape.border.color", "rgb(40, 138, 1)");
+                busLane.s("shape.border.width", 10);
+                busLane.setLayer(1);
+                dataModel.add(busLane);
+                
+                var pathPoints = new ht.List();
+                busLane.getPoints().each(function(point) {
+                    pathPoints.add({x: point.x, y: point.y});
+                });
+                busLanePath.setPoints(pathPoints);
+                busLanePath.setSegments(new ht.List(busLane.getSegments()._as.slice(0)));
+                busLanePath.s("flow", true);
+                busLanePath.s("flow.count", 6);
+                busLanePath.s("flow.step", 2);
+                busLanePath.s("flow.element.image", "bus");
+                busLanePath.s("flow.element.max", 50);
+                busLanePath.s("flow.element.count", 1);
+                busLanePath.s("flow.element.autorotate", 1);
+                busLanePath.s("flow.element.shadow.visible", false);
+                busLanePath.s("shape.background", null);
+                busLanePath.setHost(busLane);
+                busLanePath.setLayer(2);
+                dataModel.add(busLanePath);
+                
+                stationPoints.forEach(function(point) {
+                    var node = new ht.Node();
+                    node.setWidth(15);
+                    node.setHeight(15);
+                    node.s("shape", "circle");
+                    node.s("select.border.width", 0);
+                    node.s("shape.background", "white");
+                    node.s("shape.border.color", "rgb(40, 138, 1)");
+                    node.s("shape.border.width", 2);
+                    node.s("select.width", 0);
+                    node.a("pointIndex", point.index);
+                    node.a("type", "station");
+                    node.setLayer(1);
+                    node.setHost(busLane);
+                    node.setPosition(point.x, point.y);
+                    dataModel.add(node);
+                });
+                
+                var titleNode = new ht.Node();
+                titleNode.setPosition(140, 100);
+                titleNode.setLayer(2);
+                titleNode.setImage("title");
+                dataModel.add(titleNode);
+                
+                dataModel.sm().setFilterFunc(function(data) {
+                    if (data === busLanePath) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+                dataModel.md(function(e) {
+                    var property = e.property,
+                        data = e.data,
+                        newPosition = e.newValue;
+                    if (property === "position" && data.a("type") === "station") {
+                        var pointIndex = data.a("pointIndex");
+                        ht.Default.setIsolating(true);
+                        busLane.setPoint(pointIndex, {x: newPosition.x, y: newPosition.y});
+                        busLanePath.setPoint(pointIndex, {x: newPosition.x, y: newPosition.y});
+                        ht.Default.setIsolating(false);
+                        var rect = ht.Default.unionPoint(busLane.getPoints());
+                        if (rect) {
+                            busLane._position.x = rect.x + rect.width/2;
+                            busLane._position.y = rect.y + rect.height/2;
+                            busLane._width = rect.width;
+                            busLane._height = rect.height;
+                        }
+                        rect = ht.Default.unionPoint(busLanePath.getPoints());
+                        if (rect) {
+                            busLanePath._position.x = rect.x + rect.width/2;
+                            busLanePath._position.y = rect.y + rect.height/2;
+                            busLanePath._width = rect.width;
+                            busLanePath._height = rect.height;
+                        }
+                    }
+                });
+                graph.setLayers([1, 2]);
+                graph.translate(40, -30);
+                graph.enableFlow(40);
+                view.className = "view";
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

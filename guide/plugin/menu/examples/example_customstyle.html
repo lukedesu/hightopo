@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Menu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script src="../../../../lib/plugin/ht-menu.js"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+            .ht-widget-menu {
+                background: -webkit-linear-gradient(top, rgb(250,252,253), rgb(232,241,251) 40%,rgb(220,230,243) 40%,rgb(220,231,245)) !important;
+                background: linear-gradient(to bottom, rgb(250,252,253), rgb(232,241,251) 40%,rgb(220,230,243) 40%,rgb(220,231,245)) !important;
+            }
+            .ht-widget-dropdownmenu ul {
+                background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABAQMAAADO7O3JAAAAA3NCSVQICAjb4U/gAAAABlBMVEXi4+P///9V63aNAAAACXBIWXMAAAsSAAALEgHS3X78AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M1cbXjNgAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNy8wNi8xMZANh+UAAAAKSURBVAiZY3AAAABCAEGV6TQ4AAAAAElFTkSuQmCC") repeat-y rgb(240, 240, 240) !important;
+                background-position: -webkit-calc(1.4em + 4px) 0px !important;
+                background-position: calc(1.4em + 4px) 0px !important;
+                border-radius: 0 !important;
+            }
+            
+            .ht-widget-dropdownmenu .menu-item {
+                background: rgba(0,0,0,0) !important;
+                color: black !important;
+                border: 1px solid rgba(0,0,0,0) !important;
+                border-radius: 2px !important;
+                margin: 3px 2px !important;
+            }
+            .ht-widget-dropdownmenu .menu-item.menu-item-hover {
+                background: -webkit-linear-gradient(top, rgba(193,222,255,0.2),rgba(193,222,255,0.4)) !important;
+                background: linear-gradient(to bottom, rgba(193,222,255,0.2),rgba(193,222,255,0.4)) !important;
+                color: black !important;
+                border: 1px solid rgb(183,212,246) !important;
+            }
+            .ht-widget-dropdownmenu .menu-item.disabled { 
+                color: #888 !important;
+                background: rgba(0,0,0,0) !important;
+            }
+            .ht-widget-dropdownmenu .menu-item.disabled.menu-item-hover {
+                color: #888 !important;
+                background: rgba(0,0,0,0) !important;
+                border: 1px solid rgba(0,0,0,0) !important;
+            }
+            .ht-widget-dropdownmenu .prefix {
+                margin-right: 0.8em !important;
+            }
+            .ht-widget-dropdownmenu .suffix {
+                margin-left: 3em !important;
+                margin-right: 1em !important;
+            }
+            .ht-widget-dropdownmenu .separator {
+                margin-left: -webkit-calc(1.4em + 5px) !important;
+                margin-left: calc(1.4em + 5px) !important;
+                height: 2px !important;
+                background-image: -webkit-linear-gradient(top, rgb(226,226,226), rgb(226,226,226) 50%,rgb(252,252,252) 50%,rgb(252,252,252)) !important;
+                background-image: linear-gradient(to bottom, rgb(226,226,226), rgb(226,226,226) 50%,rgb(252,252,252) 50%,rgb(252,252,252)) !important;
+            }
+        </style>
+        <!--[if IE 9]>
+            <style>
+                .ht-widget-menu {
+                    background: url(data:image/png;base64,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) repeat-x !important;
+                    background-size: 100% 100% !important;
+                }
+                .ht-widget-dropdownmenu ul {
+                    background-position: 1.6em 0 !important;
+                }
+                .ht-widget-dropdownmenu .menu-item.menu-item-hover {
+                    background: rgba(193,222,255,0.4) !important;
+                }
+                .ht-widget-dropdownmenu .separator {
+                    margin-left: calc(1.6em + 1px) !important;
+                    background: url(data:image/png;base64,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) repeat-x !important;
+                }
+            </style>
+        <![endif]-->
+        <script type="text/javascript">
+            ht.Default.setImage('menu_icon', "settings.png");
+            var iconSrc = 'menu_icon';
+            function init() {
+                var json = [
+                    {
+                        label: "File",
+                        items: [
+                            {
+                                label: "New...",
+                                icon: iconSrc, 
+                                action: function(item) { 
+                                    alert(item.label);
+                                }
+                            },
+                            {
+                                label: "Open...",
+                                icon: iconSrc,
+                                suffix: "Ctrl+O", 
+                                key: [Key.ctrl, Key.o], 
+                                action: function(item) {
+                                    alert("you clicked:" + item.label + ",this=" + this);
+                                },
+                                scope: "hello" 
+                            },
+                            {
+                                label: "Disabled",
+                                icon: iconSrc, 
+                                disabled: true 
+                            },
+                            "separator",
+                            {
+                                label: "More...",
+                                icon: iconSrc,
+                                type: "check", 
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        label: "Edit",
+                        items: [
+                            {
+                                label: "Copy",
+                                icon: iconSrc
+                            },
+                            {
+                                label: "Paste",
+                                icon: iconSrc
+                            }
+                        ]
+                    },
+                    {
+                        label: "CheckMenuItems",
+                        items: [
+                            {
+                                label: "Check1",
+                                icon: iconSrc,
+                                type: "check"
+                            },
+                            {
+                                label: "Check2",
+                                icon: iconSrc,
+                                type: "check"
+                            },
+                            {
+                                label: "Check3",
+                                icon: iconSrc,
+                                type: "check",
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    }
+                                ]
+                            }
+                        ],
+                        action: function(item) {
+                            alert("you clicked:" + item.label + ",this=" + this);
+                        }
+                    },   
+                    {
+                        label: "RadioMenuItems",
+                        action: function(item, event) {
+                            alert("you clicked:" + item.label);
+                        },
+                        items: [
+                            {
+                                label: "Radio1",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1 
+                            },
+                            {
+                                label: "Radio2",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1
+                            },
+                            {
+                                label: "Radio3",
+                                icon: iconSrc,
+                                type: "radio",
+                                groupId: 1,
+                                items: [
+                                    {
+                                        label: "AAAA"
+                                    },
+                                    {
+                                        label: "BBBB"
+                                    },
+                                    {
+                                        label: "CCCC"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        label: "TestMenu",
+                        icon: iconSrc,
+                        action: function(item) {
+                            alert(item.label);
+                        },
+                        items: [
+                            {
+                                label: "Homepage",
+                                href: "http://www.hightopo.com",
+                                linkTarget: "_blank", 
+                                key: [Key.ctrl, Key.enter],
+                                suffix: "Ctrl+Enter",
+                                preventDefault: false
+                            },
+                            {
+                                label: "submenu",
+                                action: function(item) {
+                                    alert(item.label);
+                                }
+                            }
+                        ]
+                    }
+                ];
+                var menu = window.menu = new ht.widget.Menu(json);
+                menu.setHoverBackground("rgb(58,155,252)");
+                menu.setHoverColor("#000");
+                menu.enableGlobalKey();
+                menu.addTo(document.getElementById("menuDiv"));
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="menuDiv"></div>
+    </body>
+</html>

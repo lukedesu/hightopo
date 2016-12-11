@@ -1,0 +1,601 @@
+<!doctype html>
+<html>
+    <head>
+        <title>HT for Web 表格组件手册</title>
+        <meta charset="UTF-8">    
+        <meta name="viewport" content="user-scalable=yes, width=1024">
+        <style type="text/css"> 
+            h1, h2, h3, h4, h5, h6, p, blockquote {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+                font-size: 13px;
+                line-height: 18px;
+                color: #737373;
+                background-color: white; 
+                margin: 10px 13px 10px 13px;
+            }
+            table {
+                margin: 10px 0 15px 0;
+                border-collapse: collapse;
+            }
+            td,th {	
+                border: 1px solid #ddd;
+                padding: 3px 10px;
+            }
+            th {
+                padding: 5px 10px;	
+            }
+            a {
+                color: #0069d6;
+            }
+            a:hover {
+                color: #0050a3;
+                text-decoration: none;
+            }
+            a img {
+                border: none;
+            }
+            p {
+                margin-bottom: 9px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #404040;
+                line-height: 36px;
+            }
+            h1 {
+                margin-bottom: 18px;
+                font-size: 30px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 18px;
+            }
+            h4 {
+                font-size: 16px;
+            }
+            h5 {
+                font-size: 14px;
+            }
+            h6 {
+                font-size: 13px;
+            }
+            hr {
+                margin: 0 0 19px;
+                border: 0;
+                border-bottom: 1px solid #ccc;
+            }
+            blockquote {
+                padding: 13px 13px 21px 15px;
+                margin-bottom: 18px;
+                font-family:georgia,serif;
+                font-style: italic;
+            }
+            blockquote:before {
+                content:"\201C";
+                font-size:40px;
+                margin-left:-10px;
+                font-family:georgia,serif;
+                color:#eee;
+            }
+            blockquote p {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 18px;
+                margin-bottom: 0;
+                font-style: italic;
+            }
+            code, pre {
+                font-family: Monaco, Andale Mono, Courier New, monospace;
+            }
+            code {
+                background-color: #fee9cc;
+                color: rgba(0, 0, 0, 0.75);
+                padding: 1px 3px;
+                font-size: 12px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+            }
+            pre {
+                display: block;
+                padding: 14px;
+                margin: 0 0 18px;
+                line-height: 16px;
+                font-size: 11px;
+                border: 1px solid #d9d9d9;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            pre code {
+                background-color: #fff;
+                color:#737373;
+                font-size: 11px;
+                padding: 0;
+            }
+            sup {
+                font-size: 0.83em;
+                vertical-align: super;
+                line-height: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact;
+            }
+            @media screen and (min-width: 914px) {
+                body {
+                    width: 854px;
+                    margin:10px auto;
+                }
+            }
+            @media print {
+                body,code,pre code,h1,h2,h3,h4,h5,h6 {
+                    color: black;
+                }
+                table, pre {
+                    page-break-inside: avoid;
+                }
+            }                        
+            iframe{
+                width: 100%;
+                border: 1px solid #34495E;
+                margin: 0;                
+            }            
+            .logo{
+                vertical-align: middle;
+            }
+
+        </style>        
+        <script>
+            function init() {
+                var logoSrc = 'data:image/png;base64,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',
+                    logos = document.querySelectorAll('.logo'),
+                    i = 0;
+                for (; i < logos.length; i++) {
+                    logos[i].src = logoSrc;
+                }
+                
+                var iframes = document.querySelectorAll('iframe'),
+                    func = function(){};
+                for (i=0; i < iframes.length; i++) {
+                    var iframe = iframes[i];
+                    
+                    // a small hack to make it work on android
+                    iframe.ontouchstart = func;
+                    
+                    var div = document.createElement('div');
+                    div.innerHTML = '<a href="' + iframe.src + '" target="_blank">独立运行→</a>';
+                    iframe.parentNode.insertBefore(div, iframe);
+                }   
+            }
+        </script>    
+    </head>
+    <body onload="init();">
+        <a href="http://www.hightopo.com"><img class="logo"></a>HT for Web 表格组件手册
+        <hr style="margin: 1px 0 20px 0">
+<p>索引</p>
+
+<ul><li><a href="#ref_overview">概述</a></li><li><a href="#ref_column">列</a></li><li><a href="#ref_tableheader">表头组件</a></li><li><a href="#ref_tablepane">表格面板</a></li><li><a href="#ref_tableview">表格组件</a></li></ul>
+
+<hr/>
+
+<div id="ref_overview"></div>
+
+<h2>概述</h2>
+
+<p><code>HT for Web</code>提供了表格组件类<code>ht.widget.TableView</code>，用于显示<code>DataModel</code>数据容器中<code>Data</code>类型对象的属性信息，支持排序和过滤等功能。</p>
+
+<p>通过<code>tableView = new ht.widget.TableView(dataModel);</code>初始化构建一个表格组件对象，<code>dataModel</code>参数为表格组件绑定的数据模型，
+该模型为空时表格组件构造函数内部将创建一个新的数据模型进行绑定。</p>
+
+<p>表格组件的<code>getColumnModel()</code>函数返回列模型对象，其本质也是个<code>DataModel</code>类型对象，只不过该对象是仅用于添加<code>ht.Column</code>类型对象，
+<code>ht.Column</code>类型的父类为<code>ht.Data</code>，增加了和属性定义相关的函数接口。</p>
+
+<p>因此用户所需要做的工作是，根据要显示的属性信息构建出<code>ht.Column</code>对象，然后添加到<code>tableView.getColumnModel()</code>函数返回的列模型，
+这样<code>tableView.getDataModel()</code>的数据模型中的<code>Data</code>的相关属性信息，就会根据<code>tableView.getColumnModel()</code>上存储的
+<code>ht.Column</code>对象的配置进行显示。</p>
+
+<div id="ref_column"></div>
+
+<h2>列</h2>
+
+<p><code>ht.Column</code>列类继承于<code>ht.Data</code>，不可设置父子关系，具备以下属性函数：</p>
+
+<ul><li><code>getName()</code>和<code>setName(name)</code>用于存取<code>name</code>属性，该属性结合<code>accessType</code>属性最终实现对<code>Data</code>属性的存取</li><li><code>getDisplayName()</code>和<code>setDisplayName(displayName)</code>用于存取表头的列名内容，若为空则显示<code>name</code>值</li><li><code>getIcon()</code>和<code>setIcon(&#39;icon&#39;)</code>存取表头的列名左侧显示的图标</li><li><code>getWidth()</code>和<code>setWidth(80)</code>存取列宽度，默认<code>setWidth</code>函数允许的最小宽度为<code>16</code>，避免列过窄</li><li><code>isVisible()</code>和<code>setVisible(true/false)</code>存取列是否可见</li><li><code>getColor()</code>和<code>setColor(color)</code>存取表头的列名的文本颜色</li><li><code>isEditable()</code>和<code>setEditable(true/false)</code>设置该列是否可编辑，默认为<code>false</code></li><li><code>isBatchEditable()</code>和<code>setBatchEditable(true/false)</code>设置该列是否允许多选时批量编辑，默认为<code>true</code></li><li><code>getAccessType()</code>和<code>setAccessType(type)</code>操作存取列的属性类型：<ul><li><code>null</code>： 默认类型，如<code>name</code>为<code>age</code>，采用<code>getAge()</code>和<code>setAge(98)</code>的<code>get/set</code>或<code>is/set</code>方式存取</li><li><code>style</code>：如<code>name</code>为<code>age</code>，采用<code>getStyle(&#39;age&#39;)</code>和<code>setStyle(&#39;age&#39;, 98)</code>的方式存取</li><li><code>field</code>：如<code>name</code>为<code>age</code>，采用<code>data.age</code>和<code>data.age = 98</code>的方式存取</li><li><code>attr</code>：如<code>name</code>为<code>age</code>，采用<code>getAttr(&#39;age&#39;)</code>和<code>setAttr(&#39;age&#39;, 98)</code>的方式存取</li></ul></li><li><code>valueType</code>值类型用于提示组件提供合适的<code>renderer</code>渲染，合适的编辑控件，及改变值时必要的类型转换：<ul><li><code>null</code>：默认类型，显示为文本方式</li><li><code>string</code>：字符串类型，显示为文本方式</li><li><code>boolean</code>：布尔类型，显示为勾选框</li><li><code>color</code>：颜色类型，以填充背景色的方式显示</li><li><code>int</code>：整型类型，文本编辑器改变值时自动通过<code>parseInt</code>进行转换</li><li><code>number</code>：浮点数类型，文本编辑器改变值时自动通过<code>parseFloat</code>转换</li></ul></li><li><code>getAlign()</code>和<code>setAlign(&#39;left&#39;/&#39;center&#39;/&#39;right&#39;)</code>决定以文本方式进行渲染时的水平对齐方式，默认为<code>left</code></li><li><code>isNullable()</code>和<code>setNullable(true/false)</code>决定属性是否可为空，默认为<code>true</code>，设置为<code>false</code>可避免输入<code>null</code>或<code>undefined</code></li><li><code>isEmptiable()</code>和<code>setEmptiable(true/false)</code>决定属性是否可为空字符串，默认为<code>false</code>，可避免输入空字符串，空字符串转换成<code>undefined</code></li><li><code>getSortOrder()</code>和<code>setSortOrder(&#39;desc&#39;/&#39;asc&#39;)</code>存取列升降序状态，点击表头排序时会自动改变其值</li><li><code>isSortable()</code>和<code>setSortable(true/false)</code>存取列是否可排序标志，默认为<code>true</code></li><li><code>getSortFunc()</code>和<code>setSortFunc(function(v1, v2, d1, d2){return 1/-1/0})</code>存取列排序函数，用于自定义排序逻辑</li><li><code>column.getValue = function(data, column, view){return value}</code>自定义获取值方式</li><li><code>column.setValue = function(data, column, value, view){}</code>自定义设置值方式</li><li><code>column.drawCell = function (g, data, selected, column, x, y, w, h, view){}</code>自定义单元格渲染方式</li><li><code>column.formatValue = function(value)</code>一般用于将数字转换更易读的文本格式，可重载自定义</li><li><code>column.getToolTip = function(data, tableView)</code>自定义文字提示内容`</li></ul>
+
+<p>枚举是较为常见的属性编辑选择应用，在编辑时候呈现下拉列表，因此<code>ht</code>对枚举类型属性考虑了很多应用场景，<code>setEnum(params)</code>函数即可设置单个的<code>json</code>参数，
+也可以设置逐个的参数信息<code>setEnum(enumValues, enumLabels, enumIcons, enumEditable, enumStrict)</code>，
+以下为常见的案例：</p>
+
+<ul><li><code>setEnum([&#39;C&#39;,&#39;C++&#39;,&#39;JS&#39;])</code>，传递数值数组      </li><li><code>setEnum([1,2,3], [&#39;C&#39;,&#39;C++&#39;,&#39;JS&#39;])</code>，传递数值和文字数组  </li><li><code>setEnum([1,2,3], [&#39;C&#39;,&#39;C++&#39;,&#39;JS&#39;], [&#39;c_icon&#39;, &#39;c++_icon&#39;, &#39;js_icon&#39;])</code>，传递数值、文字和图标数组</li><li><code>setEnum({values:[1,2,3]})</code>，传递数值数组</li><li><code>setEnum({values:[1,2,3], labels:[&#39;C&#39;,&#39;C++&#39;,&#39;JS&#39;]})</code>，传递数值和文字数组</li><li><code>setEnum({values:[1,2,3], labels:[&#39;C&#39;,&#39;C++&#39;,&#39;JS&#39;], icons:[&#39;c_icon&#39;, &#39;c++_icon&#39;, &#39;js_icon&#39;]})</code>，传递数值、文字和图标数组</li></ul>
+
+<blockquote><p><code>ht</code>内部会自动检测用户是否引入了<a href="../../plugin/form/ht-form-guide.html">表单插件</a>，若引入了表单插件的<code>ht.widget.ComboBox</code>组件则采用之作为编辑器，
+否则采用原生<code>html</code>的<code>select</code>组件，由于原生<code>html</code>的<code>select</code>下拉组件只文本显示，因此上面的很多参数仅对<code>ht.widget.ComboBox</code>组件起作用。</p></blockquote>
+
+<ul><li><code>enumValues</code>：枚举值数组</li><li><code>enumLabels</code>：枚举文本数组 </li><li><code>enumIcons</code>：枚举图标数组</li><li><code>enumEditable</code>：枚举下拉编辑器是否允许可输入，默认为<code>false</code></li><li><code>enumStrict</code>：值匹配时是否采用严格的<code>===</code>进行比较，默认为<code>true</code>，若为<code>false</code>则采用<code>==</code>进行比较</li></ul>
+
+<p><a href="../../plugin/form/ht-form-guide.html">表单插件</a>中的滑动条<code>ht.widget.Slider</code>也是较为常见和易用的编辑组件，
+为此<code>ht</code>也增加了该类型相应列属性的设置，通过<code>getSlider()</code>和<code>setSlider(parmas)</code>可指定该列在编辑状态呈现的滑动条信息。</p>
+
+<p><iframe src="examples/example_column.html" style="height:150px"></iframe></p>
+
+<p>上列中告警级别信息存于<code>Data</code>对象的<code>attr</code>类型的属性<code>alarmSeverity</code>中，第一列设置了<code>setSortFunc</code>的排序函数，
+实现<code>Cleared</code>告警级别置顶，其他告警级值越高排在越上层的效果，同时调用了<code>tableView.setSortColumn(column)</code>指定了当前排序列。</p>
+
+<pre><code>var column = new ht.Column();
+column.setName(&quot;alarmSeverity&quot;);
+column.setAccessType(&#39;attr&#39;);
+column.setSortFunc(function(v1, v2, d1, d2){
+    if(v1 === v2){
+        return 0;
+    }
+    // keep &#39;Cleared&#39; on top
+    if(v1 === 0){
+        return -1;
+    }
+    if(v2 === 0){
+        return 1;
+    }
+    // compare value
+    if(v1 &gt; v2){
+        return -1;
+    }else{
+        return 1;
+    }                  
+});
+columnModel.add(column);                
+tableView.setSortColumn(column);</code></pre>
+
+<p>第二列重载了<code>column.getValue</code>自定义了获取值的方式，根据<code>attr</code>类型的属性<code>alarmSeverity</code>值，通过<code>map</code>对象的
+配置找到对应的告警级别颜色。通过设置<code>valueType</code>为<code>color</code>类型后，<code>ht</code>自动会用填充满单元格背景色的方式渲染该属性。 </p>
+
+<pre><code>column = new ht.Column();
+column.setValueType(&#39;color&#39;);
+column.getValue = function(data){
+    var alarmSeverity = data.getAttr(&#39;alarmSeverity&#39;),
+        color = map[alarmSeverity].color;
+    return tableView.isSelected(data) ? ht.Default.darker(color) : color;
+};
+columnModel.add(column);</code></pre>
+
+<p>第三列重载了<code>column.drawCell</code>自定义单元格渲染效果，通过<code>tableView.getRowIndex(data)</code>返回<code>data</code>对象所在行索引，
+将索引信息通过<code>ht.Default.drawText</code>绘制在单元格中间，同时根据索引的奇偶绘制不同的行背景色。</p>
+
+<pre><code>column = new ht.Column();             
+column.drawCell = function (g, data, selected, column, x, y, w, h, tableView) {
+    var index = tableView.getRowIndex(data);
+
+    // draw background
+    var color = index % 2 === 0 ? &#39;#ECF0F1&#39; : &#39;#3498DB&#39;;
+    g.fillStyle = selected ? ht.Default.darker(color) : color;
+    g.beginPath();
+    g.rect(x, y, w, h);
+    g.fill();
+
+    // draw label
+    color = selected ? &#39;white&#39; : &#39;black&#39;;
+    ht.Default.drawText(g, &#39;row &#39; + index, null, color, x, y, w, h, &#39;center&#39;);
+};
+columnModel.add(column);</code></pre>
+
+<p>第四列重载了<code>column.drawCell</code>自定义单元格渲染效果，根据<code>attr</code>类型的属性<code>alarmSeverity</code>值，
+通过<code>map</code>对象的配置找到对应的告警级别名字和颜色信息进行渲染绘制。</p>
+
+<pre><code>column = new ht.Column();
+column.setWidth(200);    
+column.drawCell = function (g, data, selected, column, x, y, w, h, tableView) {
+    var alarmSeverity = data.getAttr(&#39;alarmSeverity&#39;),
+        info = map[alarmSeverity],
+        color = info.color;
+
+    // draw background                    
+    g.fillStyle = selected ? ht.Default.darker(color) : color;
+    g.beginPath();
+    g.rect(x, y, w, h);
+    g.fill();
+
+    // draw label     
+    color = selected ? &#39;white&#39; : &#39;black&#39;;
+    ht.Default.drawText(g, info.name, null, color, x, y, w, h, &#39;center&#39;);
+};
+columnModel.add(column);</code></pre>
+
+<div id="ref_tableheader"></div>
+
+<h3>表头组件</h3>
+
+<p><code>ht.widget.TableHeader</code>表头组件常与<code>TableView</code>和<code>TreeTableView</code>结合呈现<code>Column</code>信息，
+并提供<code>Column</code>的正反排序切换、列宽大小拉伸，以及列顺序位置变化等交互操作功能。</p>
+
+<p>通过<code>tableHeader = new ht.widget.TableHeader(tableView/treeTableView);</code>初始化构建一个表头组件对象，
+可传入<code>tableView</code>或<code>treeTableView</code>的表格组件对象进行绑定，<code>tableHeader</code>将自动监听<code>tableView.getColumnModel()</code>的列模型，
+当用户点击排序、列宽变化以及列顺序变化等操作，都将相应的修改到列模型的<code>Column</code>属性上，用户直接通过<code>API</code>修改<code>Column</code>属性时表头组件也会自动刷新。</p>
+
+<ul><li><code>getSortDescIcon()</code>和<code>setSortDescIcon(icon)</code>获取和设置表头列降序图标</li><li><code>getSortAscIcon()</code>和<code>setSortAscIcon(icon)</code>获取和设置表头列升序图标</li><li><code>getMoveBackground()</code>和<code>setMoveBackground(color)</code>获取和设置移动列时的列头背景色</li><li><code>getInsertColor()</code>和<code>setInsertColor(color)</code>获取和设置移动列时可插入位置的提示颜色</li><li><code>isColumnLineVisible()</code>和<code>setColumnLineVisible(true/false)</code>获取和设置列线是否可见，默认为<code>true</code></li><li><code>isColumnLineColor()</code>和<code>setColumnLineColor(color)</code>获取和设置列线颜色</li><li><code>isResizable()</code>和<code>setResizable(true/false)</code>获取和设置列宽是否允许改变，默认为<code>true</code></li><li><code>isMovable()</code>和<code>setMovable(true/false)</code>获取和设置列顺序是否允许移动改变，默认为<code>true</code>           </li><li><code>getTableView()</code>获取表头绑定的表格组件</li><li><code>getLabel(column)</code>获取列头文字信息，默认返回<code>column.toLabel()</code>，可重载自定义</li><li><code>getLabelFont(column)</code>获取列头文字字体，可重载自定义</li><li><code>getLabelColor(column)</code>获取列头文字颜色，默认会考虑<code>column.getColor()</code>值，可重载自定义</li><li><code>getLabelAlign(column)</code>获取列头文字水平对齐方式，默认会考虑<code>column.getAlign()</code>值，可重载自定义</li><li><code>drawColumn(g, column, x, y, width, height)</code>绘制列头，可重载自定义</li></ul>
+
+<p><iframe src="examples/example_tableheader.html" style="height:140px"></iframe></p>
+
+<p>以上例子构建了两个<code>ht.widget.TableHeader</code>表头组件，他们绑定同一个<code>tableView</code>对象，因此两个表头可实现交互同步的效果。</p>
+
+<pre><code>tableHeader1 = new ht.widget.TableHeader(tableView);
+tableHeader2 = new ht.widget.TableHeader(tableView);
+
+borderPane = new ht.widget.BorderPane();
+borderPane.setTopView(tableHeader1);
+borderPane.setCenterView(tableView);
+borderPane.setBottomView(tableHeader2);</code></pre>
+
+<p><code>TableView</code>提供了<code>addColumns</code>和<code>setColumns</code>的函数，可通过<code>json</code>格式较容易的批量添加<code>Column</code>列，上例采用了如下的代码方式：</p>
+
+<pre><code>tableView.addColumns([
+    {
+        displayName: &#39;Severity&#39;,
+        name: &#39;alarmSeverity&#39;,
+        accessType: &#39;attr&#39;,
+        sortOrder: &#39;desc&#39;,
+        tag: &#39;sortableColumn&#39;,
+        sortFunc: function(v1, v2, d1, d2){
+            if(v1 === v2){
+                return 0;
+            }
+            // keep &#39;Cleared&#39; on top
+            if(v1 === 0){
+                return -1;
+            }
+            if(v2 === 0){
+                return 1;
+            }
+            // compare value
+            if(v1 &gt; v2){
+                return -1;
+            }else{
+                return 1;
+            }                  
+        }
+    },
+    // ...                           
+]);</code></pre>
+
+<p>例子中只有第一列允许排序，其他列的<code>sortable</code>属性都设置成了<code>false</code>，为了初始化显示就对该列进行排序，代码中特意为第一列设置了<code>tag</code>标识，
+通过<code>tableView.getColumnModel().getDataByTag(&#39;sortableColumn&#39;)</code>查找到该列对象。</p>
+
+<pre><code>tableView.setSortColumn(tableView.getColumnModel().getDataByTag(&#39;sortableColumn&#39;));</code></pre>
+
+<blockquote><p>注意<code>tableView.getColumnModel()</code>也就是<code>DataModel</code>，<code>Column</code>也是继承于<code>Data</code>类型，因此具备<code>tag</code>等数据容器的相关操作。</p></blockquote>
+
+<div id="ref_tablepane"></div>
+
+<h2>表格面板</h2>
+
+<p>上节例子通过<code>BorderPane</code>容器组合了<code>TableView</code>和<code>TableHeader</code>对象，大部分情况这两个对象是需要一体化使用，
+为此<code>HT</code>提供了<code>ht.widget.TablePane</code>和<code>ht.widget.TreeTablePane</code>，这两个组件分别内置构建了<code>TableView</code>和<code>TreeTableView</code>对象，
+同时也都内置构建了一个<code>TableHeader</code>对象，界面上<code>TableHeader</code>组件呈现于上方，<code>TableView</code>和<code>TreeTableView</code>组件呈现于下方。</p>
+
+<p><code>ht.widget.TablePane</code>和<code>ht.widget.TreeTablePane</code>构造函数可分别传入<code>TableView</code>和<code>TreeTableView</code>对象，
+若未传入则内部自动生成一个<code>TableView</code>和<code>TreeTableView</code>对象，其他常用函数如下：</p>
+
+<ul><li><code>getTableView()</code>获取表格组件</li><li><code>getTableHeader()</code>获取表头组件</li><li><code>getDataModel()</code>获取表格组件绑定的数据模型</li><li><code>getColumnModel()</code>获取表格组件绑定的列模型</li><li><code>addColumns(array)</code>用<code>json</code>的数组参数方式批量添加列信息</li><li><code>setColumns(array)</code>用<code>json</code>的数组参数方式批量添加列信息，参数为空时代表清空目前所有列</li></ul>
+
+<p><iframe src="examples/example_tablepane.html" style="height:200px"></iframe></p>
+
+<p>以上例子中继承于<code>ht.Column</code>扩展了<code>com.hightopo.LanguageColumn</code>和<code>com.hightopo.LanguageColumn</code>这两个列类型，
+主要目的是在构造函数中初始化必要的参数配置信息，这样可以避免在项目比较大，同类型列需要多处定义时重复配置信息过多，
+并有利于参数信息的统一修改。</p>
+
+<pre><code>com = {};
+com.hightopo = {}; 
+
+var LanguageColumn = com.hightopo.LanguageColumn = function(){
+    LanguageColumn.superClass.constructor.call(this);                    
+    this.setName(&#39;Language&#39;);
+    this.setAccessType(&#39;attr&#39;);
+    this.setEnum({values: [1, 2, 3, 4, 5, 6], labels: [&#39;C&#39;, &#39;C++&#39;, &#39;Java&#39;, &#39;JS&#39;, &#39;AS&#39;, &#39;C#&#39;]});
+    this.setEditable(true);
+    this.setSortFunc(function(v1, v2, d1, d2){
+        if(v1 === v2){
+            return 0;
+        }
+        if(v1 === 2){
+            return 1;
+        }
+        if(v2 === 2){
+            return -1;
+        }
+        if(v1 === 5){
+            return -1;
+        }
+        if(v2 === 5){
+            return 1;
+        }
+        return v1 - v2;
+    });                    
+}; 
+ht.Default.def(&#39;com.hightopo.LanguageColumn&#39;, ht.Column, {
+});     
+
+var SexColumn = com.hightopo.SexColumn = function(){
+    SexColumn.superClass.constructor.call(this);                    
+    this.setName(&#39;Sex&#39;);
+    this.setAccessType(&#39;attr&#39;);
+    this.setEnum([&#39;Male&#39;, &#39;Female&#39;]);                   
+    this.setEditable(true);                    
+}; 
+ht.Default.def(&#39;com.hightopo.SexColumn&#39;, ht.Column, {
+});  </code></pre>
+
+<p>通过以上的类封装，配置列属性时就减少了很多参数，以下代码需注意<code>className</code>的关键字，
+<code>ht</code>会根据这个<code>className</code>特殊关键字信息来替换默认的<code>ht.Column</code>类型，
+同理属性组件也会通过<code>className</code>特殊关键字信息来替换默认的<code>ht.Property</code>类型。</p>
+
+<pre><code>tablePane.addColumns([
+    {
+        name: &#39;id&#39;,
+        width: 60,
+        tag: &#39;id&#39;
+    },
+    {
+        className: &#39;com.hightopo.LanguageColumn&#39;,
+        width: 100,
+        tag: &#39;language&#39;
+    },
+    {
+        className: &#39;com.hightopo.SexColumn&#39;,
+        width: 100,
+        tag: &#39;sex&#39;
+    }
+]);
+
+propertyView.addProperties([
+    {
+        name: &#39;id&#39;
+    },
+    {
+        className: &#39;com.hightopo.LanguageProperty&#39;,
+        editable: true
+    },
+    {
+        className: &#39;com.hightopo.SexProperty&#39;,
+        editable: true
+    }                    
+]);</code></pre>
+
+<p>通过<code>tablePane.getTableHeader().setResizable(false)</code>将表头被设置成不可改变列宽度：</p>
+
+<pre><code>tablePane.getTableHeader().setResizable(false);</code></pre>
+
+<p>通过<code>tablePane.addViewListener</code>监听<code>tablePane</code>的组件事件，当监听到<code>beginValidate</code>事件触发时，
+根据当前组件宽度，对每个列宽进行分配，在定义<code>column</code>时设置了<code>tag</code>参数，
+因此通过<code>columnModel.getDataByTag(&#39;language&#39;)</code>可找到对应的列：</p>
+
+<pre><code>tablePane.addViewListener(function(e){
+    if(e.kind === &#39;beginValidate&#39;){
+        var columnModel = tablePane.getColumnModel(),
+            width = tablePane.getWidth();
+        columnModel.getDataByTag(&#39;id&#39;).setWidth(width * 0.2);
+        columnModel.getDataByTag(&#39;language&#39;).setWidth(width * 0.4);
+        columnModel.getDataByTag(&#39;sex&#39;).setWidth(width * 0.4);                        
+    }
+});</code></pre>
+
+<div id="ref_tableview"></div>
+
+<h2>表格组件</h2>
+
+<p>表格组件类<code>ht.widget.TableView</code>主要可配置属性和函数如下：</p>
+
+<ul><li><code>enableToolTip()</code>和<code>disableToolTip()</code>开启和关闭文字提示</li><li><code>isDisabled()</code>和<code>setDisabled(true/false, iconURL)</code>可获取和设置整个组件处于不可用状态</li><li><code>addTopPainter(func)</code>和<code>removeTopPainter(func)</code>增加和删除顶层绘制器<code>function(g){...}</code></li><li><code>addBottomPainter(func)</code>和<code>removeBottomPainter(func)</code>增加和删除底层绘制器<code>function(g){...}</code></li><li><code>isEditable()</code>和<code>setEditable(true/false)</code>控制可否编辑的总开关，默认为<code>false</code>，每个<code>Column</code>列对象可再控制</li><li><code>isBatchEditable()</code>和<code>setBatchEditable(true/false)</code>控制可否多选时批量编辑总开关，默认为<code>true</code>，每个<code>Column</code>列对象可再控制</li><li><code>getRowHeight()</code>和<code>setRowHeight(20)</code>获取和设置行高</li><li><code>isRowLineVisible()</code>和<code>setRowLineVisible(true/false)</code>获取和设置行线是否可见，默认为<code>true</code></li><li><code>getRowLineColor()</code>和<code>setRowLineColor(color)</code>获取和设置行线颜色</li><li><code>isColumnLineVisible()</code>和<code>setColumnLineVisible()</code>获取和设置列线是否可见，默认为<code>true</code></li><li><code>getColumnLineColor()</code>和<code>setColumnLineColor(color)</code>获取和设置列线颜色</li><li><code>getSortColumn()</code>和<code>setSortColumn(column)</code>获取和设置当前排序列</li><li><code>getSortFunc()</code>和<code>setSortFunc(sortFunc)</code>获取和设置排序函数，默认值为空不排序，其值在没有<code>sortColumn</code>情况下起作用</li><li><code>getVisibleFunc()</code>和<code>setVisibleFunc()</code>获取和设置可见过滤器，其可过滤<code>DataModel</code>中的<code>Data</code>数据对象</li><li><code>getScrollBarColor()</code>和<code>setScrollBarColor(color)</code>获取和设置滚动条颜色</li><li><code>getScrollBarSize()</code>和<code>setScrollBarSize(6)</code>获取和设置滚动条宽度</li><li><code>isAutoHideScrollBar()</code>和<code>setAutoHideScrollBar(true/false)</code>获取和设置是否自动隐藏滚动条，默认为<code>true</code></li><li><code>isCheckModel()</code>和<code>setCheckMode(true/false)</code>获取和设置是否为<code>check</code>模式，默认为<code>false</code>，为<code>true</code>时自动插入<code>checkColumn</code>列</li><li><code>getColumnModel()</code>： 表格组件内置一个<code>DataModel</code>类型的列模型，用于存储<code>Column</code>列对象信息</li><li><code>onColumnClicked(column)</code>列头被点击时调用，可重载做后续处理，如远程排序功能   </li><li><code>getCheckIcon(data)</code>返回<code>data</code>对象对应的<code>check</code>图标，可重载自定义<code>check</code>图标，该函数在<code>checkMode</code>模式下有效</li><li><code>getFocusData()</code>、<code>setFocusData(data)</code>和<code>setFocusDataById(id)</code>在<code>checkMode</code>模式下图元除了被选中有<code>check</code>状态外，还可以有被点击行的<code>focus</code>状态</li><li><code>getDataAt(pointOrEvent)</code>传入逻辑坐标点或交互事件<code>event</code>参数，返回对应的<code>data</code>对象或空</li><li><code>onDataDoubleClicked(data)</code>当<code>data</code>所在行被双击时回调，可重载对双击事件做响应          </li><li><code>onDataClicked(data)</code>当<code>data</code>所在行被单击时回调，可重载对单击事件做响应                       </li><li><code>getLabelFont(data, column, value)</code>返回对应的单元格文本字体，可重载自定义</li><li><code>getLabelColor(data, column, value)</code>返回对应的单元格文本颜色，可重载自定义</li><li><code>getSelectBackground(data)</code>和<code>setSelectBackground(color)</code>获取和设置行选中背景颜色</li><li><code>getStartRowIndex()</code>返回当前可见区域的起始行索引</li><li><code>getEndRowIndex()</code>返回当前可见区域的结束行索引</li><li><code>getRowDatas()</code>返回当前显示的<code>Data</code>对象数组，该数组已被排序和过滤</li><li><code>getRowIndex(data)</code>返回<code>data</code>对象所在的行索引</li><li><code>getRowSize()</code>返回当前可见行总行数</li><li><code>isVisible(data)</code>判断<code>data</code>对象是否可见，可重载自定义</li><li><code>getDataModel()</code>获取绑定的<code>DatModel</code>数据模型</li><li><code>setDataModel(dataModel)</code>绑定新的<code>DatModel</code>数据模型</li><li><code>makeVisible(data)</code>该函数触发组件滚动到确保<code>data</code>对象出现在可见区域。</li><li><code>invalidateModel()</code>该函数触发组件重新排序过滤加载数据，一般组件会自动调用，除非数据变化但未派发事件时才需强制调用</li><li><code>redraw()</code>重绘刷新，注意该函数不会触发数据模型的重新加载</li><li><code>invalidateData(data)</code>调用该函数会重绘<code>data</code>对象所在行</li><li><code>drawRowBackground(g, data, selected, x, y, width, height)</code>绘制行背景色，默认仅在选中该行时填充选中背景色，可重载自定义</li><li><code>drawCell(g, data, selected, column, x, y, width, height)</code>绘制单元格，可重载自定义单元格渲染</li><li><code>drawCheckColumnCell(g, data, selected, column, x, y, width, height, view)</code>绘制<code>check</code>列单元格，可重载自定义</li><li><code>isCellEditable(data, column)</code>判断单元格是否可编辑，可重载自定义</li><li><code>getCurrentSortFunc()</code>该函数默认返回<code>sortFunc</code>函数，当<code>sortColumn</code>不为空时将返回其对应的排序函数</li><li><code>handleDragAndDrop(event, state)</code>该函数默认为空，若该函数被重载，则<code>pan</code>平移组件功能将被关闭<ul><li><code>event</code>鼠标或<code>Touch</code>交互事件</li><li><code>state</code>当前状态，先后会有<code>prepare</code>-<code>begin</code>-<code>between</code>-<code>end</code>四种过程</li></ul></li></ul>
+
+<p>以下为<code>getCurrentSortFunc</code>函数默认实现，<code>TableView</code>的<code>sortFunc</code>回调时的两个参数分别是<code>d1</code>和<code>d2</code>即两个不同的<code>Data</code>对象，
+<code>Column</code>的<code>sortFunc</code>回调时传入的是<code>v1,v2,d1,d2</code>四个参数，也就是头两个参数分别为<code>Data</code>对象对应列的值。</p>
+
+<pre><code>getCurrentSortFunc: function () {
+    var column = this._sortColumn;
+    if (column &amp;&amp; column.isSortable()) {
+        var func = column.getSortFunc(),
+                tableView = this,
+                order = &#39;asc&#39; === column.getSortOrder() ? 1 : -1;            
+        if (!func) {
+            func = ht.Default.sortFunc;
+        }
+        return function (d1, d2) {
+            var v1 = tableView.getValue(d1, column),
+                v2 = tableView.getValue(d2, column);
+            return func.call(tableView, v1, v2, d1, d2) * order;
+        };
+    }
+    return this._sortFunc;
+}</code></pre>
+
+<p><iframe src="examples/example_filter.html" style="height:270px"></iframe></p>
+
+<p>以下代码通过<code>tableHeader.getView().style</code>获取表头的底层<code>div</code>组件，采用<code>css</code>的设置以<code>repeat-x</code>方式平铺了渐进色的背景。</p>
+
+<pre><code>tableHeader = tablePane.getTableHeader();
+tableHeader.getView().style.background = &#39;url(images/header.png) repeat-x&#39;;</code></pre>
+
+<p>以下代码重载了<code>drawRowBackground</code>函数，绘制了表格行交替斑马线的效果。</p>
+
+<pre><code>tableView.drawRowBackground = function(g, data, selected, x, y, width, height){
+    if(tableView.isSelected(data)){
+        g.fillStyle = &#39;#87A6CB&#39;;
+    }
+    else if(tableView.getRowIndex(data) % 2 === 0){
+        g.fillStyle = &#39;#F1F4F7&#39;;
+    }
+    else{
+        g.fillStyle = &#39;#FAFAFA&#39;;
+    }
+    g.beginPath();
+    g.rect(x, y, width, height);
+    g.fill();
+};</code></pre>
+
+<p>以下代码设置了可见过滤器，过滤器根据<code>toolbar</code>工具条的元素选中状态决定<code>Data</code>对象是否可见，由于过滤器只设置一次，
+过滤规则随着工具条状态的变化而变化，但工具条元素的状态变化并未派发任何任何事件，因此工具条按钮的<code>action</code>都显示
+调用了<code>tableView.invalidateModel();</code>通知表格进行数据重新加载更新。</p>
+
+<pre><code>tableView.setVisibleFunc(function(data){                    
+    var nation = data.a(&#39;nation&#39;),
+        sex = data.a(&#39;sex&#39;);                    
+    // filter nation 
+    if(!toolbar.getItemById(&#39;nation-all&#39;).selected){
+        if(toolbar.getItemById(&#39;uk&#39;).selected &amp;&amp; nation !== 0){
+            return false;
+        }
+        if(toolbar.getItemById(&#39;usa&#39;).selected &amp;&amp; nation !== 1){
+            return false;
+        }
+        if(toolbar.getItemById(&#39;mexico&#39;).selected &amp;&amp; nation !== 2){
+            return false;
+        }
+    } 
+    // filter sex
+    if(!toolbar.getItemById(&#39;sex-all&#39;).selected){
+        if(toolbar.getItemById(&#39;man&#39;).selected &amp;&amp; sex !== 0){
+            return false;
+        }
+        if(toolbar.getItemById(&#39;woman&#39;).selected &amp;&amp; sex !== 1){
+            return false;
+        }
+    }
+    return true;
+});</code></pre>
+
+<p>以下代码在添加的列中重载了<code>drawCell</code>函数，通过<code>ht.Default.drawStretchImage</code>函数在单元格中心位置绘制了对应的图标，
+<code>drawStretchImage</code>函数的第三个参数可传入<code>fill</code>、<code>uniform</code>或<code>centerUniform</code>的类型。</p>
+
+<pre><code>tablePane.addColumns([
+    {
+        name: &#39;index&#39;,
+        displayName: &#39;Index&#39;,
+        accessType: &#39;attr&#39;,
+        align: &#39;center&#39;
+    },
+    {
+        name: &#39;nation&#39;,
+        displayName: &#39;Nation&#39;,
+        accessType: &#39;attr&#39;,
+        align: &#39;center&#39;,
+        drawCell: function (g, data, selected, column, x, y, w, h, view) {
+            var image = ht.Default.getImage(&#39;images/&#39; + nations[data.a(&#39;nation&#39;)] + &#39;.png&#39;);
+            ht.Default.drawStretchImage(g, image, &#39;centerUniform&#39;, x, y, w, h);
+        }
+
+    },
+    {
+        name: &#39;sex&#39;,
+        displayName: &#39;Sex&#39;,
+        accessType: &#39;attr&#39;,
+        align: &#39;center&#39;,
+        drawCell: function (g, data, selected, column, x, y, w, h, view) {
+            var image = ht.Default.getImage(&#39;images/&#39; + sexs[data.a(&#39;sex&#39;)] + &#39;.png&#39;);
+            ht.Default.drawStretchImage(g, image, &#39;centerUniform&#39;, x, y, w, h);
+        }
+    }
+]);</code></pre>    <hr id="contact" style="margin: 20px 0 1px 0">
+    <a href="http://www.hightopo.com"><img class="logo"></a>欢迎交流 <a href="mailto:service@hightopo.com">service@hightopo.com</a>
+</body>
+</html>

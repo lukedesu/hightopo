@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="../../../../lib/core/ht.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-palette.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-form.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-xeditinteractor.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-historymanager.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script type="text/javascript" src="../../xeditinteractor/examples/contextmenu.js"></script>
+        <script type="text/javascript">
+            function init() {
+                var palette = new ht.widget.Palette(),
+                    graphView = window.graph = new ht.graph.GraphView(),
+                    dataModel = graphView.dm(),
+                    list = new ht.widget.ListView(),
+                    tree = new ht.widget.TreeView(dataModel),
+                    properView = new ht.widget.PropertyView(dataModel),
+                    leftSplitView = new ht.widget.SplitView(palette, tree, 'v', 200),
+                    rightSplitView = new ht.widget.SplitView(properView, list, 'v', 200),
+                    splitView = new ht.widget.SplitView(leftSplitView, graphView, "h", 200),
+                    mainSplitView = new ht.widget.SplitView(splitView, rightSplitView, 'h', -160),
+                    historyManager = window.historyManager = new ht.HistoryManager(dataModel),
+                    view = mainSplitView.getView(),
+                    contextMenu = new ht.widget.ContextMenu(),
+                    style = view.style;
+                initDataModel(dataModel);
+                initPaletteModel(palette.dm());
+                historyManager.clear();
+                graphView.setEditable(true);
+                
+                historyManager.mp(function(e) {
+                    var property = e.property;
+                    if (property === 'historyIndex' || property === 'histories') {
+                        var histories = historyManager.getHistories(),
+                            historyIndex = historyManager.getHistoryIndex(),
+                            dataModel = list.dm();
+                        list._betweenUpdate = 1;
+                        dataModel.clear();
+                        var initData = new ht.Data();
+                        initData.setName('init status');
+                        dataModel.add(initData);
+                        histories.forEach(function(history) {
+                            var actions = [];
+                            history.forEach(function(action) {
+                                actions.push(action.type);
+                            });
+                            var actionsStr = actions.join(', ');
+                            var data = new ht.Data();
+                            data.setName(actionsStr);
+                            dataModel.add(data);
+                        });
+                        list.sm().ss(dataModel.getDatas().get(historyIndex + 1));
+                        list._betweenUpdate = 0;
+                    }
+                });
+
+                list.sm().ms(function(e) {
+                    if (!list._betweenUpdate) {
+                        var data = list.sm().ld(),
+                            index = list.dm().getDatas().indexOf(data);
+                        historyManager.setHistoryIndex(index - 1);
+                    }
+                });
+
+                properView.addProperties([{
+                    name: 'name',
+                    editable: true
+                }, {
+                    name: 'label.background',
+                    accessType: 'style',
+                    editable: true,
+                    valueType: 'color'
+                }]);
+
+                palette.handleDragAndDrop = function(e, state) {
+                    if (state === 'end') {
+                        var bound = graphView.getView().getBoundingClientRect(),
+                            point = ht.Default.getClientPoint(e);
+
+                        if (ht.Default.containsPoint({
+                            x: bound.left,
+                            y: bound.top,
+                            width: bound.width,
+                            height: bound.height
+                        }, point)) {
+                            historyManager.beginInteraction();
+                            var paletteNode = this.sm().ld(),
+                                node = new ht.Node(),
+                                lp = graphView.lp(e);
+
+                            graphView.dm().add(node);
+                            node.setPosition(lp.x, lp.y);
+                            node.setImage(paletteNode.getImage());
+                            historyManager.endInteraction();
+                        }
+                    }
+                };
+                style.position = "absolute";
+                style.top = "0";
+                style.right = "0";
+                style.bottom = "0";
+                style.left = "0";
+                document.body.appendChild(view);
+
+                window.addEventListener("resize", function(e) {
+                    mainSplitView.iv();
+                });
+
+                window.addEventListener('keydown', function(e) {
+                    if (ht.Default.isCtrlDown(e)) {
+                        if (e.keyCode == 90) {
+                            historyManager.undo();
+                        } else if (e.keyCode == 89) {
+                            historyManager.redo();
+                        }
+                    }
+                });
+
+                var editInteractor = window.editInteractor = graph.getEditInteractor();
+                contextMenu.addTo(graph.getView());
+                contextMenu.afterShow = function() {
+                    editInteractor._pause = true;
+                };
+                contextMenu.afterHide = function() {
+                    editInteractor._pause = false;
+                };
+
+                contextMenu.beforeShow = function(e) {
+                    var mouseData = graph.getDataAt(e.originEvent),
+                        hoverSegmentIndex = editInteractor._hoverSegmentIndex,
+                        segments;
+
+                    if (hoverSegmentIndex >= 0) {
+                        var segment,
+                            data = editInteractor._shape || editInteractor._edge,
+                            items;
+
+                        if (data instanceof ht.Shape) {
+                            segments = data.getSegments();
+                        } else if (data instanceof ht.Edge) {
+                            segments = data.s("edge.segments")
+                        }
+
+                        if (!segments) {
+                            segments = editInteractor.getDefaultSegments(data);
+                        }
+                        if (data instanceof ht.Shape && data.isClosePath() && segments.indexOf(5) < 0) {
+                            segments.add(5);
+                        }
+                        segment = segments.get(hoverSegmentIndex);
+
+                        contextMenuChangeToMove.selected = segment === 1;
+                        contextMenuChangeToLine.selected = segment === 2;
+                        contextMenuChangeToQuadratic.selected = segment === 3;
+                        contextMenuChangeToBezier.selected = segment === 4;
+                        contextMenuClosePath.selected = segments.indexOf(5) >= 0;
+                        contextMenuClosePath.action = function(item) {
+                            if (data instanceof ht.Shape) {
+                                historyManager.beginInteraction();
+                                segments = new ht.List(segments._as.slice(0));
+                                segments.remove(5);
+                                if (item.selected) {
+                                    data.setClosePath(true);
+                                } else {
+                                    data.setClosePath(false);
+                                }
+                                data.setSegments(segments);
+                                historyManager.endInteraction();
+                            }
+                        }
+                        if ([1, 2, 3, 4].indexOf(segment) >= 0) {
+                            items = [contextMenuChangeToMove, contextMenuChangeToLine, contextMenuChangeToQuadratic, contextMenuChangeToBezier, contextMenuAddPoint];
+                        } else if (segment === 5) {
+                            items = [contextMenuAddPoint];
+                        }
+                        if (data instanceof ht.Shape) {
+                            items.push(contextMenuClosePath);
+                        }
+                        contextMenu.setItems(items);
+                    } else if (editInteractor._removePointIndex >= 0) {
+                        contextMenu.setItems([contextMenuRemovePoint]);
+                    } else if (mouseData && mouseData instanceof ht.Shape) {
+                        segments = mouseData.getSegments();
+
+                        if ((segments && segments.indexOf(5) >= 0) || mouseData.isClosePath()) {
+                            contextMenuClosePath.selected = true;
+                        } else {
+                            contextMenuClosePath.selected = false;
+                        }
+                        contextMenuClosePath.action = function(item) {
+                            historyManager.beginInteraction();
+                            if (segments && segments.indexOf(5) >= 0) {
+                                segments = new ht.List(segments._as.slice(0));
+                                segments.remove(5);
+                                mouseData.setSegments(segments);
+                            }
+                            if (item.selected) {
+                                mouseData.setClosePath(true);
+                            } else {
+                                mouseData.setClosePath(false);
+                            }
+                            historyManager.endInteraction();
+                        }
+                        contextMenu.setItems([contextMenuClosePath]);
+                    } else {
+                        contextMenu.setItems(null);
+                    }
+                };
+            }
+
+            function initDataModel(dataModel) {
+                var circleNode = new ht.Node(),
+                    rectNode = new ht.Node(),
+                    triangleNode = new ht.Node(),
+                    hightopoTextNode = new ht.Node(),
+                    htLogoNode = new ht.Node(),
+                    heartNode = new ht.Shape(),
+                    edge = new ht.Edge(htLogoNode, heartNode),
+                    shape = new ht.Shape(),
+                    shape1 = new ht.Shape();
+                circleNode.setPosition(100, 70);
+                circleNode.s({
+                    "shape": "circle",
+                    "shape.background": "rgb(50, 205, 50)"
+                });
+                circleNode.setSize(70, 70);
+                dataModel.add(circleNode);
+
+                rectNode.setPosition(150, 80);
+                rectNode.s({
+                    "shape": "rect",
+                    "shape.background": "rgb(255, 85, 85)"
+                });
+                rectNode.setSize(70, 70);
+                dataModel.add(rectNode);
+
+                triangleNode.setPosition(200, 85);
+                triangleNode.s({
+                    "shape": "triangle",
+                    "shape.background": "rgb(85, 85, 255)"
+                });
+                triangleNode.setSize(70, 70);
+                dataModel.add(triangleNode);
+
+                hightopoTextNode.setRotation(Math.PI / 6);
+                hightopoTextNode.setPosition(150, 180);
+                dataModel.add(hightopoTextNode);
+
+                htLogoNode.setPosition(680, 60);
+                htLogoNode.setSize(60, 70);
+                dataModel.add(htLogoNode);
+
+                heartNode.setPoints(new ht.List([{
+                    x: 716,
+                    y: 165
+                }, {
+                    x: 714,
+                    y: 159
+                }, {
+                    x: 700,
+                    y: 156
+                }, {
+                    x: 696,
+                    y: 166
+                }, {
+                    x: 691,
+                    y: 180
+                }, {
+                    x: 714,
+                    y: 190
+                }, {
+                    x: 717,
+                    y: 196
+                }, {
+                    x: 718,
+                    y: 190
+                }, {
+                    x: 741,
+                    y: 178
+                }, {
+                    x: 737,
+                    y: 165
+                }, {
+                    x: 733,
+                    y: 154
+                }, {
+                    x: 717,
+                    y: 159
+                }, {
+                    x: 716,
+                    y: 165
+                }]));
+                heartNode.setSegments(new ht.List([1, 4, 4, 4, 4]));
+                heartNode.s({
+                    "shape.background": "rgb(207,39,29)",
+                    "shape.gradient.color": "rgb(244, 124,90)",
+                    "shape.gradient": "radial.northwest"
+                });
+                heartNode.setPosition(840, 180);
+                heartNode.setSize(60, 60);
+                dataModel.add(heartNode);
+
+                edge.setStyle('edge.type', 'points');
+                edge.setStyle('edge.points', new ht.List([{
+                    x: 766,
+                    y: 59
+                }, {
+                    x: 766,
+                    y: 82
+                }, {
+                    x: 791,
+                    y: 82
+                }, {
+                    x: 791,
+                    y: 107
+                }, {
+                    x: 816,
+                    y: 107
+                }, {
+                    x: 816,
+                    y: 132
+                }, {
+                    x: 841,
+                    y: 132
+                }]));
+                dataModel.add(edge);
+
+                var h = 50;
+                shape.setPoints(new ht.List([{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 25,
+                    y: -h
+                }, {
+                    x: 50,
+                    y: 0
+                }, {
+                    x: 75,
+                    y: h
+                }, {
+                    x: 100,
+                    y: 0
+                }, {
+                    x: 125,
+                    y: -h
+                }, {
+                    x: 150,
+                    y: 0
+                }, {
+                    x: 175,
+                    y: h
+                }, {
+                    x: 200,
+                    y: 0
+                }]));
+                shape.setSegments(new ht.List([
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3 // quadraticCurveTo
+                ]));
+                shape.translate(880, 60);
+                dataModel.add(shape);
+
+                shape1.s("shape.border.width", 10);
+                shape1.s("shape.border.color", "rgb(52, 152, 219)");
+                shape1.s("shape.background", null);
+                shape1.setPoints(new ht.List([{
+                    x: 0,
+                    y: 0
+                }, {
+                    x: 25,
+                    y: -h
+                }, {
+                    x: 50,
+                    y: 0
+                }, {
+                    x: 75,
+                    y: h
+                }, {
+                    x: 100,
+                    y: 0
+                }, {
+                    x: 125,
+                    y: -h
+                }, {
+                    x: 150,
+                    y: 0
+                }, {
+                    x: 175,
+                    y: h
+                }, {
+                    x: 200,
+                    y: 0
+                }]));
+                shape1.setSegments(new ht.List([
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3 // quadraticCurveTo
+                ]));
+                shape1.translate(880, 130);
+                dataModel.add(shape1);
+
+                var grid = new ht.Grid();
+                grid.setSize(360, 200);
+                grid.setStyle('grid.row.count', 2);
+                grid.setStyle('grid.column.count', 5);
+                grid.setStyle('grid.border', 8);
+                grid.setStyle('grid.gap', 8);
+                grid.setStyle('grid.depth', -5);
+                grid.setStyle('grid.background', '#E5BB77');
+                grid.setStyle('select.width', 0);
+                grid.setPosition(440, 120);
+                dataModel.add(grid);
+
+
+                var group = new ht.Group(),
+                    childNode1 = new ht.Node(),
+                    childNode2 = new ht.Node();
+                group.setExpanded(true);
+                group.addChild(childNode1);
+                group.addChild(childNode2);
+                childNode1.setPosition(100, 300);
+                childNode2.setPosition(300, 300);
+                dataModel.add(group);
+                dataModel.add(childNode1);
+                dataModel.add(childNode2);
+            }
+
+            function initPaletteModel(model) {
+                var group = new ht.Group(),
+                    node = new ht.Node(),
+                    draggableNode = new ht.Node();
+
+                group.setName("Nodes");
+                group.setExpanded(true);
+                node.setName("node1");
+                node.s('draggable', true);
+                draggableNode.setName("node2");
+                draggableNode.s("draggable", true);
+                group.addChild(node);
+                group.addChild(draggableNode);
+                model.add(group);
+                model.add(node);
+                model.add(draggableNode);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+
+    </body>
+</html>

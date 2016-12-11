@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .view {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-animation.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <script type="text/javascript">
+            function init() {
+                ht.Default.setImage('alarm-icon', {
+                    width: 100,
+                    height: 100,
+                    opacity: { func: 'attr@alarm.opacity' },
+                    comps: [
+                        {
+                            type: 'triangle',
+                            rect: [2, 2, 96, 96],
+                            background: { 
+                                value : 'gray',
+                                func: 'attr@alarm.color'
+                            }
+                        },
+                        {
+                            type: 'rect',
+                            rect: [45, 30, 10, 40],
+                            background: 'white'
+                        },
+                        {
+                            type: 'circle',
+                            rect: [40, 72, 20, 20],
+                            background: 'white'
+                        }
+                    ]
+                });
+                dm = new ht.DataModel();
+                g2d = new ht.graph.GraphView(dm);
+                view = g2d.getView();
+                                
+                createNode(100, 100, 'Critical', '#FF0000');
+                createNode(200, 100, 'Major', '#FFA000');
+                createNode(300, 100, 'Minor', '#FFFF00');
+                createNode(400, 100, 'Warning', '#00FFFF');                                       
+             
+                dm.enableAnimation(500);
+                view.className = "view";
+                document.body.appendChild(view);
+                 
+                g2d.isLabelVisible = function(){return true;}
+                g2d.mp(function(e){
+                    if(e.property === 'zoom'){                         
+                        dm.each(function(data){
+                            data.s('label.scale', 1/g2d.getZoom());
+                        });
+                    }
+                });
+            }
+            
+            function createNode(x, y, alarmLabel, alarmColor){
+                var node = new ht.Node();
+                node.setPosition(x, y);
+                node.setName(alarmLabel);
+                node.setAttr('alarm.color', alarmColor);
+                node.addStyleIcon('alarm', {
+                    position: 24,
+                    width: 18,
+                    height: 18,
+                    names: ['alarm-icon']
+                }); 
+                if(alarmLabel === 'Critical' || alarmLabel === 'Major'){
+                    node.setAnimation({
+                        hide: {
+                            property: "alarm.opacity",
+                            accessType: "attr", 
+                            from: 1, 
+                            to: 0.3,
+                            frames: 1,
+                            next: "show"
+                        },
+                        show: {
+                            property: "alarm.opacity",
+                            accessType: "attr", 
+                            from: 0.3, 
+                            to: 1,
+                            frames: 1,
+                            next: "hide"
+                        },
+                        start: ["hide"]
+                    });
+                }
+                dm.add(node);
+                return node;
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SnapToGrid</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <script type="text/javascript" src="../../../../lib/core/ht.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-xeditinteractor.js"></script>
+        <script type="text/javascript" src="SnapMoveInteractor.js"></script>
+        <script type="text/javascript" src="SnapTouchInteractor.js"></script>
+        <script type="text/javascript" src="GridPainter.js"></script>
+        <script>
+            function init() {
+                var graph = window.graph = new ht.graph.GraphView(),
+                    dataModel = graph.getDataModel(),
+                    view = graph.getView(),
+                    style = view.style,
+                    editInteractor = window.editInteractor = new ht.graph.XEditInteractor(graph);
+                graph.setInteractors(new ht.List([
+                    new ht.graph.SelectInteractor(graph),
+                    editInteractor,
+                    new ht.graph.SnapMoveInteractor(graph),
+                    new ht.graph.DefaultInteractor(graph),
+                    new ht.graph.SnapTouchInteractor(graph , {editable: false})
+                ]));
+                graph.addBottomPainter(new ht.graph.GridPainter(graph));
+                var rectNode = new ht.Node();
+                rectNode.setPosition(150, 80);
+                rectNode.s({"shape": "rect",
+                              "shape.background": "rgb(255, 85, 85)"
+                           });
+                rectNode.setSize(70, 70);
+                dataModel.add(rectNode);
+                
+                
+                var grid = new ht.Grid();
+                grid.setSize(360, 200);
+                grid.setStyle('grid.row.count', 2);
+                grid.setStyle('grid.column.count', 5);
+                grid.setStyle('grid.border', 8);
+                grid.setStyle('grid.gap', 8);
+                grid.setStyle('grid.depth', -5),
+                grid.setStyle('grid.background', '#E5BB77');
+                grid.setStyle('select.width', 0);
+                grid.setPosition(440, 120);
+                dataModel.add(grid);
+                graph.setSnapSpacing(10);
+                var edge = new ht.Edge(grid, rectNode);
+                dataModel.add(edge);
+                window.addEventListener("resize", function(e) {
+                   graph.iv(); 
+                });
+                
+                graph.translate(-40, 0);
+                style.position = "absolute";
+                style.left = "0";
+                style.right = "0";
+                style.top = "0";
+                style.bottom = "0";
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

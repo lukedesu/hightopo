@@ -1,0 +1,725 @@
+<!doctype html>
+<html>
+    <head>
+        <title>HT for Web 电信扩展手册</title>
+        <meta charset="UTF-8">    
+        <meta name="viewport" content="user-scalable=yes, width=1024">
+        <style type="text/css"> 
+            h1, h2, h3, h4, h5, h6, p, blockquote {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+                font-size: 13px;
+                line-height: 18px;
+                color: #737373;
+                background-color: white; 
+                margin: 10px 13px 10px 13px;
+            }
+            table {
+                margin: 10px 0 15px 0;
+                border-collapse: collapse;
+            }
+            td,th {	
+                border: 1px solid #ddd;
+                padding: 3px 10px;
+            }
+            th {
+                padding: 5px 10px;	
+            }
+            a {
+                color: #0069d6;
+            }
+            a:hover {
+                color: #0050a3;
+                text-decoration: none;
+            }
+            a img {
+                border: none;
+            }
+            p {
+                margin-bottom: 9px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #404040;
+                line-height: 36px;
+            }
+            h1 {
+                margin-bottom: 18px;
+                font-size: 30px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 18px;
+            }
+            h4 {
+                font-size: 16px;
+            }
+            h5 {
+                font-size: 14px;
+            }
+            h6 {
+                font-size: 13px;
+            }
+            hr {
+                margin: 0 0 19px;
+                border: 0;
+                border-bottom: 1px solid #ccc;
+            }
+            blockquote {
+                padding: 13px 13px 21px 15px;
+                margin-bottom: 18px;
+                font-family:georgia,serif;
+                font-style: italic;
+            }
+            blockquote:before {
+                content:"\201C";
+                font-size:40px;
+                margin-left:-10px;
+                font-family:georgia,serif;
+                color:#eee;
+            }
+            blockquote p {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 18px;
+                margin-bottom: 0;
+                font-style: italic;
+            }
+            code, pre {
+                font-family: Monaco, Andale Mono, Courier New, monospace;
+            }
+            code {
+                background-color: #fee9cc;
+                color: rgba(0, 0, 0, 0.75);
+                padding: 1px 3px;
+                font-size: 12px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+            }
+            pre {
+                display: block;
+                padding: 14px;
+                margin: 0 0 18px;
+                line-height: 16px;
+                font-size: 11px;
+                border: 1px solid #d9d9d9;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            pre code {
+                background-color: #fff;
+                color:#737373;
+                font-size: 11px;
+                padding: 0;
+            }
+            sup {
+                font-size: 0.83em;
+                vertical-align: super;
+                line-height: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact;
+            }
+            @media screen and (min-width: 914px) {
+                body {
+                    width: 854px;
+                    margin:10px auto;
+                }
+            }
+            @media print {
+                body,code,pre code,h1,h2,h3,h4,h5,h6 {
+                    color: black;
+                }
+                table, pre {
+                    page-break-inside: avoid;
+                }
+            }                        
+            iframe{
+                width: 100%;
+                border: 1px solid #34495E;
+                margin: 0;                
+            }            
+            .logo{
+                vertical-align: middle;
+            }
+
+        </style>        
+        <script>
+            function init() {
+                var logoSrc = 'data:image/png;base64,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',
+                    logos = document.querySelectorAll('.logo'),
+                    i = 0;
+                for (; i < logos.length; i++) {
+                    logos[i].src = logoSrc;
+                }
+                
+                var iframes = document.querySelectorAll('iframe'),
+                    func = function(){};
+                for (i=0; i < iframes.length; i++) {
+                    var iframe = iframes[i];
+                    
+                    // a small hack to make it work on android
+                    iframe.ontouchstart = func;
+                    
+                    var div = document.createElement('div');
+                    div.innerHTML = '<a href="' + iframe.src + '" target="_blank">独立运行→</a>';
+                    iframe.parentNode.insertBefore(div, iframe);
+                }   
+            }
+        </script>    
+    </head>
+    <body onload="init();">
+        <a href="http://www.hightopo.com"><img class="logo"></a>HT for Web 电信扩展手册
+        <hr style="margin: 1px 0 20px 0">
+<p>索引</p>
+
+<ul><li><a href="#ref_alarm">告警</a><ul><li><a href="#ref_alarmSeverity">告警级别</a><ul><li><a href="#ref_alarmSeverityDefault">默认告警级别</a></li><li><a href="#ref_alarmSeverityCustom">自定义告警级别</a></li></ul></li><li><a href="#ref_alarmState">告警状态</a><ul><li><a href="#ref_alarmStateOperation">操作</a></li><li><a href="#ref_alarmStateLookup">查询</a></li></ul></li><li><a href="#ref_alarmStatePropagator">告警传播</a><ul><li><a href="#ref_alarmStatePropagatorCustom">自定义告警传播</a></li></ul></li><li><a href="#ref_alarmStateStatistics">告警统计</a><ul><li><a href="#ref_alarmStateStatisticsCustom">自定义告警统计面板</a></li></ul></li><li><a href="#ref_alarmOnTree">告警在树上的展示</a></li></ul></li></ul>
+
+<hr/>
+
+<div id="ref_alarm"></div>
+
+<h2>告警</h2>
+
+<p>告警用于描述电信网管中网元的异常和错误信息。<code>HT</code>中网元有告警状态属性（<code>ht.Data#getAlarmState()</code>，类型为<code>ht.AlarmState</code>），
+用于描述网元的告警信息。告警状态中记录了新发告警和确认告警对应于每一种告警级别（<code>ht.AlarmSeverity</code>）的告警数量。</p>
+
+<div id="ref_alarmSeverity"></div>
+
+<h3>告警级别</h3>
+
+<p>告警级别（<code>ht.AlarmSeverity</code>）用于描述告警的严重程度，具有如下属性：</p>
+
+<ul><li><code>value</code> 值（<code>number</code>），用于排序告警级别</li><li><code>name</code> 名称（<code>string</code>），用于唯一标识告警级别</li><li><code>nickName</code> 别名，一般是一个字符，用于告警冒泡上显示简短的告警级别名称</li><li><code>color</code> 颜色（<code>color</code>），用于告警冒泡的背景填充色</li><li><code>displayName</code> 显示名称（<code>string</code>），用于详细描述告警级别</li></ul>
+
+<div id="ref_alarmSeverityDefault"></div>
+
+<h4>默认告警级别</h4>
+
+<p><code>HT</code>预定义了如下告警级别：</p>
+
+<ul><li><code>AlarmSeverity.CRITICAL</code>，严重告警：<code>{value: 500, name: &#39;Critical&#39;, nickName: &#39;C&#39;, color: &#39;#FF0000&#39;}</code></li><li><code>AlarmSeverity.MAJOR</code>，主要告警：<code>{value: 400, name: &#39;Major&#39;, nickName: &#39;M&#39;, color: &#39;#FFA000&#39;}</code></li><li><code>AlarmSeverity.MINOR</code>，次要告警：<code>{value: 300, name: &#39;Minor&#39;, nickName: &#39;m&#39;, color: &#39;#FFFF00&#39;}</code></li><li><code>AlarmSeverity.WARNING</code>，警告告警：<code>{value: 200, name: &#39;Warning&#39;, nickName: &#39;W&#39;, color: &#39;#00FFFF&#39;}</code></li><li><code>AlarmSeverity.INDETERMINATE</code>，未知告警：<code>{value: 100, name: &#39;Indeterminate&#39;, nickName: &#39;N&#39;, color: &#39;#C800FF&#39;}</code></li><li><code>AlarmSeverity.CLEARED</code>，已清除告警：<code>{value: 0, name: &#39;Cleared&#39;, nickName: &#39;R&#39;, color: &#39;#00FF00&#39;}</code></li></ul>
+
+<div id="ref_alarmSeverityCustom"></div>
+
+<h4>自定义告警级别</h4>
+
+<p>除了<code>HT</code>提供的默认告警级别，可以用如下方法添加自定义告警级别：</p>
+
+<h5><code>AlarmSeverity.add(value, name, nickName, color, displayName)</code></h5>
+
+<ul><li><code>value</code> 值（<code>number</code>），用于排序告警级别</li><li><code>name</code> 名称（<code>string</code>），用于唯一标识告警级别</li><li><code>nickName</code> 别名，一般是一个字符，用于告警冒泡上显示简短的告警级别名称</li><li><code>color</code> 颜色（<code>color</code>），用于告警冒泡的背景填充色</li><li><code>displayName</code> 显示名称（<code>string</code>），用于详细描述告警级别</li><li>return <code>ht.AlarmSeverity</code></li></ul>
+
+<p>示例：</p>
+
+<p><iframe src="examples/example_severity.html" style="height:200px"></iframe></p>
+
+<pre><code>var trivial = ht.AlarmSeverity.add(50, &#39;Trivial&#39;, &#39;T&#39;, &#39;#20B2AA&#39;);
+console.assert(trivial === ht.AlarmSeverity.getByName(&#39;Trivial&#39;),
+	&quot;trivial === ht.AlarmSeverity.getByName(&#39;Trivial&#39;)&quot;);</code></pre>
+
+<p>另外，<code>ht.AlarmSeverity</code>提供了如下Class方法和属性：</p>
+
+<h5><code>AlarmSeverity.severities</code></h5>
+
+<ul><li><code>ht.List</code> 默认和自定义的告警级别都被添加到了这个集合中，其中元素的顺序是按告警级别的<code>value</code>从小到大排序的</li></ul>
+
+<h5><code>AlarmSeverity.each(callbackFunction, [scope])</code></h5>
+
+<ul><li><code>callbackFunction</code> <code>function</code> 回调函数</li><li><code>scope</code> <code>object</code> 回调函数里this指向的对象</li></ul>
+
+<p>循环所有告警级别，执行指定函数</p>
+
+<h5><code>AlarmSeverity.getSortFunction()</code></h5>
+
+<ul><li>return <code>function</code> 排序函数</li></ul>
+
+<p>返回<code>AlarmSeverity.setSortFunction(sortFunction)</code>设置的告警级别排序函数，如果未设置，则返回默认的告警级别排序函数（按告警级别的<code>value</code>从小到大排序）</p>
+
+<h5><code>AlarmSeverity.setSortFunction(sortFunction)</code></h5>
+
+<ul><li><code>sortFunction</code> <code>function</code> 排序函数</li></ul>
+
+<p>设置告警级别排序函数</p>
+
+<h5><code>AlarmSeverity.remove(name)</code></h5>
+
+<ul><li><code>name</code> <code>string</code> 名称</li></ul>
+
+<p>按名称删除指定的告警级别</p>
+
+<h5><code>AlarmSeverity.isClearedAlarmSeverity(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li>return <code>boolean</code> 如果指定的告警级别<code>value</code>是<code>0</code>则返回<code>true</code>，否则返回<code>false</code></li></ul>
+
+<h5><code>AlarmSeverity.getByName(name)</code></h5>
+
+<ul><li><code>name</code> <code>string</code> 名称</li><li>return <code>ht.AlarmSeverity</code> 按名字查找告警级别</li></ul>
+
+<h5><code>AlarmSeverity.getByValue(value)</code></h5>
+
+<ul><li><code>value</code> <code>number</code> 值</li><li>return <code>ht.AlarmSeverity</code> 按值查找告警级别</li></ul>
+
+<h5><code>AlarmSeverity.clear()</code></h5>
+
+<p>清空所有告警级别</p>
+
+<h5><code>AlarmSeverity.compare(severity1, severity2)</code></h5>
+
+<ul><li><code>severity1</code> <code>ht.AlarmSeverity</code> 告警级别<code>1</code></li><li><code>severity1</code> <code>ht.AlarmSeverity</code> 告警级别<code>2</code></li><li>return <code>number</code> 如果<code>severity1</code>大于<code>severity2</code>则返回<code>1</code>，如果<code>severity1</code>小于<code>severity2</code>则返回<code>-1</code>，如果<code>severity1</code>等于<code>severity2</code>则返回<code>0</code></li></ul>
+
+<p>比较指定的两个告警级别</p>
+
+<div id="ref_alarmState"></div>
+
+<h3>告警状态</h3>
+
+<p>告警状态（<code>ht.AlarmState</code>）是<code>HT</code>中网元的属性（<code>Data#getAlarmState()</code>）。告警分新发告警（<code>New Alarm</code>）和确认告警（<code>Acknowledged Alarm</code>），
+告警状态中记录了新发告警和确认告警对应于每一种告警级别（<code>ht.AlarmSeverity</code>）的告警数量。此外，告警状态还记录了传播告警级别（传播告警指网元所有孩子的最高告警级别）。</p>
+
+<p>如果有新发告警，<code>GraphView</code>上样式<code>note2</code>被替换成新发告警信息，填充色为最高新发告警级别的颜色，文字为最高新发告警级别的数量和别名：</p>
+
+<pre><code>ht.GraphView.prototype.getNote2 = function (data) {
+	var severity = data.getAlarmState().getHighestNewAlarmSeverity();
+	if (severity) {
+		var label = data.getAlarmState().getNewAlarmCount(severity) + severity.nickName;
+		if (data.getAlarmState().hasLessSevereNewAlarms()) {
+			label += &quot;+&quot;;
+		}
+		return label;
+	}
+	return data.getStyle(&#39;note2&#39;);
+};
+ht.GraphView.prototype.getNote2Background = function (data) {
+    var severity = data.getAlarmState().getHighestNewAlarmSeverity();
+    if (severity) {
+        return severity.color;
+    }
+    return data.getStyle(&#39;note2.background&#39;);
+};</code></pre>
+
+<p>如果有确认告警，网元的填充色变为最高新发或确认告警级别的颜色：</p>
+
+<pre><code>ht.GraphView.prototype.getBodyColor = function (data) {
+	var severity = data.getAlarmState().getHighestNativeAlarmSeverity();
+	if (severity) {
+		return severity.color;
+	}
+	return data.getStyle(&#39;body.color&#39;);
+};</code></pre>
+
+<p>如果有传播告警，网元的边框颜色变为传播告警的颜色：</p>
+
+<pre><code>ht.GraphView.prototype.getBorderColor = function (data) {
+	var severity = data.getAlarmState().getPropagateSeverity();
+	if (severity) {
+		return severity.color;
+	}
+	return data.getStyle(&#39;border.color&#39;);
+};</code></pre>
+
+<p>示例：</p>
+
+<p><iframe src="examples/example_state.html" style="height:200px"></iframe></p>
+
+<div id="ref_alarmStateOperation"></div>
+
+<h4>操作</h4>
+
+<h5><code>AlarmState#increaseNewAlarm(severity, [increment])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li><code>increment</code> <code>number</code> 数量，可选，默认值为<code>1</code></li></ul>
+
+<p>增加指定数量和级别的新发告警</p>
+
+<h5><code>AlarmState#decreaseNewAlarm(severity, [decrement])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li><code>decrement</code> <code>number</code> 数量，可选，默认值为<code>1</code></li></ul>
+
+<p>减少指定数量和级别的新发告警</p>
+
+<h5><code>AlarmState#setNewAlarmCount(severity, count)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li><code>count</code> <code>number</code> 数量</li></ul>
+
+<p>设置指定级别的新发告警数量</p>
+
+<h5><code>AlarmState#removeAllNewAlarms(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li></ul>
+
+<p>清除所有新发告警</p>
+
+<h5><code>AlarmState#acknowledgeAlarm(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li></ul>
+
+<p>确认一条指定级别的新发告警</p>
+
+<h5><code>AlarmState#acknowledgeAllAlarms([severity])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别，可选</li></ul>
+
+<p>确认指定级别的所有新发告警，如果<code>severity</code>参数省略，则确认所有级别的新发告警</p>
+
+<h5><code>AlarmState#increaseAcknowledgedAlarm(severity, [increment])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li><code>increment</code> <code>number</code> 数量，可选，默认值为<code>1</code></li></ul>
+
+<p>增加指定数量和级别的确认告警</p>
+
+<h5><code>AlarmState#decreaseAcknowledgedAlarm(severity, [decrement])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li><code>decrement</code> <code>number</code> 数量，可选，默认值为<code>1</code></li></ul>
+
+<p>减少指定数量和级别的确认告警</p>
+
+<h5><code>AlarmState#setAcknowledgedAlarmCount(severity, count)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li><code>count</code> <code>number</code> 数量</li></ul>
+
+<p>设置指定级别的确认告警数量</p>
+
+<h5><code>AlarmState#removeAllAcknowledgedAlarms(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li></ul>
+
+<p>清除所有确认告警</p>
+
+<h5><code>AlarmState#clear()</code></h5>
+
+<p>清除所有新发和确认告警</p>
+
+<h5><code>AlarmState#setPropagateSeverity(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li></ul>
+
+<p>设置传播告警级别</p>
+
+<h5><code>AlarmState#setEnablePropagation(value)</code></h5>
+
+<ul><li><code>value</code> <code>boolean</code> 否启用告警传播</li></ul>
+
+<p>设置是否启用告警传播，默认值为<code>true</code></p>
+
+<div id="ref_alarmStateLookup"></div>
+
+<h4>查询</h4>
+
+<h5><code>AlarmState#getHighestAcknowledgedAlarmSeverity()</code></h5>
+
+<ul><li>return <code>ht.AlarmSeverity</code> 返回最高的确认告警级别</li></ul>
+
+<h5><code>AlarmState#getHighestNewAlarmSeverity()</code></h5>
+
+<ul><li>return <code>ht.AlarmSeverity</code> 返回最高的新发告警级别</li></ul>
+
+<h5><code>AlarmState#getHighestNativeAlarmSeverity()</code></h5>
+
+<ul><li>return <code>ht.AlarmSeverity</code> 返回最高的确认或新发告警级别</li></ul>
+
+<h5><code>AlarmState#getPropagateSeverity()</code></h5>
+
+<ul><li>return <code>ht.AlarmSeverity</code> 返回传播告警级别</li></ul>
+
+<h5><code>AlarmState#getHighestOverallAlarmSeverity()</code></h5>
+
+<ul><li>return <code>ht.AlarmSeverity</code> 返回最高的确认、新发或传播告警级别</li></ul>
+
+<h5><code>AlarmState#hasLessSevereNewAlarms()</code></h5>
+
+<ul><li>return <code>boolean</code> 返回是否有低于最高新发告警级别的新发告警</li></ul>
+
+<h5><code>AlarmState#getNewAlarmCount(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li>return <code>number</code> 返回指定告警级别的新发告警数量</li></ul>
+
+<h5><code>AlarmState#getAcknowledgedAlarmCount(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li>return <code>number</code> 返回指定告警级别的确认告警数量</li></ul>
+
+<h5><code>AlarmState#getAlarmCount(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li>return <code>number</code> 返回指定告警级别的确认和新发告警数量总和</li></ul>
+
+<h5><code>AlarmState#isEmpty()</code></h5>
+
+<ul><li>return <code>boolean</code> 返回是否没有新发、确认或传播告警</li></ul>
+
+<h5><code>AlarmState#isEnablePropagation()</code></h5>
+
+<ul><li>return <code>boolean</code> 返回是否启用告警传播，默认值为<code>true</code></li></ul>
+
+<div id="ref_alarmStatePropagator"></div>
+
+<h3>告警传播</h3>
+
+<p>在<code>HT</code>中，告警传播<code>ht.AlarmStatePropagator</code>会将底层网元的告警往上层网元传播，比如<code>Group</code>或<code>SubGraph</code>中所有孩子的最高级别告警会传播到<code>Group</code>或<code>SubGraph</code>。
+默认告警传播未开启，需要调用<code>ht.DataModel#setEnableAlarmStatePropagator(true)</code>开启告警传播。</p>
+
+<div id="ref_alarmStatePropagatorCustom"></div>
+
+<h4>自定义告警传播</h4>
+
+<p>默认告警传播是从孩子传播到父亲，可以重写<code>ht.AlarmStatePropagator</code>的<code>propagateToTop</code>方法改变传播机制，下面例子演示了告警沿着<code>host</code>传播：</p>
+
+<p>先关闭数据容器的告警传播（<code>ht.DataModel#setEnableAlarmStatePropagator(false)</code>）,然后创建新的<code>ht.AlarmStatePropagator</code>对象，再重写
+<code>AlarmStatePropagator#handleDataPropertyChange(e)</code>和<code>AlarmStatePropagator#propagateToTop(data)</code>方法：</p>
+
+<pre><code>propagator.handleDataPropertyChange = function (e) {
+	ht.AlarmStatePropagator.prototype.handleDataPropertyChange.call(this, e);
+	if (e.property === &#39;host&#39;) {
+    	var oldHost = e.oldValue;
+		if (oldHost) {
+			this.propagate(oldHost);
+		}
+		this.propagate(e.data);
+	}
+};
+propagator.propagateToTop = function (data) {
+	this.propagateToHost(null, data);
+	while (data &amp;&amp; data.getHost()) {
+		this.propagateToHost(data, data.getHost());
+		data = data.getHost();
+	}
+};
+propagator.propagateToHost = function (attach, host) {
+	var result = null;
+	if (host.getAttaches()) {
+		host.getAttaches().each(function (attach) {
+			var severity = attach.getAlarmState().getHighestOverallAlarmSeverity();
+			if (ht.AlarmSeverity.compare(severity, result) &gt; 0) {
+				result = severity;
+			}
+			});
+		}
+		host.getAlarmState().setPropagateSeverity(result);
+	};</code></pre>
+
+<p><iframe src="examples/example_propagator.html" style="height:200px"></iframe></p>
+
+<p><code>AlarmStatePropagator</code>包含如下方法：</p>
+
+<h5><code>AlarmStatePropagator(dataModel)</code></h5>
+
+<ul><li><code>dataModel</code> <code>ht.DataModel</code> 数据容器</li></ul>
+
+<p>构造函数，构建告警传播</p>
+
+<h5><code>AlarmStatePropagator#getDataModel()</code></h5>
+
+<ul><li>return <code>ht.DataModel</code> 返回关联的数据容器</li></ul>
+
+<h5><code>AlarmStatePropagator#isEnable()</code></h5>
+
+<ul><li>return <code>boolean</code> 返回是否启用告警传播，默认为<code>false</code></li></ul>
+
+<h5><code>AlarmStatePropagator#setEnable(enable)</code></h5>
+
+<ul><li><code>enable</code> <code>boolean</code> 是否启用告警传播</li></ul>
+
+<p>设置是否启用告警传播</p>
+
+<h5><code>AlarmStatePropagator#handleDataModelChange(e)</code></h5>
+
+<ul><li><code>e</code> <code>object</code> 模型更改事件，包含如下属性：<ul><li><code>kind</code> <code>string</code> 取值为<code>add</code>, <code>remove</code>, <code>clear</code></li><li><code>data</code> <code>ht.Data</code> 当<code>kind</code>为<code>add</code>或<code>remove</code>时，<code>data</code>属性为添加或删除的数据，当<code>kind</code>为<code>clear</code>时，<code>data</code>属性为<code>null</code></li></ul></li></ul>
+
+<p>数据容器更改回调函数，处理告警传播</p>
+
+<h5><code>AlarmStatePropagator#handleDataPropertyChange(e)</code></h5>
+
+<ul><li><code>e</code> <code>object</code> 数据更改事件，包含如下属性：<ul><li><code>property</code> <code>string</code> 发生变化的属性</li><li><code>oldValue</code> <code>object</code> 旧值</li><li><code>newValue</code> <code>object</code> 新值</li><li><code>data</code> <code>ht.Data</code> 发生属性变化的数据</li></ul></li></ul>
+
+<p>数据属性更改回调函数，处理告警传播</p>
+
+<h5><code>AlarmStatePropagator#propagate(data)</code></h5>
+
+<ul><li><code>data</code> <code>ht.Data</code> 数据</li></ul>
+
+<p>传播告警</p>
+
+<h5><code>AlarmStatePropagator#propagateToTop(data)</code></h5>
+
+<ul><li><code>data</code> <code>ht.Data</code> 数据</li></ul>
+
+<p>传播告警到上层</p>
+
+<h5><code>AlarmStatePropagator#propagateToParent(data)</code></h5>
+
+<ul><li><code>data</code> <code>ht.Data</code> 数据</li></ul>
+
+<p>传播告警到父亲</p>
+
+<div id="ref_alarmStateStatistics"></div>
+
+<h3>告警统计</h3>
+
+<p>告警统计（<code>ht.AlarmStateStatistics</code>）用于统计数据容器中所有数据的各告警级别的新发、确认以及总数量。</p>
+
+<h5><code>AlarmStateStatistics(dataModel)</code></h5>
+
+<ul><li><code>dataModel</code> <code>ht.DataModel</code> 数据容器</li></ul>
+
+<p>构造函数，创建告警统计对象</p>
+
+<h5><code>AlarmStateStatistics#getDataModel()</code></h5>
+
+<ul><li>return <code>ht.DataModel</code> 返回关联的数据容器</li></ul>
+
+<h5><code>AlarmStateStatistics#setDataModel(dataModel)</code></h5>
+
+<ul><li><code>dataModel</code> <code>ht.DataModel</code> 设置关联的数据容器</li></ul>
+
+<h5><code>AlarmStatePropagator#dispose()</code></h5>
+
+<p>销毁告警统计，删除对数据容器和数据的监听</p>
+
+<h5><code>AlarmStateStatistics#handleDataModelChange(e)</code></h5>
+
+<ul><li><code>e</code> <code>object</code> 模型更改事件，包含如下属性：<ul><li><code>kind</code> <code>string</code> 取值为<code>add</code>, <code>remove</code>, `clear</li><li><code>data</code> <code>ht.Data</code> 当<code>kind</code>为<code>add</code>或<code>remove</code>时，<code>data</code>属性为添加或删除的数据，当<code>kind</code>为<code>clear</code>时，<code>data</code>属性为<code>null</code></li></ul></li></ul>
+
+<p>数据容器更改回调函数，重新统计告警数量</p>
+
+<h5><code>AlarmStateStatistics#handleDataPropertyChange(e)</code></h5>
+
+<ul><li><code>e</code> <code>object</code> 数据更改事件，包含如下属性：<ul><li><code>property</code> <code>string</code> 发生变化的属性</li><li><code>oldValue</code> <code>object</code> 旧值</li><li><code>newValue</code> <code>object</code> 新值</li><li><code>data</code> <code>ht.Data</code> 发生属性变化的数据</li></ul></li></ul>
+
+<p>数据属性更改回调函数，重新统计告警数量</p>
+
+<h5><code>AlarmStateStatistics#fireAlarmStateChange()</code></h5>
+
+<p>重新统计告警数量，派发<code>alarmState</code>更改事件</p>
+
+<h5><code>AlarmStateStatistics#getNewAlarmCount([severity])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别，可选</li><li>return <code>number</code> 返回指定告警级别的统计新发告警数量，如果不提供<code>severity</code>参数，则返回所有级别的新发告警数</li></ul>
+
+<h5><code>AlarmStateStatistics#getAcknowledgedAlarmCount([severity])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别，可选</li><li>return <code>number</code> 返回指定告警级别的统计确认告警数量，如果不提供<code>severity</code>参数，则返回所有级别的确认告警数</li></ul>
+
+<h5><code>AlarmStateStatistics#getTotalAlarmCount([severity])</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别，可选</li><li>return <code>number</code> 返回指定告警级别的统计新发和确认告警数量，如果不提供<code>severity</code>参数，则返回所有级别的新发和确认告警数</li></ul>
+
+<h5><code>AlarmStateStatistics#getSumInfo(severity)</code></h5>
+
+<ul><li><code>severity</code> <code>ht.AlarmSeverity</code> 告警级别</li><li>return <code>object</code> 返回指定告警级别的统计新发、确认以及新发和确认告警数量<ul><li><code>newCount</code> <code>number</code> 新发告警数量</li><li><code>ackedCount</code> <code>number</code> 确认告警数量</li><li><code>totalCount</code> <code>number</code> 新发和确认告警数量</li></ul></li></ul>
+
+<h5><code>AlarmStateStatistics#increase(data)</code></h5>
+
+<ul><li><code>data</code> <code>ht.Data</code> 数据</li></ul>
+
+<p>增加指定数据的告警</p>
+
+<h5><code>AlarmStateStatistics#decrease(data)</code></h5>
+
+<ul><li><code>data</code> <code>ht.Data</code> 数据</li></ul>
+
+<p>减少指定数据的告警</p>
+
+<h5><code>AlarmStateStatistics#reset()</code></h5>
+
+<p>重新统计告警数量</p>
+
+<h5><code>AlarmStateStatistics#getFilterFunc()</code></h5>
+
+<ul><li>return <code>function</code> 返回过滤函数<ul><li><code>data</code> <code>ht.Data</code> 数据</li><li>return <code>boolean</code> 返回<code>true</code>则不统计此数据的告警信息，否则参与统计</li></ul></li></ul>
+
+<h5><code>AlarmStateStatistics#setFilterFunc(value)</code></h5>
+
+<ul><li><code>value</code> <code>function</code> 过滤函数<ul><li><code>data</code> <code>ht.Data</code> 数据</li><li>return <code>boolean</code> 返回<code>true</code>则不统计此数据的告警信息，否则参与统计</li></ul></li></ul>
+
+<p>设置过滤函数，过滤不参与统计的数据</p>
+
+<div id="ref_alarmStateStatisticsCustom"></div>
+
+<h4>自定义告警统计面板</h4>
+
+<p>下面的例子演示了用矢量实现告警统计面板：</p>
+
+<p><iframe src="examples/example_statistics.html" style="height:200px"></iframe></p>
+
+<div id="ref_alarmOnTree"></div>
+
+<h2>告警在树上的展示</h2>
+
+<p>默认树上节点的图标填充色是数据的最高新发或确认告警级别的颜色，如果有传播告警，树节点图标会加上颜色为传播告警级别颜色的边框：</p>
+
+<pre><code>ht.widget.TreeView.prototype.getIcon = ht.widget.TreeTableView.prototype.getIcon = function (data) {
+	return &#39;__alarmIcon__&#39;;
+};
+ht.Default.setImage(&#39;__alarmIcon__&#39;, {
+    width: 18,
+    height: 18,
+    comps: [
+        {
+            type: &#39;image&#39;,
+            name: {
+                func: function (data) { return data.getIcon(); }
+            },
+            color: {
+                func: function (data) {
+                    var severity = data.getAlarmState().getHighestNativeAlarmSeverity();
+                    if (severity) {
+                        return severity.color;
+                    }
+                    return data.getStyle(&#39;body.color&#39;);
+                }
+            },
+            rect: [1, 1, 16, 16]
+        },
+        {
+            type: &#39;rect&#39;,
+            borderWidth: 2,
+            borderColor: {
+                func: function (data) {
+                    var severity = data.getAlarmState().getPropagateSeverity();
+                    if (severity) {
+                        return severity.color;
+                    }
+                    return data.getStyle(&#39;border.color&#39;);
+                }
+            },
+            visible: {
+                func: function (data) {
+                    return !!data.getAlarmState().getPropagateSeverity() || !!data.getStyle(&#39;border.color&#39;);
+                },
+            },
+            rect: [1, 1, 16, 16]
+        }
+    ]
+});</code></pre>
+
+<p>下面的例子在树节点图标的左下角加上了小圆圈，代表最高级别的新发告警：</p>
+
+<p><iframe src="examples/example_tree.html" style="height:200px"></iframe></p>
+
+<pre><code>ht.Default.getImage(&#39;__alarmIcon__&#39;).comps.push({
+    type: &#39;circle&#39;,
+    gradient: &#39;radial.center&#39;,
+    gradientColor: &#39;#FFFFFF&#39;,
+    background: {
+        func: function (data) {
+            var severity = data.getAlarmState().getHighestNewAlarmSeverity();
+            if (severity) {
+                return severity.color;
+            }
+            return null;
+        }
+    },
+    visible: {
+        func: function (data) {
+            return !!data.getAlarmState().getHighestNewAlarmSeverity();
+        },
+    },
+    rect: [1, 8, 8, 8]
+});</code></pre>    <hr id="contact" style="margin: 20px 0 1px 0">
+    <a href="http://www.hightopo.com"><img class="logo"></a>欢迎交流 <a href="mailto:service@hightopo.com">service@hightopo.com</a>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rotation</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="../../3d/examples/texture.js"></script>
+        <script>                         
+            function init(){                                                                                                                            
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);   
+                g3d.setEye([0, 120, 630]);
+                g3d.setGridSize(100);
+                g3d.setGridVisible(true);
+                g3d.enableToolTip();
+                g3d.getToolTip = function(e){
+                    var data = this.getDataAt(e);
+                    if(data){
+                        return '<pre>' + JSON.stringify(data.getStyleMap(), null, 4) + '</pre>';
+                    }
+                    return null;
+                };                    
+                g3d.setEditable(true);
+                g3d.setMovableFunc(function(data){
+                    return !data.s('p3Fixed');
+                });
+                g3d.setRotationEditableFunc(function(data){
+                    return !data.s('r3Fixed');
+                });
+                g3d.setSizeEditableFunc(function(data){
+                    return !data.s('s3Fixed');
+                });                
+                
+                g2d = new ht.graph.GraphView(dataModel);  
+                g2d.setTranslate(430, 50);
+                g2d.setZoom(0.3);
+                g2d.setEditable(true);
+                splitView = new ht.widget.SplitView(g3d, g2d, 'vertical', 0.6);
+                
+                view = splitView.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);   
+                
+                createHT([100, 10, 100], 20).s({
+                   'shape3d.image': 'colors',
+                   'shape3d.top.image': 'fab',
+                   'shape3d.bottom.image': 'fab',
+                   'shape3d': 'cylinder',
+                   'shape3d.side': 100
+                }).s('p3Fixed', true);  
+                
+                createHT([300, 10, 100], 8).s({
+                   'all.image': 'colors'
+                });  
+                
+                createHT([-100, 50, 100], 20).s({
+                    'shape3d': 'cylinder',
+                    'shape3d.side': 100,
+                    'shape3d.color': '#1ABC9C' 
+                }).s('r3Fixed', true).setRotationX(Math.PI/2);
+                
+                createHT([-300, 50, 100], 8).s({
+                   'all.color': '#1ABC9C'
+                }).s('s3Fixed', true).setRotationX(Math.PI/2);                
+                
+                createCurve([230, 30, -10]).s({
+                    'top.color': '#1ABC9C',
+                    'left.color': 'yellow',
+                    'right.color': 'red',
+                    'front.visible': false
+                });
+                
+                createCurve([-230, 30, -10]).s({
+                    'back.image': 'colors',
+                    'back.uv.scale': [6, 3],
+                    'top.color': '#1ABC9C',
+                    'left.color': 'yellow',
+                    'right.color': 'red',
+                    'front.visible': false,                    
+                    'all.reverse.flip': true
+                });                 
+                
+                createSun([230, 60, -120]).s({
+                    'shape3d.color': 'yellow'
+                }).setRotationX(Math.PI/2);
+                
+                createSun([-230, 60, -120]).s({
+                    'shape3d.image': 'colors',
+                    'shape3d.top.image': 'colors',
+                    'shape3d.bottom.image': 'colors'
+                }).setRotationX(Math.PI/2);    
+                
+                flowNode = createCurve([0, 80, 220]).s({
+                    'shape3d': 'cylinder',                    
+                    'shape3d.image': 'flow',
+                    'shape3d.uv.scale': [20, 5],
+                    'shape3d.color': '#D2923F'
+                });                
+                flowNode.setTall(26);
+                flowNode.setThickness(26);
+                
+                router1 = createRouter([-100, 15, 400]);                                                                
+                router2 = createRouter([100, 15, 400]);
+                
+                for(var i=0; i<3; i++){
+                    var edge = new ht.Edge(router1, flowNode);
+                    edge.s({
+                        'edge.target.t3': [-150+i*50, 0, 0],
+                        'edge.target.offset.x': -150+i*50,
+                        'edge.offset': 0,
+                        'edge.width': 3,
+                        'edge.gap': 0,
+                        'edge.color': 'red',
+                        'edge.gradient.color': 'blue'
+                    });
+                    dataModel.add(edge);
+                }
+                
+                for(var i=0; i<3; i++){
+                    var edge = new ht.Edge(router2, flowNode);
+                    edge.s({
+                        'edge.target.t3': [50+i*50, 0, 0],
+                        'edge.target.offset.x': 50+i*50,
+                        'edge.offset': 0,
+                        'edge.width': 6,
+                        'edge.gap': 0,
+                        'shape3d': 'cylinder',
+                        'shape3d.color': 'red' 
+                    });
+                    if(i === 1){
+                        imageEdge = edge;
+                        edge.s({
+                            'edge.width': 12,
+                            'shape3d.image': 'fab',
+                            'shape3d.uv.scale': [1, 3],
+                            'repeat.uv.length': 20
+                        });                        
+                    }
+                    dataModel.add(edge);
+                }
+                
+                for(var i=0; i<3; i++){
+                    var edge = new ht.Edge(router1, router2);                
+                    edge.s({                    
+                        'edge.type': 'points',
+                        'edge.width': 3,
+                        'edge.color': 'yellow',
+                        'edge.gradient.color': 'green',
+                        'edge.points': [
+                            {x: -100, e: i===1?120:100, y: 350+i*50},
+                            {x: 100, e: i===1?120:100, y: 350+i*50}
+                        ]
+                    });
+                    dataModel.add(edge);                    
+                }
+                                                              
+                dataModel.each(function(data){
+                    data.s({
+                        'wf.visible': 'selected',
+                        'wf.color': '#3498DB'
+                    });
+                });
+              
+                offset = 0.1;
+                setInterval(function(){
+                    offset += 0.1;
+                    flowNode.s('shape3d.uv.offset', [offset, 0]);
+                    imageEdge.s('shape3d.uv.offset', [0, offset]);                    
+                }, 200);
+            } 
+
+            function createRouter(p3){
+                var node = new ht.Node();
+                node.s({
+                    'top.image': 'router-top',
+                    'all.image': 'router-face'
+                });
+                node.s3(30, 30, 30);
+                node.p3(p3);
+                dataModel.add(node);
+                return node;
+            }
+
+            function createHT(p3, thickness){
+                shape = new ht.Shape();                
+                shape.s({
+                    'shape.background': null,
+                    'shape.border.width': 10,
+                    'shape.border.color': '#1ABC9C'                                        
+                });
+                shape.setTall(20);
+                shape.setThickness(thickness);
+                shape.setPoints([                    
+                    // draw H
+                    {x: 20, y: 0},
+                    {x: 20, y: 100},
+                    {x: 20, y: 50},
+                    {x: 80, y: 50},
+                    {x: 80, y: 0},
+                    {x: 80, y: 100},
+
+                    // draw T
+                    {x: 120, y: 0},
+                    {x: 180, y: 0},
+                    {x: 150, y: 0},
+                    {x: 150, y: 100}                    
+                ]);                                
+                shape.setSegments([
+                    // draw H
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+
+                    // draw T
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2 // lineTo
+                ]);                
+                shape.p3(p3);
+                dataModel.add(shape); 
+                return shape;
+            }
+                        
+          
+            function createCurve(p3){
+                shape = new ht.Shape(); 
+                shape.setTall(60);
+                shape.setThickness(15);
+                shape.s({
+                    'shape.background': null,
+                    'shape.border.width': 10,
+                    'shape.border.color': '#1ABC9C'                                        
+                });                
+                shape.setPoints([                                        
+                    {x: 0, y: 0},
+                    {x: 25, y: -15},
+                    {x: 50, y: 0},                    
+                    {x: 75, y: 15},
+                    {x: 100, y: 0},                                     
+                    {x: 125, y: -15},                    
+                    {x: 150, y: 0},                    
+                    {x: 175, y: 15},                    
+                    {x: 200, y: 0},   
+                    
+                    {x: 230, y: 0},
+                    {x: 255, y: -15},
+                    {x: 280, y: 0},                    
+                    {x: 305, y: 15},
+                    {x: 330, y: 0},                                     
+                    {x: 355, y: -15},                    
+                    {x: 380, y: 0},                    
+                    {x: 405, y: 15},                    
+                    {x: 430, y: 0}                     
+                ]);                 
+                shape.setSegments([
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3 // quadraticCurveTo                    
+                ]);                 
+                shape.p3(p3);
+                dataModel.add(shape); 
+                return shape;
+                 
+            }
+          
+            function createSun(p3){
+                shape = new ht.Shape();
+                shape.s({
+                    'shape.background': 'yellow'                    
+                });                
+                shape.setThickness(-1);
+                shape.setPoints([
+                    {x: 0, y: 120},
+                    {x: 0, y: 0},
+                    {x: 300, y: 0},
+                    {x: 300, y: 120}
+                ]);
+                shape.setSegments([
+                    1, // moveTo
+                    4, // bezierCurveTo,
+                    5  // closePath
+                ]); 
+                shape.p3(p3);
+                dataModel.add(shape); 
+                return shape;
+            }
+          
+        </script>
+    </head>
+    <body onload="init();">                  
+              
+    </body>
+</html>

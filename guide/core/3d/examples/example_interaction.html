@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Interaction</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body, div {
+                padding: 0px;
+                margin: 0px;  
+                font-size: 12px;
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="texture.js"></script>   
+        <script>    
+                                 
+            function init(){                                                                                                                            
+                toolbar = new ht.widget.Toolbar([                   
+                    {
+                        label: 'Rotatable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){
+                            g3d.setRotatable(this.selected);
+                        }
+                    },
+                    {
+                        label: 'Zoomable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){
+                            g3d.setZoomable(this.selected);
+                        }
+                    },
+                    {
+                        label: 'Pannable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){
+                            g3d.setPannable(this.selected);
+                        }
+                    }, 
+                    {
+                        label: 'Walkable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){
+                            g3d.setWalkable(this.selected);
+                        }
+                    },  
+                    {
+                        label: 'Resettable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){
+                            g3d.setResettable(this.selected);
+                        }
+                    },
+                    {
+                        label: 'RectSelectable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){
+                            g3d.setRectSelectable(this.selected);
+                        }
+                    },
+                    'separator',                    
+                    {
+                        label: 'Node Movable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){                        
+                            g3d.setMovableFunc(this.selected ? null : function(data){
+                                return false;
+                            });
+                        }                
+                    },
+                    {
+                        label: 'Node Rotatable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){                        
+                            g3d.setRotationEditableFunc(this.selected ? null : function(data){
+                                return false;
+                            });
+                        }                
+                    },  
+                    {
+                        label: 'Node Scalable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){                        
+                            g3d.setSizeEditableFunc(this.selected ? null : function(data){
+                                return false;
+                            });
+                        }                
+                    },
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        selected: true,
+                        action: function(){                        
+                            g3d.setEditable(this.selected);
+                        }                
+                    },
+                    'separator',   
+                    {
+                        type: 'toggle',
+                        selected: false,
+                        label: 'First person mode',
+                        action: function(){
+                            g3d.setFirstPersonMode(this.selected);                              
+                        }
+                    }                             
+                ]);                                                                                
+
+                
+                div = document.createElement('div');
+                div.style.background = 'lightyellow';
+                div.style.position = 'absolute';
+                
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);  
+                g3d.setEditable(true);
+                g3d.setGridVisible(true);
+                g3d.setEye([-200, 200, 400]);
+                g3d.setMoveStep(3);
+                
+                rows = new ht.List();
+                g3d.mi(function(e){                    
+                    var text = '&nbsp;' + e.kind;
+                    if(e.part){
+                        text += ' on ' + e.part + ' of ' + e.data.s('label');
+                    }
+                    text += '<br>';
+                    rows.add(text);
+                    if(rows.size() > 25){
+                        rows.removeAt(0);
+                    }
+                    text = '';
+                    rows.each(function(row){
+                        text += row;
+                    });
+                    div.innerHTML = text;
+                    
+                });                
+                
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(g3d);                
+                
+                splitView = new ht.widget.SplitView(borderPane, div, 'horizontal', 0.7);
+                view = splitView.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);   
+
+
+                
+               /**
+                *    34                      35
+                *   1 | 2         3         4 | 5
+                * ----6-----------7-----------8----
+                *   9 | 10        11       12 | 13
+                *     |                       |
+                *  14 15 16       17       18 19 20
+                *     |                       |
+                *  21 | 22        23       24 | 25 
+                * ----26----------27----------28---
+                *  29 | 30        31       32 | 33  
+                *    36                      37
+                */                 
+                host = createNode([0, 51, 0], [100, 100, 100]).s({  
+                    'label': 'Cube',
+                    'label.visible': false,
+                    'all.image': 'dice',                    
+                    'front.uv': [0.25, 0.75, 0.25, 1, 0.5, 1, 0.5, 0.75],                    
+                    'back.uv': [0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 0.25],
+                    'bottom.uv': [0.25, 0, 0.25, 0.25, 0.5, 0.25, 0.5, 0],
+                    'left.uv': [0, 0.75, 0, 1, 0.25, 1, 0.25, 0.75],
+                    'right.uv': [0.5, 0.75, 0.5, 1, 0.75, 1, 0.75, 0.75],
+                    'front.opacity': 0.5,
+                    'front.transparent': true,                      
+                    'front.blend': 'red',
+                    'top.visible': false,                    
+                    'all.reverse.flip': true,
+                    'note': 'A good example about customizing uv',
+                    'note.face': 'right',
+                    'note.autorotate': true,
+                    'note2': 'A fixed note',
+                    'note2.face': 'front',                    
+                    'note2.position': 6,
+                    'icons': {
+                        ICONS1: {
+                            names: ['node_icon', 'group_icon', 'subGraph_icon', 'grid_icon', 'shape_icon', 'edge_icon'],                            
+                            position: 5
+                        },
+                        ICONS2: {
+                            names: ['earth', 'colors', 'fab', 'dice'],
+                            position: 26,                            
+                            width: 30,
+                            height: 30,
+                            gap: 5,                            
+                            direction: 'north', 
+                            face: 'left',
+                            r3: [Math.PI/2, Math.PI/2, 0],
+                            rotationMode: 'yxz',
+                            t3: [-15, 15, 0]
+                        }
+                    }
+                }); 
+
+                createNode([0, 51, -50], [50, 50, 50], host).s({
+                    'shape3d': 'sphere',
+                    'shape3d.image': 'earth',
+                    'body.color': 'red',
+                    'label': 'Sphere',
+                    'label.background': 'yellow',
+                    'label2': 'Sphere',
+                    'label2.background': 'blue',
+                    'label2.position': 3,
+                    'label2.face': 'back'
+                });               
+                
+                createNode([50, 51, 0], [50, 50, 50], host).s({
+                    'shape3d': 'cylinder',
+                    'shape3d.image': 'earth',
+                    'shape3d.blend': 'yellow',
+                    'label': 'Cylinder',
+                    'label.background': 'yellow',
+                    'label2': 'Cylinder',
+                    'label2.background': 'blue',
+                    'label2.position': 3,
+                    'label2.face': 'right'
+                });    
+                
+                createNode([-50, 51, 0], [50, 50, 50], host).s({
+                    'shape3d': 'cone',
+                    'shape3d.image': 'earth',
+                    'shape3d.blend': 'green',
+                    'label': 'Cone',
+                    'label.background': 'yellow',
+                    'label2': 'Cone',
+                    'label2.background': 'blue',
+                    'label2.position': 3,
+                    'label2.face': 'left'
+                });    
+                    
+            } 
+            
+            function createNode(p3, s3, host){
+                var node = new ht.Node();
+                node.p3(p3);
+                node.s3(s3);
+                node.setHost(host);
+                dataModel.add(node);
+                return node;
+            }
+                        
+          
+        </script>
+    </head>
+    <body onload="init();">                  
+              
+    </body>
+</html>

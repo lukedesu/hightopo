@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContextMenu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script type="text/javascript">
+            function init() {
+                var json = [
+                        {
+                            label: "sendToTop",
+                            fordata: 1
+                        },
+                        {
+                            label: "sendToBottom",
+                            fordata: 1
+                        },
+                        {
+                            label: "Copy",
+                            fordata: 2
+                        },
+                        {
+                            label: "Paste",
+                            fordata: 2
+                        }
+                    ];
+                var graphView = new ht.graph.GraphView(),
+                    view = graphView.getView(),
+                    style = view.style,
+                    dataModel = graphView.dm();
+                
+                var node1 = new ht.Node(),
+                    node2 = new ht.Node();
+                
+                node1.setName("First Node");
+                node2.setName("Second Node");
+                node1.setPosition(100, 50);
+                node2.setPosition(200, 50);
+                dataModel.add(node1);
+                dataModel.add(node2);
+                
+                style.position = "absolute";
+                style.top = "0";
+                style.right = "0";
+                style.bottom = "0";
+                style.left = "0";
+                document.body.appendChild(view);
+                
+                
+                
+                var contextmenu = new ht.widget.ContextMenu(json);
+                contextmenu.enableGlobalKey();
+                contextmenu.setVisibleFunc(function(item) {
+                    var data = graphView.sm().ld();
+                    if (data === node1) {
+                        if (item.fordata === 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else if (data === node2) {
+                        if (item.fordata === 1) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                });
+                contextmenu.addTo(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

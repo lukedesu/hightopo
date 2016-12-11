@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>3D Room</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script>
+            htconfig = {
+                Default:{                    
+                    toolTipDelay: 100,
+                    toolTipContinual: true,
+                    toolTipLabelColor: 'yellow',
+                    toolTipBackground: 'rgba(0, 50, 50, 0.5)'
+                }
+            };
+        </script> 
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script src="3droom.js"></script>  
+        <script>                         
+
+            function init(){ 
+                
+                ht.Default.setImage('alarm', {
+                  "width": 120,
+                  "height": 130,
+                  "comps": [
+                    {
+                      "type": "rect",
+                      "rect": [50, 75, 20, 50],
+                      "background": {
+                        "value": "gray",
+                        "func": "attr@alarm.color"
+                      },
+                      "gradient": "spread.horizontal"                      
+                    },
+                    {
+                      "type": "triangle",
+                      "rect": [13, 5, 94, 84],
+                      "background": {
+                        "value": "gray",
+                        "func": "attr@alarm.color"
+                      }
+                    },
+                    {
+                      "type": "circle",
+                      "rect": [49, 43, 21, 13],
+                      "background": 'rgba(255, 255, 255, 0.9)'
+                    },
+                    {
+                      "type": "rect",
+                      "rect": [56, 59, 8, 22],
+                      "background": 'rgba(255, 255, 255, 0.9)'
+                    }
+                  ]
+                });
+
+                items = [ 
+                    {
+                        label: 'White',
+                        groupId: 'headLightColor',
+                        selected: true,
+                        action: function(){                             
+                            g3d.setHeadlightColor('white');
+                        }
+                    },        
+                    {
+                        label: 'Red',
+                        groupId: 'headLightColor',
+                        action: function(){                             
+                            g3d.setHeadlightColor('red');
+                        }
+                    }, 
+                    {
+                        label: 'Blue',
+                        groupId: 'headLightColor',
+                        action: function(){                             
+                            g3d.setHeadlightColor('blue');
+                        }
+                    },        
+                    {
+                        label: 'Yellow',
+                        groupId: 'headLightColor',        
+                        action: function(){                             
+                            g3d.setHeadlightColor('yellow');
+                        }
+                    },        
+                    {
+                        id: 'step',                        
+                        unfocusable: true,
+                        slider: {
+                            width: 70,
+                            step: 500,
+                            min: 0,
+                            max: 10000,
+                            value: 0,                            
+                            onValueChanged: function(){
+                                g3d.setHeadlightRange(this.getValue());
+                            }       
+                        }                
+                    },
+                    'separator', 
+                    {
+                        label: 'Fog',
+                        type: 'check',                        
+                        action: function(){
+                            g3d.setFogDisabled(!this.selected);
+                        }
+                    },
+                    {
+                        label: 'White',
+                        groupId: 'fogColor',
+                        selected: true,
+                        action: function(){                             
+                            g3d.setFogColor('white');
+                        }
+                    },                     
+                    {
+                        label: 'Red',
+                        groupId: 'fogColor',
+                        action: function(){                             
+                            g3d.setFogColor('red');
+                        }
+                    },        
+                    {
+                        label: 'Yellow',
+                        groupId: 'fogColor',        
+                        action: function(){                             
+                            g3d.setFogColor('yellow');
+                        }
+                    },
+                    {                       
+                        unfocusable: true,
+                        label: 'FogNear',
+                        slider: {
+                            width: 70,
+                            min: 10,
+                            max: 4000,
+                            value: 100,                            
+                            onValueChanged: function(){
+                                g3d.setFogNear(this.getValue());
+                            }       
+                        }                
+                    },                        
+                    {                       
+                        unfocusable: true,
+                        label: 'FogFar',
+                        slider: {
+                            width: 70,
+                            min: 5000,
+                            max: 15000,
+                            value: 8000,                            
+                            onValueChanged: function(){
+                                g3d.setFogFar(this.getValue());
+                            }       
+                        }                
+                    },                    
+                    'separator', 
+                    {
+                        id: 'movable',
+                        label: 'Movable',
+                        type: 'check',
+                        selected: false                
+                    }, 
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        selected: false,
+                        action: function(item){
+                            g3d.setEditable(item.selected);
+                        }
+                    },
+                    {
+                        label: 'Wireframe',
+                        type: 'check',
+                        selected: false,
+                        action: function(item){
+                            if(item.selected){
+                                dataModel.each(function(data){
+                                    data.s({
+                                        'wf.visible': 'selected',
+                                        'wf.color': 'red'                                        
+                                    });
+                                });                                
+                            }else{
+                                dataModel.each(function(data){
+                                    data.s({
+                                        'wf.visible': false                                       
+                                    });
+                                });                               
+                            }                            
+                        }
+                    },
+                    {
+                        type: 'toggle',
+                        label: 'Orthographic Projection',                        
+                        action: function(item){  
+                            g3d.setOrtho(item.selected);                           
+                        }                    
+                    },
+                    {
+                        type: 'toggle',
+                        selected: false,
+                        label: 'First Person Mode',
+                        action: function(item){
+                            g3d.setFirstPersonMode(item.selected);  
+                            g3d.reset();
+                        }
+                    },                                                       
+                    'separator',                      
+                    {
+                        type: 'check',
+                        label: 'Origin Axis',
+                        selected: false,
+                        action: function(item){
+                            g3d.setOriginAxisVisible(item.selected);                           
+                        }
+                    },   
+                    {
+                        type: 'check',
+                        label: 'Center Axis',
+                        selected: false,
+                        action: function(item){
+                            g3d.setCenterAxisVisible(item.selected);                           
+                        }
+                    },                             
+                    {
+                        type: 'check',
+                        label: 'Grid',
+                        selected: false,
+                        action: function(item){
+                            g3d.setGridVisible(item.selected);                           
+                        }
+                    },                    
+                    {
+                        label: 'Export Image',
+                        action: function(){                             
+                            var w = window.open();
+                            w.document.open();                            
+                            w.document.write("<img src='" + g3d.toDataURL(g3d.getView().style.background) + "'/>");
+                            w.document.close();
+                        }
+                    }                    
+                ];
+                
+                toolbar = new ht.widget.Toolbar(items);                                                                                                
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);    
+                g3d.getView().style.background = 'black';
+                g3d.setGridSize(100);
+                g3d.setGridGap(100); 
+                g3d.setFar(30000);
+                g3d.setOrthoWidth(5000);  
+                g3d.setFogNear(100);
+                g3d.setFogFar(8000);
+                g3d.reset = reset;
+                g3d.reset();
+                g3d.enableToolTip();                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(g3d);       
+
+                view = borderPane.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                         
+                    
+                w = 50, 
+                g = 3, 
+                transparent = 'rgba(0, 50, 50, 0.8)';
+                initModel();
+                
+                dataModel.sm().setFilterFunc(function(data){
+                    return data !== floor;
+                }); 
+                g3d.setMovableFunc(function(data){
+                    return toolbar.v('movable');
+                });
+                anim = null;
+                g3d.onDataDoubleClicked = function(data, e, dataInfo){
+                    if(data.face){
+                        data.getHost().getAttaches().each(function(attach){
+                            if(attach.pop){
+                                toggleData(attach);
+                            }
+                        });
+                    }
+                    toggleData(data, dataInfo.name);
+                };  
+            } 
+            
+            function toggleData(data, name){
+                var angle = data.angle,
+                    pop = data.pop;
+            
+                if(angle != null){
+                    if(anim){
+                        anim.stop(true);
+                    }
+                    var oldAngle = data.window ? data.getRotationX() : data.getRotation();
+                    if(data.open){
+                        angle = -angle;
+                    }
+                    data.open = !data.open;
+                    anim = ht.Default.startAnim({
+                        action: function(v){
+                            if(data.window){
+                                data.setRotationX(oldAngle + v * angle);    
+                            }else{
+                                data.setRotation(oldAngle + v * angle);
+                            }                                
+                        }
+                    });
+                }
+                else if(pop != null){
+                    if(anim){
+                        anim.stop(true);
+                    }
+                    var p3 = data.p3(),
+                        s3 = data.s3(),
+                        dist = pop ? -s3[2] : s3[2];
+                    data.pop = !data.pop;                        
+                    if(data.pop){
+                        data.s({
+                            'note': 'Detail...',  
+                            'note.background': '#3498DB',
+                            'note.font': '26px Arial',
+                            'note.position': 6,
+                            'note.t3': [-30, -3, 30],
+                            'note.expanded': true,
+                            'note.toggleable': false,
+                            'note.autorotate': true                        
+                        });                                     
+                    }else{
+                        data.s('note', null);
+                    }                                                
+                    anim = ht.Default.startAnim({
+                        action: function(v){
+                            data.p3(p3[0], p3[1], p3[2] + v * dist);                                                               
+                        }
+                    }); 
+                }            
+            }
+
+            function reset(){
+                g3d.setEye([0, 1500, 2500]);
+                g3d.setCenter([0, 0, -1500]);                  
+            }
+            function initModel(){
+                redLight = new ht.Light();
+                redLight.p3(-1600, 200, -2200);
+                redLight.s({
+                    'light.color': 'red',
+                    'light.range': 1000
+                });
+                dataModel.add(redLight);
+                
+                blueLight = new ht.Light();
+                blueLight.p3(1600, 200, -2200);
+                blueLight.s({
+                    'light.color': 'blue',
+                    'light.range': 1000
+                });
+                dataModel.add(blueLight);                                   
+                
+                greenLight = new ht.Light();
+                greenLight.p3(-800, 400, -200);
+                greenLight.s({
+                    'light.center': [-300, 0, -900],
+                    'light.type': 'spot',
+                    'light.color': 'green',
+                    'light.range': 4000,
+                    'light.exponent': 10
+                });
+                dataModel.add(greenLight);                
+                
+                floor = createNode([0, -5, -1500], [5200, 10, 4200]);
+                floor.s({                             
+                    'shape3d': 'rect',
+                    'shape3d.top.color': '#F0F0F0'                    
+                });                
+                
+                var i, j, d;
+                
+                for(i=0; i<3; i++){
+                    for(j=0; j<3; j++){
+                        createServer1(250+i*280, -1200-500*j, j === 2);
+                        createServer1(-250-i*280, -1200-500*j, j === 1);
+                    }
+                }
+                     
+                for(i=0; i<2; i++){
+                    for(j=0; j<2; j++){
+                        createServer2(1500+i*200, -700-500*j, 
+                            (i === 1 ? (j === 1 ? '#00FFFF' : '#C800FF') : null));
+                        createServer2(-1500-i*200, -700-500*j, 
+                            (j === 1 ? (i === 1 ? 'red' : 'yellow') : null));
+                    }
+                }                                          
+          
+                // fire extinguisher
+                createFireExtinguisher(1300, -1800, [0.45, 0]); 
+                createFireExtinguisher(-1300, -1800); 
+                createFireExtinguisher(1100, -2450);   
+                createFireExtinguisher(-1100, -2450, [0.45, 0]);  
+                
+                // air condition
+                createNode([1120, 170, -700], [80, 340, 170]).s({
+                    'all.color': '#EDEDED',
+                    'left.image': 'stand'
+                }).setToolTip('Air Conditioner'); 
+                createNode([-1120, 170, -700], [80, 340, 170]).s({
+                    'all.color': '#EDEDED',
+                    'right.image': 'stand'
+                }).setToolTip('Air Conditioner'); 
+                createNode([1680, 400, -1850], [370, 120, 60]).s({
+                    'all.color': '#767676',
+                    'front.image': 'air1'
+                }).setToolTip('Air Conditioner');             
+                createNode([-1680, 400, -1850], [370, 120, 60]).s({
+                    'all.color': '#767676',
+                    'front.image': 'air2'
+                }).setToolTip('Air Conditioner'); 
+                for(i=0; i<2; i++){
+                    createNode([300+i*580, 90, -2630], [260, 180, 60]).s({
+                        'all.color': '#EDEDED',
+                        'back.image': 'air3'
+                    }).setToolTip('Air Conditioner');  
+                    createNode([-300-i*580, 90, -2630], [260, 180, 60]).s({
+                        'all.color': '#EDEDED',
+                        'back.image': 'air3'
+                    }).setToolTip('Air Conditioner');                      
+                }
+          
+                // center
+                createWindow([0, 250, 0], [1600, 300, w/4]);
+                // top
+                createNode([0, 450, 0], [4000, 100, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [40, 1]
+                });                
+                // bottom
+                createNode([0, 50, 0], [1600, 100, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [16, 1]
+                });
+                // right
+                createNode([850, 200, 0], [100, 400, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [1, 4]
+                });
+                // left
+                createNode([-850, 200, 0], [100, 400, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [1, 4]
+                });  
+                // right door separator
+                createNode([1200, 200, 0], [200, 400, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [2, 4]
+                });
+                // left door separator
+                createNode([-1200, 200, 0], [200, 400, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [2, 4]
+                }); 
+                // right wall
+                createNode([1550, 200, 0], [100, 400, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [1, 4]
+                });                
+                // left wall
+                createNode([-1550, 200, 0], [100, 400, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [1, 4]
+                });                
+                // right bottom
+                createNode([1800, 50, 0], [400, 100, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [4, 1]
+                });     
+                // left bottom
+                createNode([-1800, 50, 0], [400, 100, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [4, 1]
+                }); 
+                // right center
+                createWindow([1700, 250, 0], [200, 300, w/4]);   
+                // left center
+                createWindow([-1700, 250, 0], [200, 300, w/4]);                 
+                // right wall
+                createNode([1900, 250, 0], [200, 300, w]).s({
+                    'all.color': 'white'
+                });    
+                // left wall
+                createNode([-1900, 250, 0], [200, 300, w]).s({
+                    'all.color': 'white'
+                });                 
+                // right corner
+                d = 100 + w/2;
+                createNode([2000-w/2+g, 250, -100+d/2], [w, 300, d]).s({
+                    'all.color': 'white'
+                }); 
+                // left corner               
+                createNode([-(2000-w/2+g), 250, -100+d/2], [w, 300, d]).s({
+                    'all.color': 'white'
+                });                 
+                // right top
+                createNode([2000-w/2+g, 450, -1300+w/4], [w, 100, 2600+w/2-g]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [26, 1],
+                    'top.uv.scale': [0.5, 26]
+                });                 
+                // left top
+                createNode([-(2000-w/2+g), 450, -1300+w/4], [w, 100, 2600+w/2-g]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [26, 1],
+                    'top.uv.scale': [0.5, 26]
+                });                  
+                // right center
+                createNode([2000-w/2+g, 250, -1000], [w/4, 300, 1800]).s({
+                    'all.color': transparent,
+                    'all.reverse.cull': true,
+                    'all.transparent': true
+                });                
+                // left center
+                createNode([-(2000-w/2+g), 250, -1000], [w/4, 300, 1800]).s({
+                    'all.color': transparent,
+                    'all.reverse.cull': true,
+                    'all.transparent': true
+                });                 
+                // right bottom
+                createNode([2000-w/2+g, 50, -1900/2+w/4], [w, 100, 1900+w/2-g]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [26, 1]
+                });    
+                // left bottom
+                createNode([-(2000-w/2+g), 50, -1900/2+w/4], [w, 100, 1900+w/2-g]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [26, 1]
+                });                  
+                // right door separator
+                createNode([2000-w/2+g, 200, -2000], [w, 400, 200]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [2, 4]
+                });                
+                // left door separator
+                createNode([-(2000-w/2+g), 200, -2000], [w, 400, 200]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [2, 4]
+                });                 
+                // right corner center
+                createNode([2000-w/2+g, 250, -2450], [w, 300, 300]).s({
+                    'all.color': 'white'
+                });  
+                // left corner center
+                createNode([-(2000-w/2+g), 250, -2450], [w, 300, 300]).s({
+                    'all.color': 'white'
+                });                 
+                // right corner bottom
+                createNode([2000-w/2+g, 50, -2450], [w, 100, 300]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [3, 1]
+                });   
+                // left corner bottom
+                createNode([-(2000-w/2+g), 50, -2450], [w, 100, 300]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [3, 1]
+                });  
+                // back
+                createNode([0, 250, -2600+w/2-g], [4000-g, 500, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [40, 5],
+                    'top.uv.scale': [40, 0.5]
+                });                                 
+                // right middle 
+                createNode([1200, 200, -950], [w/4, 400, 1900-g]).s({
+                    'all.color': transparent,
+                    'all.reverse.cull': true,
+                    'all.transparent': true
+                });                
+                // left middle 
+                createNode([-1200, 200, -950], [w/4, 400, 1900-g]).s({
+                    'all.color': transparent,
+                    'all.reverse.cull': true,
+                    'all.transparent': true
+                }); 
+                // right middle top
+                createNode([1200, 450, -1300], [w, 100, 2600-g]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [36, 1],
+                    'top.uv.scale': [0.5, 26]
+                });                 
+                // left middle top
+                createNode([-1200, 450, -1300], [w, 100, 2600-g]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [36, 1],
+                    'top.uv.scale': [0.5, 26]
+                });                  
+                // right middle tail
+                createNode([1200, 200, -2250], [w, 400, 700-g]).s({
+                    'all.color': 'white'
+                });                 
+                // left middle tail
+                createNode([-1200, 200, -2250], [w, 400, 700-g]).s({
+                    'all.color': 'white'
+                });  
+                // right room separator
+                createNode([1600, 250, -1900], [800, 500, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [8, 5],
+                    'top.uv.scale': [8, 0.5]
+                }); 
+                // left room separator
+                createNode([-1600, 250, -1900], [800, 500, w]).s({
+                    'all.image': 'wall',
+                    'all.uv.scale': [8, 5],
+                    'top.uv.scale': [8, 0.5]
+                });                  
+                // door
+                createDoor(900, 0, 1100, 0, -Math.PI/2); 
+                createDoor(-900, 0, -1100, 0);
+                createDoor(1300, 0, 1500, 0, -Math.PI/2);                
+                createDoor(-1300, 0, -1500, 0);
+                createDoor(1980, -2100, 1980, -2300, -Math.PI/2);
+                createDoor(-1980, -2100, -1980, -2300);
+            }
+            
+            function createNode(p3, s3){
+                var node = new ht.Node();
+                node.s({
+                    'shape': 'rect',
+                    'shape3d.color': 'gray'                   
+                });
+                node.p3(p3);
+                node.s3(s3);
+                dataModel.add(node);
+                return node;
+            }
+            
+            function createDoor(x1, y1, x2, y2, angle){
+                var node = new ht.Shape();
+                node.s({
+                    'all.image': 'door',
+                    'all.reverse.cull': true
+                });                
+                node.open = false;                
+                node.angle = angle == null ? Math.PI/2 : angle;
+                node.addPoint({x: x1, y: y1});
+                node.addPoint({x: x2, y: y2});
+                node.addPoint({x: x2*2-x1, y: y2*2-y1});
+                node.setSegments([1, 2, 1]);
+                node.setTall(400);
+                node.setElevation(200);
+                node.setThickness(w/5);
+                node.setToolTip('Double click to open the door');
+                dataModel.add(node);
+                return node;                
+            }
+             
+            function createWindow(p3, s3){
+                var node = createNode(p3, s3).s({
+                    'all.color': transparent,
+                    'all.reverse.cull': true,
+                    'all.transparent': true
+                });        
+                node.open = false;                
+                node.angle = -Math.PI/4; 
+                node.window = true;
+                node.setToolTip('Double click to open the window');
+                return node;
+            } 
+             
+            function createFireExtinguisher(x, z, uvOffset){
+                var w = 80, 
+                    h = 200,
+                    body = createNode([0, 0, 0], [w, h, w]).s({
+                        'shape3d': 'cylinder',
+                        'shape3d.image': 'fire',
+                        'shape3d.uv.offset': uvOffset,
+                        'shape3d.reverse.cull': true
+                    }),                    
+                    sphere = createNode([0, h/2, 0], [w, w, w]).s({
+                        'shape3d': 'sphere',
+                        'shape3d.color': '#F20000',
+                        'shape3d.reverse.cull': true
+                    }),
+                    top = createNode([0, h/2+w/3, 0], [w/2, w/2, w/2]).s({
+                        'shape3d': 'cylinder',
+                        'shape3d.color': '#242424',
+                        'shape3d.reverse.cull': true
+                    });
+                    
+                sphere.setHost(body);
+                top.setHost(sphere);
+                body.p3([x, h/2, z]);
+                body.setToolTip('Fire Extinguisher');
+                sphere.setToolTip('Fire Extinguisher');
+                top.setToolTip('Fire Extinguisher');
+            } 
+            
+            function createServer2(x, z, alarmColor){
+                var h = 360, w = 150, d = 170,
+                    node = createNode([x, h/2+1, z], [w, h, d]);
+            
+                node.s({
+                   'all.color': '#808080',
+                   'front.image': 'front'                      
+                });                
+                node.setToolTip('Double click to see detail');    
+                if(alarmColor){
+                    node.addStyleIcon('alarm', {
+                        names: ['alarm'],
+                        autorotate: true,
+                        face: 'top',
+                        position: 17,
+                        t3: [0, 60, 0],
+                        discardSelectable: false
+                    });
+                    node.setAttr('alarm.color', alarmColor);
+                    node.setStyle('body.color', alarmColor);
+                }
+                return node;
+            }
+             
+            function createServer1(x, z, disabled){
+                var h = 360, w = 150, d = 170, k = 10,
+                    main = createNode([0, 0, 0], [w, h, d]),
+                    face = new ht.Shape(),
+                    s = {'all.visible': false, 'front.visible': true};         
+                  
+                dataModel.add(face);    
+                face.addPoint({x: -w/2, y: d/2-1});
+                face.addPoint({x: w/2, y: d/2-1});
+                face.addPoint({x: w+w/2, y: d/2-1});
+                face.setSegments([1, 2, 1]);                
+                face.setTall(h);
+                face.setThickness(1);                 
+                face.s(s);                
+                face.setHost(main);
+                
+                main.s({
+                    'all.color': '#403F46',
+                    'front.visible': false
+                });                
+                
+                if(!disabled){                   
+                    face.s({
+                        'all.color': 'rgba(0, 40, 60, 0.7)',
+                        'all.reverse.flip': true,
+                        'all.transparent': true
+                    });
+                    face.face = true;                     
+                    face.open = false;
+                    face.angle = -Math.PI * 0.6;                       
+                    face.setToolTip('Double click to open the door');
+                    
+                    var up = createNode([0, h/2-k/2, d/2], [w, k, 1]).s(s),
+                        down = createNode([0, -h/2+k/2, d/2], [w, k, 1]).s(s),
+                        right = createNode([w/2-k/2, 0, d/2], [k, h, 1]).s(s),
+                        left = createNode([-w/2+k/2, 0, d/2], [k, h, 1]).s(s);
+                                
+                    up.setHost(face);
+                    down.setHost(face);
+                    left.setHost(face);
+                    right.setHost(face);
+
+                    var num = Math.ceil(Math.random() * 2),
+                        start = 20 + 20 * Math.random();
+                    for(var i=0; i<num; i++){
+                        var node = createNode([0, start+45*i, 0], [w-6, 16, d-30]);
+                        node.setHost(main);
+                        node.s({
+                            'front.image': 'server',
+                            'all.color': '#E6DEEC',
+                            'all.reverse.cull': true
+                        });
+                        node.pop = false;
+                        node.setToolTip('Double click to pop the server');
+
+                        var node = createNode([0, -start-45*i, 0], [w-6, 16, d-30]);
+                        node.setHost(main);
+                        node.s({
+                            'front.image': 'server',
+                            'all.color': '#E6DEEC',
+                            'all.reverse.cull': true
+                        }); 
+                        node.pop = false;
+                        node.setToolTip('Double click to pop the server');
+                    }                    
+                }
+                
+                main.p3(x, h/2+1, z);
+            }
+        </script>
+    </head>
+    <body onload="init();">                  
+              
+    </body>
+</html>

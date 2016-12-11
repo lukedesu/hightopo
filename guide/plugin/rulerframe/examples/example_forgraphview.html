@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RulerFrame</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-rulerframe.js"></script>
+        
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+            }
+            .main {
+                position: absolute !important;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+        </style>
+        <script type="text/javascript">
+            
+            function init() {
+                var dataModel = new ht.DataModel(),
+                    graphView = window.graph = new ht.graph.GraphView(dataModel),
+                    rulerFrame = new ht.widget.RulerFrame(graphView),
+                    view = rulerFrame.getView();
+                rulerFrame.getDefaultRulerConfig().guideVisible = true;
+                rulerFrame.getDefaultRulerConfig().guideTipVisible = true;
+                rulerFrame.getDefaultRulerConfig().guideTipBackground = "rgb(0, 173, 239)";
+                rulerFrame.getDefaultRulerConfig().guideTipTextColor = "white";
+                
+                rulerFrame.getLeftRulerConfig().background = "yellow";
+                rulerFrame.getLeftRulerConfig().tickSpacingAdaptable = false;
+                rulerFrame.getLeftRulerConfig().defaultMajorTickSpacing = 100;
+                rulerFrame.getLeftRulerConfig().guideTipVisible = false;
+                
+                rulerFrame.getTopRulerConfig().guideTipVisible = false;
+                
+                rulerFrame.getRightRulerConfig().visible = true;
+                
+                rulerFrame.getBottomRulerConfig().visible = true;
+                
+                rulerFrame.iv();
+
+                var node = new ht.Node();
+                node.setPosition(200, 100);
+                dataModel.add(node);
+                
+                graphView.getView().style.background = "rgb(232, 232, 232)";
+                
+                view.className = "main";
+                document.body.appendChild(view);
+                
+                window.addEventListener("resize", function(e) {
+                   rulerFrame.invalidate(); 
+                });
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

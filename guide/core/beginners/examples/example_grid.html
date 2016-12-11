@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Grid</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.4);
+            }             
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script>      
+            
+            for(var i=0; i<8; i++){
+                ht.Default.setImage('book' + i, 'res/book' + i + '.jpg'); 
+            }            
+            
+            function init(){                 
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();            
+
+                view.className = 'main';                
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);  
+                
+                grid = new ht.Grid();
+                grid.setSize(500, 240);
+                grid.setStyle('grid.row.count', 2);
+                grid.setStyle('grid.column.count', 5);
+                grid.setStyle('grid.border', 8);
+                grid.setStyle('grid.gap', 8);
+                grid.setStyle('grid.depth', -5),
+                grid.setStyle('grid.cell.depth', -1),  
+                grid.setStyle('grid.cell.border.color', null);  
+                grid.setStyle('grid.background', '#E5BB77');
+                grid.setStyle('select.width', 0);
+                dataModel.add(grid);
+                
+                for(var i=0; i<8; i++){
+                    var node = new ht.Node();
+                    node.setImage('book' + i);
+                    node.setStyle('attach.row.index', Math.floor(i / 4));
+                    node.setStyle('attach.column.index', i % 4);
+                    node.setStyle('attach.padding', -2);
+                    node.setStyle('select.width', 0);
+                    node.setHost(grid);
+                    dataModel.add(node);
+                }
+                
+                graphView.translate(280, 150);
+                                                                                
+                formPane = new ht.widget.FormPane();
+                view = formPane.getView();
+                view.className = 'formpane'; 
+                document.body.appendChild(view); 
+                formPane.setWidth(230);
+                formPane.setHeight(200);             
+                formPane.addRow(['grid.border', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 30,
+                            step: 1,
+                            value: 8,
+                            onValueChanged: function(){     
+                                grid.s('grid.border', this.getValue());                                 
+                            }
+                        }
+                    }
+                ], [90, 0.1]);  
+                formPane.addRow(['grid.gap', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 30,
+                            step: 1,
+                            value: 8,
+                            onValueChanged: function(){     
+                                grid.s('grid.gap', this.getValue());                                 
+                            }
+                        }
+                    }
+                ], [90, 0.1]); 
+                formPane.addRow(['grid.depth', 
+                    {
+                        slider: {                    
+                            min: -10,
+                            max: 10,
+                            step: 1,
+                            value: -5,
+                            onValueChanged: function(){     
+                                grid.s('grid.depth', this.getValue());                                 
+                            }
+                        }
+                    }
+                ], [90, 0.1]);    
+                formPane.addRow(['grid.cell.depth', 
+                    {
+                        slider: {                    
+                            min: -10,
+                            max: 10,
+                            step: 1,
+                            value: -1,
+                            onValueChanged: function(){     
+                                grid.s('grid.cell.depth', this.getValue());                                 
+                            }
+                        }
+                    }
+                ], [90, 0.1]);                 
+            }
+                        
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

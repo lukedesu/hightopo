@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ListView Custom</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>                          
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script src="products.js"></script> 
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();                
+                toolbar = new ht.widget.Toolbar();                     
+                                
+                listView = new ht.widget.ListView(); 
+                g3d = new ht.graph3d.Graph3dView();
+                
+                borderPane.setTopView(toolbar);
+                borderPane.setLeftView(listView, 350); 
+                borderPane.setCenterView(g3d); 
+                
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);          
+    
+                listView.setRowHeight(50);   
+                listView.drawRowBackground = function(g, data, selected, x, y, width, height){
+                    if(this.isSelected(data)){
+                        g.fillStyle = '#87A6CB';
+                    }
+                    else if(this.getRowIndex(data) % 2 === 0){
+                        g.fillStyle = '#F1F4F7';
+                    }
+                    else{
+                        g.fillStyle = '#FAFAFA';
+                    }
+                    g.beginPath();
+                    g.rect(x, y, width, height);
+                    g.fill();
+                };
+
+                ht.Default.setImage('productIcon', {
+                    width: 50,
+                    height: 50,
+                    clip: function(g, width, height) {   
+                        g.beginPath();
+                        g.arc(width/2, height/2, Math.min(width, height)/2-3, 0, Math.PI * 2, true);
+                        g.clip();                        
+                    },
+                    comps: [
+                        {
+                            type: 'image',
+                            stretch: 'uniform',
+                            rect: [0, 0, 50, 50],
+                            name: {func: function(data){return data.a('ProductId');}}
+                        }
+                    ]
+                });
+                listView.setIndent(60);                 
+                listView.getIcon = function(data){
+                    return 'productIcon';
+                };  
+                
+                listView.enableToolTip();
+                listView.getLabel = function(data){
+                    return data.a('ProductName') + ' - $' + data.a('UnitPrice').toFixed(2);
+                };                
+                listView.getToolTip = function(e){
+                    var data = this.getDataAt(e);
+                    if(data){
+                        return '<span style="color:#3D97D0">ProductId:&nbsp;</span>' + data.a('ProductId') + '<br>' +  
+                               '<span style="color:#3D97D0">ProductName:&nbsp;</span>' + data.a('ProductName') + '<br>' +  
+                               '<span style="color:#3D97D0">QuantityPerUnit:&nbsp;</span>' + data.a('QuantityPerUnit') + '<br>' + 
+                               '<span style="color:#3D97D0">Description:&nbsp;</span>' + data.a('Description');                        
+                    }
+                    return null;
+                };
+                    
+                sortFunc = function(d1, d2){
+                    return d1.a('UnitPrice') - d2.a('UnitPrice');
+                };
+                listView.setSortFunc(sortFunc);
+                
+                if(!ht.Default.isTouchable){
+                    toolbar.getView().style.background = 'url(images/header.png) repeat-x';
+                }                
+                
+                toolbar.getSelectBackground = function(item){ return '#3D97D0'; };
+                toolbar.setItems([                    
+                    {
+                        id: 'text',
+                        label: 'Search',
+                        icon: 'images/search.png',
+                        textField: {
+                            width: 120
+                        }
+                    },
+                    'separator',
+                    {
+                        label: 'Sort by price',
+                        type: 'toggle',
+                        selected: true,
+                        action: function(){
+                            listView.setSortFunc(this.selected ? sortFunc : null);
+                        }
+                    }
+                ]);                                
+                toolbar.getItemById('text').element.getElement().onkeyup = function(e){
+                    listView.invalidateModel();
+                };
+                listView.setVisibleFunc(function(data){                    
+                    var text = toolbar.v('text');
+                    if(text){                        
+                        return data.a('ProductName').toLowerCase().indexOf(text.toLowerCase()) >= 0;
+                    }
+                    return true;
+                });                                        
+
+                products.forEach(function(product){
+                    var data = new ht.Data();
+                    data.a(product);
+                    listView.dm().add(data);
+                });                
+                
+                var node = new ht.Node();
+                node.s3(30, 30, 30);
+                node.p3(-30, 15, 0);
+                node.s('all.color', '#87A6CB');                
+                g3d.dm().add(node);
+                
+                var node = new ht.Node();
+                node.s3(30, 30, 30);
+                node.p3(30, 15, 0);
+                node.s('all.color', '#87A6CB');
+                node.setElevation(15);
+                g3d.dm().add(node);
+                
+                g3d.setEye(-100, 100, 80);
+                g3d.setGridVisible(true);
+                g3d.setGridColor('#F1F4F7');
+                
+                dragImage = null;
+                productId = null;
+                lastFaceInfo = null;
+                listView.handleDragAndDrop = function(e, state){
+                    if(state === 'prepare'){
+                        var data = listView.getDataAt(e);
+                        listView.sm().ss(data);
+                        if(dragImage && dragImage.parentNode){
+                            document.body.removeChild(dragImage);
+                        }
+                        dragImage = ht.Default.toCanvas('productIcon', 30, 30, 'uniform', data);
+                        productId = data.a('ProductId');      
+                    }
+                    else if(state === 'begin'){
+                        if(dragImage){
+                            var pagePoint = ht.Default.getPagePoint(e);
+                            dragImage.style.left = pagePoint.x - dragImage.width/2 + 'px';
+                            dragImage.style.top = pagePoint.y - dragImage.height/2 + 'px';
+                            document.body.appendChild(dragImage);
+                        }
+                    }
+                    else if(state === 'between'){
+                        if(dragImage){
+                            var pagePoint = ht.Default.getPagePoint(e);
+                            dragImage.style.left = pagePoint.x - dragImage.width/2 + 'px';
+                            dragImage.style.top = pagePoint.y - dragImage.height/2 + 'px';   
+                            
+                            if(ht.Default.containedInView(e, g3d)){
+                                if(lastFaceInfo){
+                                    lastFaceInfo.data.s(lastFaceInfo.face + '.image', lastFaceInfo.oldValue);
+                                    lastFaceInfo = null;
+                                }                                
+                                var faceInfo = g3d.getHitFaceInfo(e);                                
+                                if(faceInfo){
+                                    faceInfo.oldValue = faceInfo.data.s(faceInfo.face + '.image');
+                                    faceInfo.data.s(faceInfo.face + '.image', productId);
+                                    lastFaceInfo = faceInfo;
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        if(dragImage){    
+                            if(lastFaceInfo){
+                                lastFaceInfo.data.s(lastFaceInfo.face + '.image', lastFaceInfo.oldValue);
+                                lastFaceInfo = null;
+                            }                             
+                            if(ht.Default.containedInView(e, g3d)){                               
+                                var faceInfo = g3d.getHitFaceInfo(e);                                
+                                if(faceInfo){
+                                    faceInfo.data.s(faceInfo.face + '.image', productId);
+                                }
+                            }                                                        
+                            if(dragImage.parentNode){
+                                document.body.removeChild(dragImage);
+                            }
+                            dragImage = null;  
+                            productId = null;
+                        }
+                    }
+                };                
+            }
+            
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

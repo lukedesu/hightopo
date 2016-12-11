@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Host</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-xeditinteractor.js"></script>
+        <script>       
+            
+            ht.Default.setImage('nodeImage', {
+                width: 40,
+                height: 28,
+                comps: [
+                    {
+                        type: 'rect',
+                        rect: [0, 0, 40, 28],                        
+                        background: {func: 'attr@color'}
+                    },
+                    {
+                        type: 'border',
+                        rect: [0, 0, 40, 28],   
+                        color: 'red',
+                        visible: {func: function(data, view){
+                            return view.isSelected(data);
+                        }}
+                    },
+                    {
+                        type: 'text',
+                        text: {func: 'style@attach.index'},
+                        rect: [0, 0, 40, 28],
+                        font: 'bold 12px Arial',
+                        align: 'center'
+                    }      
+                ]
+            });            
+            
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);  
+                
+                shape = new ht.Shape();
+                dataModel.add(shape);                   
+                shape.setPoints([
+                    {x: 200, y: 50},
+                    {x: 400, y: 50},
+                    {x: 500, y: 200},
+                    {x: 100, y: 200}
+                ]); 
+                shape.setClosePath(true); 
+                shape.setThickness(12);
+                shape.s({
+                    'shape.background': null,
+                    'shape.border.width': 12
+                });                 
+       
+                createNode('yellow', 0, 0.5);
+                createNode('yellow', 1, 0.5);
+                createNode('yellow', 2, 0.5);
+                createNode('yellow', 3, 0.5);
+                
+                createNode('#00C149', 0, 40).s('attach.thickness', 1);
+                createNode('#00C149', 1, 40).s('attach.thickness', 1);
+                createNode('#00C149', 2, 40).s('attach.thickness', 1);
+                createNode('#00C149', 3, 40).s('attach.thickness', 1);
+                
+                createNode('pink', 0, 40, true);
+                createNode('pink', 1, 40, true);
+                createNode('pink', 2, 40, true);
+                createNode('pink', 3, 40, true);
+                
+                createNode('#A5BAD7', 2, 0.3, true, 20);
+                createNode('#A5BAD7', 2, 0.3, false, -20);
+                
+                createNode('orange', 2, 0.3, true).s('attach.thickness', 0.5);
+                createNode('orange', 2, 0.3, false).s('attach.thickness', 0.5);                
+                       
+                graphView.setEditable(true);
+                graphView.setRotationEditableFunc(function(data){
+                    return false;
+                });
+                graphView.setRectEditableFunc(function(data){
+                    return data instanceof ht.Shape;
+                });                
+                graphView.setHelperEditableFunc(function(data, helper) {
+                    if(data instanceof ht.Shape){
+                        return false;
+                    }
+                    return helper === 'host';                    
+                });                
+            }
+                
+            function createNode(color, index, offset, opposite, gap){
+                var node = new ht.Node();
+                node.s({
+                    'select.width': 0,
+                    'attach.index': index,
+                    'attach.offset': offset,
+                    'attach.offset.relative': offset < 1,
+                    'attach.offset.opposite': opposite,
+                    'attach.gap': gap
+                });
+                node.a({
+                    'color': color
+                });
+                node.setImage('nodeImage');
+                node.setHost(shape);
+                dataModel.add(node);
+                return node;
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

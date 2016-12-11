@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Label 3D</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.5);
+            } 
+        </style>    
+                                       
+        <script src="../../../../lib/core/ht.js"></script>         
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+                                    
+            function init(){                                                                                                                                              
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);                   
+                g3d.setGridVisible(true);
+                  
+                view = g3d.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    g3d.iv();
+                }, false);                                
+                
+                createModel();                
+                createFormPane();
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());  
+                
+                g3d.walk(400, true);
+            }                          
+                       
+            function createModel(){
+                labelStyle = {
+                    'label': 'HT for Web\nwww.hightopo.com',
+                    'label.background': 'yellow',
+                    'label.position': 17,
+                    'label.offset.x': 0,
+                    'label.offset.y': 0                   
+                };
+                
+                node = new ht.Node();
+                node.p3(-200, 100, -60);
+                node.s3(150, 50, 80);
+                node.s(labelStyle);
+                node.s({
+                    'shape': 'rect',
+                    'all.transparent': true,
+                    'all.reverse.cull': true,
+                    'all.opacity': 0.7,
+                    'wf.visible': true,
+                    'wf.color': 'yellow'                    
+                });                
+                
+                n1 = new ht.Node();
+                n2 = new ht.Node();    
+                n1.p3(0, 100, -60);
+                n2.p3(300, 100, -60);
+                n1.s3(16, 16, 16);                
+                n2.s3(16, 16, 16);
+                
+                edge1 = new ht.Edge(n1, n2);
+                edge1.s(labelStyle);
+                edge1.s({
+                    'edge.gap': 80,
+                    'edge.center': true
+                });
+                
+                edge2 = new ht.Edge(n1, n2);
+                edge2.s(labelStyle);
+                edge2.s({
+                    'edge.gap': 80,
+                    'edge.center': true
+                });                
+                
+                n3 = new ht.Node();
+                n4 = new ht.Node();    
+                n3.p3(-200, 50, 120);
+                n4.p3(200, 50, 120);
+                n3.s3(16, 16, 16);                
+                n4.s3(16, 16, 16);
+                
+                edge3 = new ht.Edge(n3, n4);
+                edge3.s(labelStyle);
+                edge3.s({
+                    'edge.center': false,
+                    'edge.offset': 20,
+                    'edge.type': 'points',
+                    'edge.points': [{x: -100, y: 200, e: 100}, {x: 100, y: 200, e: 100}]
+                });   
+                
+                polyline = new ht.Polyline();
+                polyline.s(labelStyle);
+                polyline.setPoints([
+                    {x: -200, y: 320, e: 50},
+                    {x: -100, y: 260, e: 50}, 
+                    {x: 100, y: 260, e: 50},
+                    {x: 200, y: 320, e: 50}
+                ]);                
+                
+                dataModel.add(node);
+                dataModel.add(n1);
+                dataModel.add(n2);
+                dataModel.add(n3);
+                dataModel.add(n4);
+                dataModel.add(edge1);
+                dataModel.add(edge2);
+                dataModel.add(edge3);
+                dataModel.add(polyline);
+                
+            }
+            
+            function update(){
+                dataModel.each(function(data){
+                    data.s('label.face', formPane.v('face')); 
+                    data.s('label.position', formPane.v('position')); 
+                    data.s('label.scale', formPane.v('scale'));
+                    data.s('label.texture.scale', formPane.v('texScale'));
+                    data.s('label.t3', [formPane.v('tx'), formPane.v('ty'), formPane.v('tz')]); 
+                    data.s('label.r3', [formPane.v('rx'), formPane.v('ry'), formPane.v('rz')]); 
+                    data.s('label.rotationMode', formPane.v('rotationMode'));
+                    data.s('label.autorotate', formPane.v('autorotate'));
+                });                
+            }
+            
+            function createFormPane(){                                                
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(230);
+                formPane.setHeight(326);                           
+                formPane.setLabelAlign('right');
+              
+                formPane.addRow([
+                    'face',
+                    {
+                        id: 'face',
+                        comboBox: {
+                            value: 'front',
+                            values: ['front', 'back', 'left', 'right', 'top', 'bottom', 'center'],
+                            onValueChanged: function(){     
+                                update();
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);              
+                formPane.addRow([
+                    'position',
+                    {
+                        id: 'position',
+                        slider: {                    
+                            min: 1,
+                            max: 55,
+                            value: 17, 
+                            step: 1,                            
+                            onValueChanged: function(){  
+                                update();
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);
+                formPane.addRow([
+                    'scale',
+                    {
+                        id: 'scale',
+                        slider: {                    
+                            min: 0,
+                            max: 5,
+                            value: 1,                                                         
+                            onValueChanged: function(){  
+                                update();
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);
+                formPane.addRow([
+                    'texScale',
+                    {
+                        id: 'texScale',
+                        slider: {                    
+                            min: 0.5,
+                            max: 3,
+                            value: 2,                                                         
+                            onValueChanged: function(){  
+                                update();
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);                
+                formPane.addRow([
+                    'tx',
+                    {
+                        id: 'tx',
+                        slider: {                    
+                            min: -100,
+                            max: 100,
+                            value: 0, 
+                            step: 1,                            
+                            onValueChanged: function(){   
+                                update();                        
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);   
+                formPane.addRow([
+                    'ty',
+                    {
+                        id: 'ty',
+                        slider: {                    
+                            min: -100,
+                            max: 100,
+                            value: 0, 
+                            step: 1,                            
+                            onValueChanged: function(){     
+                                update(); 
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);
+                formPane.addRow([
+                    'tz',
+                    {
+                        id: 'tz',
+                        slider: {                    
+                            min: -100,
+                            max: 100,
+                            value: 0, 
+                            step: 1,                            
+                            onValueChanged: function(){     
+                                update(); 
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);
+                formPane.addRow([
+                    'rx',
+                    {
+                        id: 'rx',
+                        slider: {                    
+                            min: -Math.PI,
+                            max: Math.PI,
+                            value: 0,                             
+                            onValueChanged: function(){     
+                                update();  
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);
+                formPane.addRow([
+                    'ry',
+                    {
+                        id: 'ry',
+                        slider: {                    
+                            min: -Math.PI,
+                            max: Math.PI,
+                            value: 0,                             
+                            onValueChanged: function(){     
+                                update();  
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);  
+                formPane.addRow([
+                    'rz',
+                    {
+                        id: 'rz',
+                        slider: {                    
+                            min: -Math.PI,
+                            max: Math.PI,
+                            value: 0,                             
+                            onValueChanged: function(){     
+                                update();  
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);  
+                formPane.addRow([
+                    'rm',
+                    {
+                        id: 'rotationMode',
+                        comboBox: {
+                            value: 'xzy',
+                            values: ['xyz', 'xzy', 'yxz', 'yzx', 'zxy', 'zyx'],
+                            onValueChanged: function(){     
+                                update();
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);  
+                formPane.addRow([
+                    'autorotate',
+                    {
+                        id: 'autorotate',
+                        comboBox: {
+                            value: false,
+                            values: [false, 'y', true],
+                            onValueChanged: function(){     
+                                update();
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);  
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

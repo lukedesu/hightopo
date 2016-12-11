@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Button</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script>                  
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                borderPane.setBottomView(createToolbar(true));
+                  
+                formPane = new ht.widget.FormPane();                                             
+                borderPane.setCenterView(formPane);              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+                
+                formPane.addRow([
+                    {
+                        button: {
+                            label: 'Node',
+                            icon: 'node_icon'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Group',
+                            icon: 'group_icon'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'SubGraph',
+                            icon: 'subGraph_icon'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Grid',
+                            icon: 'grid_icon'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1]);
+                
+                formPane.addRow([
+                    {
+                        button: {
+                            label: 'Node',                            
+                            icon: 'node_image',
+                            togglable: true,
+                            orientation: 'v'                            
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Group',
+                            icon: 'group_image',
+                            togglable: true,
+                            orientation: 'v',
+                            selected: true
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'SubGraph',
+                            icon: 'subGraph_image',
+                            togglable: true,
+                            orientation: 'v'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Grid',
+                            icon: 'grid_icon',
+                            togglable: true,
+                            orientation: 'v'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1], 80);
+                
+                formPane.addRow([
+                    {
+                        button: {
+                            label: 'Critical', 
+                            icon: 'node_icon',
+                            clickable: false,
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Major',
+                            icon: 'node_icon',
+                            clickable: false,
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Minor',
+                            icon: 'node_icon',
+                            clickable: false,
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Warning',
+                            icon: 'node_icon',
+                            clickable: false,
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Indeterminate',
+                            icon: 'node_icon',
+                            clickable: false,
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Cleared',
+                            icon: 'node_icon',
+                            clickable: false,
+                            background: null,
+                            borderColor: null
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], null, {background: '#ECF0F1'});
+                
+                formPane.addRow([
+                    {
+                        button: {
+                            label: 'Critical',    
+                            labelColor: '#FF0000',
+                            background: null,
+                            borderColor: null,
+                            togglable: true,
+                            groupId: 'A'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Major',
+                            labelColor: '#FFA000',
+                            background: null,
+                            borderColor: null,
+                            togglable: true,
+                            groupId: 'A'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Minor',
+                            labelColor: '#FFFF00',
+                            background: null,
+                            borderColor: null,
+                            selected: true,
+                            togglable: true,
+                            groupId: 'A'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Warning',
+                            labelColor: '#00FFFF',
+                            background: null,
+                            borderColor: null,
+                            togglable: true,
+                            groupId: 'A'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Indeterminate',
+                            labelColor: '#C800FF',
+                            background: null,
+                            borderColor: null,
+                            togglable: true,
+                            groupId: 'A'
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Cleared',
+                            labelColor: '#00FF00',
+                            background: null,
+                            borderColor: null,
+                            togglable: true,
+                            groupId: 'A'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], null, {background: '#ECF0F1'});
+                
+                formPane.addRow([
+                    {
+                        button: {
+                            label: 'Critical',                            
+                            icon: 'node_image',
+                            iconColor: '#FF0000',
+                            orientation: 'v',
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Major',
+                            icon: 'node_image',
+                            iconColor: '#FFA000',
+                            orientation: 'v',
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Minor',
+                            icon: 'node_image',
+                            iconColor: '#FFFF00',
+                            orientation: 'v',
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Warning',
+                            icon: 'node_image',
+                            iconColor: '#00FFFF',
+                            orientation: 'v',
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Indeterminate',
+                            icon: 'node_image',
+                            iconColor: '#C800FF',
+                            orientation: 'v',
+                            background: null,
+                            borderColor: null
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Cleared',
+                            icon: 'node_image',
+                            iconColor: '#00FF00',
+                            orientation: 'v',
+                            background: null,
+                            borderColor: null
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], '80+0.1', {background: '#ECF0F1'});
+                
+                formPane.addRow([
+                    {
+                        button: {                          
+                            icon: 'node_image',
+                            background: null,
+                            borderColor: '#FF0000'
+                        }
+                    },
+                    {
+                        button: {
+                            icon: 'node_image',
+                            background: null,
+                            borderColor: '#FFA000'
+                        }
+                    },
+                    {
+                        button: {
+                            icon: 'node_image',
+                            background: null,
+                            borderColor: '#FFFF00'
+                        }
+                    },
+                    {
+                        button: {
+                            icon: 'node_image',
+                            background: null,
+                            borderColor: '#00FFFF'
+                        }
+                    },
+                    {
+                        button: {
+                            icon: 'node_image',
+                            background: null,
+                            borderColor: '#C800FF'
+                        }
+                    },
+                    {
+                        button: {
+                            icon: 'node_image',
+                            background: null,
+                            borderColor: '#00FF00'
+                        }
+                    }
+                ],
+                [0.1, 0.1, 0.1, 0.1, 0.1, 0.1], '80+0.1');
+            }  
+
+            function createToolbar(stickToRight){
+                var basicButton = new ht.widget.Button();
+                basicButton.setLabel('Basic Button');  
+                basicButton.setIcon('grid_icon');
+                basicButton.setWidth(110);
+
+                toolbar = new ht.widget.Toolbar([
+                    {
+                        element: basicButton,
+                        unfocusable: true
+                    },                    
+                    {
+                        unfocusable: true,
+                        button: {
+                            label: 'Togglable Button',
+                            togglable: true,
+                            selected: true,
+                            width: 120,
+                            onClicked: function(e){
+                                alert('Selected:' + this.isSelected());
+                            }
+                        }
+                    },
+                    {
+                        unfocusable: true,
+                        button: {
+                            label: 'Disabled Button',
+                            icon: 'node_icon',
+                            disabled: true,
+                            width: 120
+                        }
+                    },
+                    {
+                        unfocusable: true,
+                        button: {
+                            label: 'Color Button',
+                            labelColor: '#3498DB',
+                            labelSelectColor: 'yellow',
+                            borderColor: 'red',
+                            background: 'yellow',                            
+                            selectBackground: '#3498DB'
+                        }
+                    },
+                    'separator',
+                    {
+                        unfocusable: true,
+                        button: {
+                            groupId: 'align',
+                            label: 'Left',                                               
+                            togglable: true,
+                            selected: true,
+                            onSelectedChanged: function(){                                
+                                if(window.console)console.log(this.getLabel() + '\'s selected:' + this.isSelected());
+                            }
+                        }
+                    },
+                    {
+                        unfocusable: true,
+                        button: {
+                            groupId: 'align',
+                            label: 'Center',                                               
+                            togglable: true,
+                            onSelectedChanged: function(){
+                                console.log(this.getLabel() + '\'s selected:' + this.isSelected());
+                            }
+                        }
+                    },
+                    {
+                        unfocusable: true,
+                        button: {
+                            groupId: 'align',
+                            label: 'Right',                                                
+                            togglable: true,
+                            onSelectedChanged: function(){
+                                console.log(this.getLabel() + '\'s selected:' + this.isSelected());
+                            }
+                        }
+                    }
+                ]);
+                toolbar.setStickToRight(stickToRight);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

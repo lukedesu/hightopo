@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="../../../../lib/plugin/ht-animation.js"></script>   
+        <style>
+            html, body {
+                background: black;
+            }
+        </style>
+        <script type="text/javascript">
+            function init() {
+                ht.Default.setCompType('bubble-shadow', function(g, rect, comp, data, view) {
+                    if (data.s('dia' + comp.cid) != null) {
+                        g.save();
+                        g.beginPath();
+                        g.globalAlpha = data.s('opacity' + comp.cid);
+                        var centerX = rect.x + rect.width / 2,
+                            centerY = rect.y + rect.height / 2,
+                            dia = data.s('dia' + comp.cid),
+                            grd = g.createRadialGradient(centerX, centerY, 0, centerX, centerY, dia);
+                        grd.addColorStop(0.1, data.s('startColor'));
+                        grd.addColorStop(0.8, data.s('endColor'));
+
+                        g.fillStyle = grd;
+                        g.arc(centerX, centerY, dia / 2, 0, 2 * Math.PI);
+                        g.fill();
+                        g.restore();
+                    }
+                });
+                ht.Default.setImage('bubble', {
+                    width: {
+                        func: function(data) {
+                            return data._width || 40;
+                        }
+                    },
+                    height: {
+                        func: function(data) {
+                            return data._height || 40;
+                        }
+                    },
+                    comps: [{
+                        cid: 1,
+                        type: 'bubble-shadow',
+                        relative: 1,
+                        rect: [17, 1, 1]
+                    }, {
+                        cid: 2,
+                        type: 'bubble-shadow',
+                        relative: 1,
+                        rect: [17, 1, 1]
+                    }]
+                });
+
+
+                var graph = window.graph = new ht.graph.GraphView(),
+                    dm = graph.dm(),
+                    view = graph.getView(),
+                    style = view.style;
+                var begin = function() {
+                    ht.Default.startAnim({
+                        duration: 1000,
+                        easing: ht.Default.getEasing('Linear'),
+                        action: function(t) {
+                            dm.each(function(data) {
+                                data.s('dia1', t * Math.min(data.getWidth(), data.getHeight()));
+                            });
+                        },
+                        finishFunc: function() {
+                            ht.Default.startAnim({
+                                duration: 1000,
+                                easing: ht.Default.getEasing('Linear'),
+                                action: function(t) {
+                                    dm.each(function(data) {
+                                        data.s('dia1', Math.min(data.getWidth(), data.getHeight()));
+                                        data.s('opacity1', 1 - t)
+                                    });
+                                },
+                                finishFunc: function() {
+                                    dm.each(function(data) {
+                                        data.s('opacity1', 1);
+                                        data.s('dia1', 0);
+                                    });
+                                    begin();
+                                }
+                            });
+
+                            ht.Default.startAnim({
+                                duration: 1000,
+                                easing: ht.Default.getEasing('Linear'),
+                                action: function(t) {
+                                    dm.each(function(data) {
+                                        data.s('dia2', t * Math.min(data.getWidth(), data.getHeight()));
+                                    });
+                                },
+                                finishFunc: function() {
+                                    ht.Default.startAnim({
+                                        duration: 1000,
+                                        easing: ht.Default.getEasing('Linear'),
+                                        action: function(t) {
+                                            dm.each(function(data) {
+                                                data.s('dia2', Math.min(data.getWidth(), data.getHeight()));
+                                                data.s('opacity2', 1 - t)
+                                            });
+                                        },
+                                        finishFunc: function() {
+                                            dm.each(function(data) {
+                                                data.s('opacity2', 1);
+                                                data.s('dia2', 0);
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    });
+                };
+
+                var node = new ht.Node();
+                node.s('endColor', "rgba(255,0,0,1)");
+                node.s('startColor', "rgba(255,0,0,0)");
+                node.setPosition(100, 100);
+                node.setImage('bubble');
+                dm.add(node);
+
+                var node2 = new ht.Node();
+                node2.s('endColor', "rgba(0,255,0,1)");
+                node2.s('startColor', "rgba(0,255,0,0)");
+                node2.setPosition(200, 100);
+                node2.setImage('bubble');
+                dm.add(node2);
+
+                var node3 = new ht.Node();
+                node3.s('endColor', "rgba(255,255,0,1)");
+                node3.s('startColor', "rgba(255,255,0,0)");
+                node3.setPosition(300, 100);
+                node3.setImage('bubble');
+                dm.add(node3);
+
+                style.position = 'absolute';
+                style.left = '0';
+                style.right = '0';
+                style.top = '0';
+                style.bottom = '0';
+                begin();
+                
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+
+    </body>
+</html>

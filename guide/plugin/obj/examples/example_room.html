@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OBJ Room</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                background: #426AA1;
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-modeling.js"></script>
+        <script>
+
+            function init(){ 
+                dataModel = new ht.DataModel();                
+                g3d = new ht.graph3d.Graph3dView(dataModel);                  
+                
+                view = g3d.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function (e) {
+                    g3d.invalidate();
+                }, false);  
+                
+                g3d.setEye([0, 700, 900]);
+                g3d.setGridVisible(true); 
+                g3d.setGridColor('#74AADA');
+                 
+                wall = new ht.CSGShape();
+                wall.setClosePath(true);
+                wall.setTall(240);
+                wall.setElevation(120);
+                wall.setThickness(20);
+                wall.setPoints([
+                    {x: -400, y: -400},
+                    {x: 400, y: -400},
+                    {x: 400, y: 400},
+                    {x: -400, y: 400}
+                ]); 
+                wall.s({
+                    'all.color': '#DDDDDD'
+                });
+                dataModel.add(wall); 
+                 
+                var array = ['window1', 'window2', 'door', 'window3'];
+                for(var i=0; i<array.length; i++){                    
+                    loadObj(array[i], i);
+                }             
+            } 
+
+            function loadObj(name, index){
+                ht.Default.loadObj('obj/' + name + '.obj', 'obj/' + name + '.mtl', {
+                    center: true,
+                    cube: true,
+                    shape3d: name,
+                    finishFunc: function(modelMap, array, rawS3){
+                        if(modelMap){
+                            var node;
+                            if(name === 'door' || name === 'window3'){
+                                node = new ht.DoorWindow();                                
+                                if(name === 'window3'){
+                                    node.s({
+                                        'dw.end': -Math.PI/7
+                                    });
+                                }
+                                node.setExpanded(true, true);
+                            }else{
+                                node = new ht.CSGNode();
+                            }                            
+                            node.s3(rawS3);
+                            if(name === 'door'){
+                                node.setElevation(node.getTall()/2);   
+                            }else{
+                                node.setElevation(wall.getTall()/2);
+                            }                            
+                            node.setHost(wall);
+                            node.s({
+                                'shape3d': name,
+                                'attach.index': index,
+                                'attach.offset': 0.5,
+                                'attach.offset.relative': true
+                            });                
+                            dataModel.add(node);  
+                        } 
+                    }
+                });            
+            }
+          
+        </script>
+    </head>
+    <body onload="init();">                         
+    </body>
+</html>

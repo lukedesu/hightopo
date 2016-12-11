@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editor</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-palette.js"></script>
+        <script src="CreateNodeInteractor.js"></script>
+        <script type="text/javascript">
+            function init() {
+                ht.Default.setImage("res/music.png", "res/music.png");
+                ht.Default.setImage("res/music2.png", "res/music2.png");
+                var palette = new ht.widget.Palette(),
+                    graphView = new ht.graph.GraphView(),
+                    splitView = new ht.widget.SplitView(palette, graphView, "h", 200),
+                    createNodeInteractor = new CreateNodeInteractor(graphView),
+                    view = splitView.getView(),
+                    style = view.style;
+
+                initPaletteModel(palette.dm());
+
+                palette.getView().style.position = "absolute";
+                style.position = "absolute";
+                style.top = "0";
+                style.right = "0";
+                style.bottom = "0";
+                style.left = "0";
+
+                palette.sm().ms(function(e) {
+                    var selectedNode = palette.sm().ld();
+                    if (selectedNode) {
+                        createNodeInteractor._image = selectedNode.getImage();
+                    }
+                });
+
+                graphView.setInteractors(new ht.List([
+                    new ht.graph.SelectInteractor(graphView),
+                    new ht.graph.MoveInteractor(graphView),
+                    new ht.graph.DefaultInteractor(graphView),
+                    new ht.graph.TouchInteractor(graphView),
+                    createNodeInteractor
+                ]));
+
+                graphView.getView().addEventListener("dragover", function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "copy";
+                });
+                graphView.getView().addEventListener("drop", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var id = e.dataTransfer.getData("Text").replace(/nodeid:/g, "");
+                    if (id) {
+                        var paletteNode = palette.dm().getDataById(id),
+                            node = new ht.Node(),
+                            lp = graphView.lp(e);
+                        if (paletteNode) {
+                            graphView.dm().add(node);
+                            node.setPosition(lp.x, lp.y);
+                            node.setImage(paletteNode.getImage());
+                        }
+                    }
+                });
+
+                document.body.appendChild(view);
+                window.addEventListener("resize", function(e) {
+                    splitView.iv();
+                });
+            }
+
+            function initPaletteModel(model) {
+                var group = new ht.Group(),
+                    node = new ht.Node(),
+                    draggableNode = new ht.Node();
+
+                group.setName("Nodes");
+                group.setExpanded(true);
+                node.setImage("res/music.png");
+                node.setName("Node");
+                node.s("title", "music.png");
+                draggableNode.setImage("res/music2.png");
+                draggableNode.setName("Draggable Node");
+                draggableNode.s("draggable", true);
+                draggableNode.s("title", "drag me to graphview");
+                group.addChild(node);
+                group.addChild(draggableNode);
+                model.add(group);
+                model.add(node);
+                model.add(draggableNode);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

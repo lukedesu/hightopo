@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Complex Edge</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.85);
+            } 
+        </style>    
+        
+        <script>
+            htconfig = {                
+                Style: {
+                    'edge.width': 1
+                }                       
+            };
+        </script>                                
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-edgetype.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script>
+                        
+            function init(){                                                                                 
+                ht.Default.setImage('toArrow', {
+                    width: 40,
+                    height: 20,
+                    comps: [
+                        {
+                            type: 'rect',
+                            rect: [2, 8, 8, 4],
+                            background: 'red'
+                        },
+                        {
+                            type: 'shape',
+                            points: [5, 2, 10, 10, 5, 18, 20, 10],
+                            closePath: true,
+                            background: 'red',                            
+                            borderWidth: 1,
+                            borderColor: 'red',
+                            gradient: 'spread.vertical'                           
+                        }
+                    ]
+                }); 
+                ht.Default.setImage('fromArrow', {
+                    width: 12,
+                    height: 12,
+                    comps: [
+                        {
+                            type: 'circle',
+                            rect: [1, 1, 10, 10],                            
+                            background: 'red'
+                        }
+                    ]
+                });                                 
+                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);    
+                graphView.setEditable(true);   
+                graphView.fitContent(true);
+                        
+                view = graphView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.iv();
+                }, false);                                
+                
+                createFormPane();
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());                  
+                
+                n0 = createNode(300, 300, 'n0');                
+                n1 = createNode(80, 80, 'n1');
+                n2 = createNode(500, 100, 'n2');
+                n3 = createNode(550, 520, 'n3');
+                n4 = createNode(20, 400, 'n4');
+                n5 = createNode(620, 200, 'n5');                                
+                
+                createEdge(n0, n1, 2, '#F26C00');
+                createEdge(n1, n0, 2, 'black', 'g');
+                
+                createEdge(n0, n2, 2, 'yellow');
+                createEdge(n2, n0, 2, 'blue', 'g');
+                
+                createEdge(n0, n3, 2, '#F26C00');
+                createEdge(n3, n0, 2, 'black', 'g');
+                
+                createEdge(n0, n4, 2, 'yellow');
+                createEdge(n4, n0, 2, 'blue', 'g');
+                
+                createEdge(n5, n4, 2, 'red');
+                createEdge(n4, n5, 2, 'green');  
+                
+                createEdge(n3, n4, 2, 'red');
+                createEdge(n4, n3, 2, 'green');                 
+            }
+            
+            function createNode(x, y, name){
+                var node = new ht.Node();
+                node.setName(name);
+                node.s({
+                    'shape': 'rect',
+                    'opacity': 0.5,
+                    'label.position': 17
+                });
+                node.setPosition(x, y);
+                node.setSize(80, 80);
+                dataModel.add(node);
+                return node;
+            }
+
+            function createEdge(sourceNode, targetNode, count, color, group){   
+                for(var i=0; i<count; i++){
+                    var edge = new ht.Edge(sourceNode, targetNode);    
+                    edge.s('edge.type', 'v.h2');                    
+                    if(group) edge.s('edge.group', group);
+                    if(color) edge.s('edge.color', color);                    
+                    edge.addStyleIcon("fromArrow", {
+                        position: 15,
+                        keepOrien: true,
+                        names: ['fromArrow']
+                    }); 
+                    edge.addStyleIcon("toArrow", {
+                        position: 19, 
+                        keepOrien: true,
+                        names: ['toArrow']
+                    }); 
+                    dataModel.add(edge);                    
+                }
+                return edge;
+            }
+            
+            function createFormPane(){                                                
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(230);
+                formPane.setHeight(350);
+
+                formPane.addRow([{ element: 'Edge Types:', font: 'bold 12px arial, sans-serif' }], [0.1]);
+                formPane.addRow([], [0.1], 1.01, {background: '#43AFF1'});
+                
+                var array = ['ortho2', 'flex2', 'extend.north2', 'extend.south2', 'extend.west2', 'extend.east2', 'v.h2', 'h.v2'],
+                    handleClick = function(){
+                        dataModel.each(function(data){
+                            if(data instanceof ht.Edge){
+                                data.s('edge.type', this.getLabel());
+                            }
+                        }, this);
+                        graphView.fitContent(true);
+                    };
+                
+                for(var i=0; i<array.length; i+=2){
+                    formPane.addRow([
+                        {
+                            radioButton: {
+                                label: array[i],
+                                groupId: 'edgeType',
+                                selected: array[i] === 'v.h2',
+                                onClicked: handleClick
+                            }
+                        },
+                        {
+                            radioButton: {
+                                label: array[i+1],
+                                groupId: 'edgeType',
+                                selected: array[i+1] === 'v.h2',
+                                onClicked: handleClick
+                            }
+                        }
+                    ],
+                    [0.1, 0.1]);
+                }
+                                
+                
+                formPane.addRow([{ element: 'Edge Params:', font: 'bold 12px arial, sans-serif' }], [0.1]);
+                formPane.addRow([], [0.1], 1.01, {background: '#43AFF1'});
+                formPane.addRow(['Gap:', {
+                    slider: {                    
+                        min: 0,
+                        max: 40,
+                        value: ht.Style['edge.gap'],
+                        onValueChanged: function(e){
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('edge.gap', this.getValue());
+                                }
+                            }, this);
+                        }
+                    }
+                }], [70, 0.1]);  
+                formPane.addRow(['Radius:', {
+                    slider: {                    
+                        min: -1,
+                        max: 50,
+                        step: 1,
+                        value: ht.Style['edge.corner.radius'],
+                        onValueChanged: function(e){
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('edge.corner.radius', this.getValue());
+                                }
+                            }, this);
+                        }
+                    }
+                }], [70, 0.1]);       
+                formPane.addRow(['Ortho:', {
+                    slider: {                    
+                        min: 0,
+                        max: 1,                        
+                        value: ht.Style['edge.ortho'],
+                        onValueChanged: function(e){
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('edge.ortho', this.getValue());
+                                }
+                            }, this);
+                        }
+                    }
+                }], [70, 0.1]);
+                formPane.addRow(['Flex:', {
+                    slider: {                    
+                        min: 0,
+                        max: 100,                        
+                        value: ht.Style['edge.flex'],
+                        onValueChanged: function(e){
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('edge.flex', this.getValue());
+                                }
+                            }, this);
+                        }
+                    }
+                }], [70, 0.1]);
+                formPane.addRow(['Extend:', {
+                    slider: {                    
+                        min: 0,
+                        max: 100,                        
+                        value: ht.Style['edge.extend'],
+                        onValueChanged: function(e){
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('edge.extend', this.getValue());
+                                }
+                            }, this);
+                        }
+                    }
+                }], [70, 0.1]);
+                formPane.addRow(['Center:', {
+                    checkBox: {                            
+                        selected: ht.Style['edge.center'],
+                        onSelectedChanged: function(e){
+                            dataModel.each(function(data){
+                                if(data instanceof ht.Edge){
+                                    data.s('edge.center', this.getValue());
+                                }
+                            }, this);
+                        }
+                    }
+                }], [70, 0.1]);
+            }
+            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

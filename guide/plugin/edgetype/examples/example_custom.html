@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Custom Edge</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+      
+        <script src="../../../../lib/core/ht.js"></script>
+                
+        <script>
+            function init(){ 
+                
+                ht.Default.setImage('toArrow', {
+                    width: 100,
+                    height: 50,
+                    comps: [
+                        {
+                            type: 'shape',
+                            points: [2, 25, 30, 25],
+                            borderWidth: 4,
+                            borderColor: 'rgba(255, 0, 0, 0.9)'
+                        },
+                        {
+                            type: 'shape',
+                            points: [15, 5, 30, 25, 15, 45, 50, 25, 15, 5],
+                            background: 'yellow',
+                            borderWidth: 1,
+                            borderColor: 'red'
+                        }
+                    ]
+                });                
+                
+                ht.Default.setEdgeType('custom', function(edge, gap, graphView, sameSourceWithFirstEdge){
+                    var sourcePoint = edge.getSourceAgent().getPosition(),
+                        targetPoint = edge.getTargetAgent().getPosition(),
+                        points = new ht.List();       
+                        points.add(sourcePoint);
+                        points.add({
+                            x: (sourcePoint.x + targetPoint.x)/2, 
+                            y: (sourcePoint.y + targetPoint.y)/2 + 300
+                        });                  
+                        points.add(targetPoint);                                                       
+
+                    return {
+                        points: points,
+                        segments: new ht.List([1, 3])
+                    };                 
+                });                                
+                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);  
+                graphView.setLayers(['nodeLayer', 'edgeLayer']);                
+                                       
+                view = graphView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);                      
+    
+		var center = createNode();
+                center.setPosition(100, 100);
+		dataModel.add(center);                            
+                            
+		var count = 30,
+                    firstNode,
+                    lastNode;
+            
+		for (var i = 0; i < count; i++) {
+			var node = createNode();
+			if(!lastNode){
+                            firstNode = node;
+			}else{
+                            node.setHost(lastNode);
+			}
+			lastNode = node;
+			
+			node.setPosition(
+                            500 + 150 * Math.cos(Math.PI * 2 / count * i),
+                            100 + 70 * Math.sin(Math.PI * 2 / count * i)
+                        );
+			dataModel.add(node);
+			var edge = new ht.Edge(center, node);
+                        edge.s({
+                            'edge.type': 'custom',
+                            'edge.color': 'lightgray',
+                            'edge.width': 1                            
+                        });
+                        edge.setLayer('edgeLayer');
+                        edge.addStyleIcon("toArrow", {
+                            position: 19,
+                            keepOrien: true,
+                            width: 30,
+                            height: 15,                        
+                            names: ['toArrow']
+                        });                        
+			dataModel.add(edge);
+		}
+		firstNode.setHost(lastNode);
+                
+                var lastFocus = null;
+                graphView.getView().addEventListener('mousemove', function(e){ 
+                    if(!ht.Default.isDragging()){
+                        if(lastFocus){
+                            lastFocus.s('edge.color', 'lightgray');
+                        }                        
+                        var data = graphView.getDataAt(e);                        
+                        if(data instanceof ht.Edge){                            
+                            data.s('edge.color', 'red');
+                            lastFocus = data;                            
+                        }else{                            
+                            lastFocus = null;                            
+                        }                        
+                    }                    
+                });
+                
+            }
+            
+            function createNode(){
+                var node = new ht.Node();
+                node.s({
+                    'shape': 'circle',                            
+                    'opacity': 0.5,
+                    'select.type': 'circle'                           
+                });
+                node.setLayer('nodeLayer');
+                node.setSize(20, 20); 
+                return node;
+            } 
+        
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Custom AlarmStatePropagator</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-telecom.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            var graphView = new ht.graph.GraphView(dataModel);
+            var propagator = new ht.AlarmStatePropagator(dataModel);
+            
+            function init() {
+                // Iterate HT default AlarmSeverity, add node with related AlarmSeverity
+                var x = 70, node = null;
+                ht.AlarmSeverity.each(function (severity) {
+                    var host = new ht.Node();
+                    host.setName(severity.name);
+                    host.setPosition(x += 100, 100);
+                    host.getAlarmState().increaseNewAlarm(severity);
+                    if (node) {
+                        node.setHost(host);
+                    }
+                    node = host;
+                    dataModel.add(host);
+                });
+                
+                // Override default propagate function, propagate along host
+                propagator.handleDataPropertyChange = function (e) {
+                    ht.AlarmStatePropagator.prototype.handleDataPropertyChange.call(this, e);
+                    if (e.property === 'host') {
+                        var oldHost = e.oldValue;
+                        if (oldHost) {
+                            this.propagate(oldHost);
+                        }
+                        this.propagate(e.data);
+                    }
+                };
+                propagator.propagateToTop = function (data) {
+                    this.propagateToHost(null, data);
+                    while (data && data.getHost()) {
+                        this.propagateToHost(data, data.getHost());
+                        data = data.getHost();
+                    }
+                };
+                propagator.propagateToHost = function (attach, host) {
+                    var result = null;
+                    if (host.getAttaches()) {
+                        host.getAttaches().each(function (attach) {
+                            var severity = attach.getAlarmState().getHighestOverallAlarmSeverity();
+                            if (ht.AlarmSeverity.compare(severity, result) > 0) {
+                                result = severity;
+                            }
+                        });
+                    }
+                    host.getAlarmState().setPropagateSeverity(result);
+                };
+                
+                // Enable AlarmStatePropagator
+                propagator.setEnable(true);
+                
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '10px';
+                style.top = '10px';
+                style.right = '10px';
+                style.bottom = '10px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

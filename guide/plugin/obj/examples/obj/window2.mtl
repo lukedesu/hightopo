@@ -1,0 +1,15 @@
+
+newmtl flltgrey
+illum 1
+Ka 0.5224 0.5224 0.5224
+Kd 0.8245 0.8245 0.8245
+Ks 0.0 0.0 0.0
+Ns 1.0
+d 0.2
+
+newmtl white
+illum 2
+Ka 0.4 0.4 0.4
+Kd 1.0 1.0 1.0
+Ks 0.3 0.3 0.3
+Ns 60.0

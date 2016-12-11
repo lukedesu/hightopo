@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Property Custom</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>              
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script>
+
+            function init() {
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                propertyView = new ht.widget.PropertyView(dataModel);
+                formPane = new ht.widget.FormPane();
+                borderPane = new ht.widget.BorderPane();                
+                borderPane.setCenterView(propertyView);
+                borderPane.setBottomView(formPane, 74);
+                splitView = new ht.widget.SplitView(graphView, borderPane);
+
+                view = splitView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    splitView.invalidate();
+                }, false);
+
+                getColor = function(value) {
+                    if (value < 40)
+                        return '#00A406';
+                    if (value < 70)
+                        return '#FFCC00';
+                    return '#A60000';
+                };
+
+                ht.Default.setImage('server_image', {
+                    width: 300,
+                    height: 200,
+                    comps: [
+                        {
+                            type: "roundRect",
+                            rect: [3, 5, 291, 189],
+                            background: "#E3E3E3",
+                            gradient: "linear.northeast",
+                            shadow: true
+                        },
+                        {
+                            type: "text",
+                            text: "CPU",
+                            font: "16px Arial",
+                            rect: [20, 45, 59, 41]
+                        },
+                        {
+                            type: "text",
+                            text: "MEM",
+                            font: "16px Arial",
+                            rect: [20, 108, 59, 41]
+                        },
+                        {
+                            type: "rect",
+                            rect: [82, 55, 145, 22],
+                            background: "#A1A1A3"
+                        },
+                        {
+                            type: "rect",
+                            rect: {
+                                func: function(data) {
+                                    return [82, 55, 145 * data.a('cpu') / 100, 22];
+                                }
+                            },
+                            background: {
+                                func: function(data) {
+                                    return getColor(data.a('cpu'));
+                                }
+                            }
+                        },
+                        {
+                            type: "rect",
+                            rect: [82, 117, 145, 22],
+                            background: "#A1A1A3"
+                        },
+                        {
+                            type: "rect",
+                            rect: {
+                                func: function(data) {
+                                    return [82, 117, 145 * data.a('mem') / 100, 22];
+                                }
+                            },
+                            background: {
+                                func: function(data) {
+                                    return getColor(data.a('mem'));
+                                }
+                            }
+                        },
+                        {
+                            type: "text",
+                            font: "16px Arial",
+                            rect: [240, 49, 53, 31],
+                            text: {
+                                func: function(data) {
+                                    return data.a('cpu') + '%';
+                                }
+                            },
+                            color: {
+                                func: function(data) {
+                                    return getColor(data.a('cpu'));
+                                }
+                            }
+                        },
+                        {
+                            type: "text",
+                            font: "16px Arial",
+                            rect: [240, 108, 47, 39],
+                            text: {
+                                func: function(data) {
+                                    return data.a('mem') + '%';
+                                }
+                            },
+                            color: {
+                                func: function(data) {
+                                    return getColor(data.a('mem'));
+                                }
+                            }
+                        }
+                    ]
+                });
+
+
+                node = new ht.Node();
+                node.setName('SERVER');
+                node.setImage('server_image');
+                node.s({
+                    'select.width': 0
+                });
+                node.a({
+                    cpu: 30,
+                    mem: 70
+                });
+                node.setPosition(200, 130);
+                
+                dataModel.add(node);
+                dataModel.sm().ss(node);
+                graphView.setInteractors(null);
+                
+                graphView.enableToolTip();
+                graphView.getToolTip = function(e){
+                    var data = graphView.getDataAt(e);
+                    if(data){
+                        var cpu = data.a('cpu'),
+                            mem = data.a('mem'),
+                            html = '<div style="background:#FDFDFD;padding:6px;font-size:13px;box-shadow:0 0 10px gray;">' + 
+                                '<span style="color:black">CPU:&nbsp;&nbsp;</span> ' 
+                                + '<span style="color:' + getColor(cpu)+ '">' + cpu + '%</span>'
+                                + '<br>' +
+                               '<span style="color:black">MEM:&nbsp;&nbsp;</span>' 
+                                + '<span style="color:' + getColor(mem)+ '">' + mem + '%</span>'
+                                + '</div>';
+                    }  
+                    return {html: html};
+                };
+
+                formPane.addRow(['CPU', {
+                    slider: {
+                        step: 1,
+                        onValueChanged: function(){
+                            var value = this.getValue();
+                            node.a('cpu', value);
+                            this.setLeftBackground(getColor(value));
+                        },
+                        value: node.a('cpu')        
+                    }
+                }], [50, 0.1]);
+                formPane.addRow(['MEM', {
+                    slider: {
+                        step: 1,                        
+                        onValueChanged: function(){
+                            var value = this.getValue();
+                            node.a('mem', value);
+                            this.setLeftBackground(getColor(value));
+                        },
+                        value: node.a('mem')        
+                    }
+                }], [50, 0.1]);
+
+                propertyView.enableToolTip();
+                drawFunc = function(g, value, x, y, w, h){
+                    g.fillStyle = '#A1A1A3';
+                    g.beginPath();
+                    g.rect(x, y, w, h);
+                    g.fill();                    
+                    g.fillStyle = getColor(value);
+                    g.beginPath();
+                    g.rect(x, y, w * value / 100, h);
+                    g.fill();
+                    ht.Default.drawText(g, value + '%', '12px Arial', 'white', x, y, w, h, 'center');                
+                };
+
+                propertyView.addProperties([
+                    {
+                        name: 'name',
+                        displayName: 'Name'
+                    },
+                    {
+                        displayName: 'CPU',
+                        drawPropertyValue: function(g, property, value, rowIndex, x, y, w, h, data, view) {
+                            drawFunc(g, data.a('cpu'), x, y, w, h);
+                        },
+                        getToolTip: function(data, isValue, propertyView){
+                            return isValue ? data.a('cpu') + '%' : 'CPU usage percentage';
+                        }
+                    },
+                    {
+                        displayName: 'MEM',
+                        drawPropertyValue: function(g, property, value, rowIndex, x, y, w, h, data, view) {
+                            drawFunc(g, data.a('mem'), x, y, w, h);
+                        },
+                        getToolTip: function(data, isValue, propertyView){
+                            return isValue ? data.a('mem') + '%' : 'Memory usage percentage';
+                        }        
+                    }
+                ]);                
+
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

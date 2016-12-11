@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Note</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.5);
+            } 
+        </style>    
+                                       
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+                                    
+            function init(){                                                                                                                                              
+                dataModel = new ht.DataModel();
+                g2d = new ht.graph.GraphView(dataModel);   
+                g2d.setEditable(true);
+                  
+                view = g2d.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    g2d.iv();
+                }, false);                                
+                
+                createModel();                
+                createFormPane();
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());                 
+            }                          
+                       
+            function createModel(){
+                noteStyle = {
+                    'note': 'HT for Web',
+                    'note.position': 17,
+                    'note.offset.x': 0,
+                    'note.offset.y': 0                   
+                };
+                
+                node = new ht.Node();
+                node.p(160, 80);
+                node.setSize(150, 80);
+                node.s(noteStyle);
+                node.s({
+                    'shape': 'rect'
+                });                
+                
+                n1 = new ht.Node();
+                n2 = new ht.Node();    
+                n1.p(320, 80);
+                n2.p(500, 80);
+                n1.setSize(16, 16);                
+                n2.setSize(16, 16);
+                
+                edge1 = new ht.Edge(n1, n2);
+                edge1.s(noteStyle);
+                edge1.s({
+                    'edge.gap': 80,
+                    'edge.center': true
+                });
+                
+                edge2 = new ht.Edge(n1, n2);
+                edge2.s(noteStyle);
+                edge2.s({
+                    'edge.gap': 80,
+                    'edge.center': true
+                });                
+                
+                n3 = new ht.Node();
+                n4 = new ht.Node();    
+                n3.p(100, 220);
+                n4.p(500, 220);
+                n3.setSize(16, 16);                
+                n4.setSize(16, 16);
+                
+                edge3 = new ht.Edge(n3, n4);
+                edge3.s(noteStyle);
+                edge3.s({
+                    'edge.center': false,
+                    'edge.offset': 20,
+                    'edge.type': 'points',
+                    'edge.points': [{x: 200, y: 160}, {x: 400, y: 160}]
+                });   
+                
+                polyline = new ht.Polyline();
+                polyline.s(noteStyle);
+                polyline.setPoints([
+                    {x: 100, y: 320},
+                    {x: 200, y: 260}, 
+                    {x: 400, y: 260},
+                    {x: 500, y: 320}
+                ]);                
+                
+                dataModel.add(node);
+                dataModel.add(n1);
+                dataModel.add(n2);
+                dataModel.add(n3);
+                dataModel.add(n4);
+                dataModel.add(edge1);
+                dataModel.add(edge2);
+                dataModel.add(edge3);
+                dataModel.add(polyline);
+                
+            }
+            
+            function createFormPane(){                                                
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(230);
+                formPane.setHeight(120);                           
+              
+                formPane.addRow([
+                    'position',
+                    {
+                        slider: {                    
+                            min: 1,
+                            max: 55,
+                            value: 17, 
+                            step: 1,                            
+                            onValueChanged: function(){  
+                                var value = this.getValue();
+                                dataModel.each(function(data){
+                                    data.s('note.position', value); 
+                                });
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);
+                formPane.addRow([
+                    'scale',
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 5,
+                            value: 1,                                                         
+                            onValueChanged: function(){  
+                                var value = this.getValue();
+                                dataModel.each(function(data){
+                                    data.s('note.scale', value); 
+                                });
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);                
+                formPane.addRow([
+                    'offsetX',
+                    {
+                        slider: {                    
+                            min: -100,
+                            max: 100,
+                            value: 0, 
+                            step: 1,                            
+                            onValueChanged: function(){   
+                                var value = this.getValue();
+                                dataModel.each(function(data){
+                                    data.s('note.offset.x', value); 
+                                });                        
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);   
+                formPane.addRow([
+                    'offsetY',
+                    {
+                        slider: {                    
+                            min: -100,
+                            max: 100,
+                            value: 0, 
+                            step: 1,                            
+                            onValueChanged: function(){     
+                                var value = this.getValue();
+                                dataModel.each(function(data){
+                                    data.s('note.offset.y', value); 
+                                });  
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.25]);               
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

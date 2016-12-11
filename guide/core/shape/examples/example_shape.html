@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Shape</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>       
+            
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);  
+                
+                shape1 = new ht.Shape();
+                dataModel.add(shape1);
+                shape1.setStyle('shape.background', 'yellow');    
+                shape1.setPoints([
+                    {x: 0, y: 100},
+                    {x: 0, y: 0},
+                    {x: 200, y: 0},
+                    {x: 200, y: 100}
+                ]);
+                shape1.setSegments([
+                    1, // moveTo
+                    4 // bezierCurveTo
+                ]);
+                
+                shape2 = new ht.Shape();
+                dataModel.add(shape2);
+                shape2.setStyle('shape.background', null);
+                shape2.setStyle('shape.border.width', 10);
+                shape2.setStyle('shape.border.color', '#1ABC9C');
+                shape2.setPoints([                    
+                    // draw H
+                    {x: 20, y: 0},
+                    {x: 20, y: 100},
+                    {x: 20, y: 50},
+                    {x: 80, y: 50},
+                    {x: 80, y: 0},
+                    {x: 80, y: 100},
+                    
+                    // draw T
+                    {x: 120, y: 0},
+                    {x: 180, y: 0},
+                    {x: 150, y: 0},
+                    {x: 150, y: 100}                    
+                ]);                                
+                shape2.setSegments([
+                    // draw H
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+                    
+                    // draw T
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2 // lineTo
+                ]);
+                
+                shape3 = new ht.Shape();
+                dataModel.add(shape3);
+                shape3.setStyle('shape.background', null);
+                shape3.setStyle('shape.border.width', 2);
+                shape3.setStyle('shape.border.color', '#3498DB');
+                var h = 10;
+                shape3.setPoints([                                        
+                    {x: 0, y: 0},
+                    {x: 25, y: -h},
+                    {x: 50, y: 0},
+                    {x: 75, y: h},
+                    {x: 100, y: 0},                                     
+                    {x: 125, y: -h},                    
+                    {x: 150, y: 0},                    
+                    {x: 175, y: h},                    
+                    {x: 200, y: 0}                 
+                ]);                                
+                shape3.setSegments([
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3 // quadraticCurveTo
+                ]);                
+                shape3.translate(0, 120);
+                
+                shape4 = new ht.Shape();                                         
+                shape4.s({                    
+                    'shape.repeat.image': 'ie.png',
+                    'shape.border.width': 20,
+                    'shape.border.3d': true,
+                    'shape.border.cap': 'butt',
+                    'shape.border.color': 'red',
+                    'shape.border.pattern': [16, 8],   
+                    'shape.dash': true,
+                    'shape.dash.width': 10,
+                    'shape.dash.color': 'yellow',
+                    'shape.dash.pattern': [16, 8],
+                    'shape.dash.3d': true,
+                    'shape.dash.3d.color': 'black'
+                });                
+                
+                shape4.setSegments([1, 2, 2, 5, 1, 3, 1, 4]);
+                shape4.setPoints([{x: 300, y: 0}, {x: 400, y: 0}, {x: 350, y: 100},
+                    {x: 400, y: 100}, {x: 350, y: 200}, {x: 300, y: 100},
+                    {x: 300, y: 200}, {x: 300, y: 120}, {x: 400, y: 120}, {x: 400, y: 200}]);
+                dataModel.add(shape4);                
+
+                graphView.translate(30, 30);
+                graphView.setEditable(true);
+            }
+                        
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

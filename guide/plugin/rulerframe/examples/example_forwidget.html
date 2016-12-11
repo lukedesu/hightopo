@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RulerFrame</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="../../../../lib/plugin/ht-rulerframe.js"></script>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+            }
+            .main {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+            p {
+                padding-left: 40px;
+            }
+        </style>
+        <script type="text/javascript">
+            function addColumns(table) {
+                var cm = table.getColumnModel();
+                var column = new ht.Column();
+                column.setName("id");
+                column.setWidth(100);
+                cm.add(column);
+                
+                column = new ht.Column();
+                column.setName("name");
+                column.setWidth(300);
+                cm.add(column);
+            }
+            function init() {
+                var dataModel = new ht.DataModel(),
+                    tablePane = new ht.widget.TablePane(dataModel),
+                    treeView = new ht.widget.TreeView(dataModel),
+                    leftRulerFrame = new ht.widget.RulerFrame(),
+                    rightRulerFrame = new ht.widget.RulerFrame(treeView),
+                    scrollableDiv = document.getElementById("scrollableDiv"),
+                    centerRulerFrame = new ht.widget.RulerFrame(),
+                    leftSplitView = new ht.widget.SplitView(leftRulerFrame, centerRulerFrame, "h", 0.4),
+                    rightSplitView = new ht.widget.SplitView(leftSplitView, rightRulerFrame, "h", 0.7),
+                    view = rightSplitView.getView();
+                leftSplitView.setDividerSize(6);
+                leftSplitView.setDividerBackground("rgba(0, 0, 0, 0.7)");
+                rightSplitView.setDividerSize(6);
+                rightSplitView.setDividerBackground("rgba(0, 0, 0, 0.7)");
+                addColumns(tablePane);
+                rightRulerFrame.getLeftRulerConfig().visible = false;
+                rightRulerFrame.getRightRulerConfig().visible = true;
+                centerRulerFrame.getRightRulerConfig().visible = true;
+                
+                leftRulerFrame.getView().style.position = "absolute";
+                rightRulerFrame.getView().style.position = "absolute";
+                centerRulerFrame.getView().style.position = "absolute";
+                
+                leftRulerFrame.addComponentPropertyChangeListener = function(component, handler){
+                    component.getTableView().mp(handler);
+                };
+                leftRulerFrame.removeComponentPropertyChangeListener = function(component, handler){
+                    component.getTableView().ump(handler);
+                };
+                leftRulerFrame.getComponentViewRect = function(component) {
+                    return component.getTableView().getViewRect();
+                };
+                leftRulerFrame.invalidateComponent = function(component) {
+                    component.iv();
+                    component.getTableView().iv();
+                };
+                leftRulerFrame.validateComponent =  function(component) {
+                    component.validate();
+                    component.getTableView().validate();
+                };
+            
+                centerRulerFrame.addComponentPropertyChangeListener = function(component, handler){
+                    component.addEventListener("scroll", handler);
+                };
+                centerRulerFrame.removeComponentPropertyChangeListener = function(component, handler){
+                    component.removeEventListener("scroll", handler);
+                };
+                centerRulerFrame.getComponentViewRect = function(component) {
+                    return {x: component.scrollLeft, y: component.scrollTop, width: component.offsetWidth, height: component.offsetHeight};
+                };
+                
+                leftRulerFrame.setComponent(tablePane); //this code must run after overriding addComponentPropertyChangeListener
+                centerRulerFrame.setComponent(scrollableDiv);
+                                
+                for (var i = 0; i < 100; i++) {
+                    var node = new ht.Node(),
+                        child = new ht.Node();
+                    child.setParent(node);
+                    node.setName("Name" + i);
+                    child.setName("Child" + i);
+                    dataModel.add(node);
+                    dataModel.add(child);
+                }
+              
+                var fontSize = 30,
+                    fragment = document.createDocumentFragment();
+                for (var i = 0; i < 15; i++) {
+                    var htP = document.createElement("p"),
+                        descP = document.createElement("p");
+                    htP.innerHTML = "HT for web";
+                    descP.innerHTML = "A simple div";
+                    htP.style.fontSize = fontSize-- + "px";
+                    descP.style.fontSize = fontSize + "px";
+                    fragment.appendChild(htP);
+                    fragment.appendChild(descP);
+                }
+                scrollableDiv.children[0].appendChild(fragment);
+
+                view.className = "main";
+                document.body.appendChild(view);
+                
+                window.addEventListener('resize', function (e) {
+                    rightSplitView.invalidate();
+                }, false); 
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="scrollableDiv" style="background: rgb(232, 232, 232); position: absolute; overflow:auto">
+            <div style="width: 2000px; height: 1500px;">
+            </div>
+        </div>
+    </body>
+</html>

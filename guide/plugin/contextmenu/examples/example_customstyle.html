@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContextMenu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            htconfig = {
+                Default: {
+                    contextMenuBackground: 'rgb(240,240,240)',
+                    contextMenuLabelColor: 'black',
+                    contextMenuHoverBackground: 'rgb(28,161,251)',
+                    contextMenuHoverLabelColor: 'black',
+                    contextMenuCheckIcon: 'checkIcon',
+                    contextMenuRadioIcon: 'radioIcon',
+                    contextMenuSeparatorColor: 'rgb(145,165,200)',
+                    contextMenuScrollerBorderColor: 'rgb(145,165,200)',
+                    contextMenuBorderColor: 'rgb(145,165,200)'
+                }
+            }
+        </script>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+
+        <script type="text/javascript">
+            ht.Default.setImage('checkIcon', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAACuElEQVR4Xq3UbUhTURgH8P+9bkglmAj6oYjCsBFhkoF9CAsjVCJH6AqkgiYEd1qE0Rt9C0avSi/qoGhFhmDbiBm2GSubCk1SEolas4UUQUVaCyNGc7d7LuzA3T1678ID49xzzvOc333ODpcTRRF62hbncvxn6wQgAHCErD9tKcCgN9tjac9YrHM1y6iUS54F8vIEzwhOJJMZofs8R2W0p+46vswOQOrJHMV1H/WHH3d1ow0Pj8lo956r+Pb7OZ0vWLadrBHAsegVH/S2yOg9cxs+/Qoo1shYmicxgiHtAqkuAoXFOU3U2ntCRp21lzEVezLfi9GKFejNXRdxuO8UvQgUnluwYpJD86Mz/UzUPhxAqigCU7Sz5jwi036Q3uY7Q3GNoyaxinxWuxIaoCgxufLbuTJ6rcqOyRmaBFP+bjT7T4J17Ky/p736EsLTj5ho+8shBZqCxdad5xD+7lMllBTW44j/uAJnoTeqWzHx1c1Eb716oUIVFR8o2cyuaIUVTT4bxdPRjppOhD47mWjXxKiMArBJMBSwKIp0k73rS5l4zdqzONRroXgKvVPrgu+9nYk+eDNOUQKxYEUF5uINTHx/SQcs7m2pzQRXfRD3J5qYqDfyWoEuBCvwqqJ1TLyl3IuqbhP6G8JoGzEz0f7oOwWqBavwytXFSDI+Ghd2jOH00zIVyHNZeDYVUaF6YYqLSQgVEv43GYdWM/LZGJRQjmehbNjADpIvEILRiLB1jQl/ErPzoksMOVJcGLyRoroaTzUGTjYbmnyLHGMB4omE6kfmyTpBSbwukV0xu/LA+KhQXVaBj7EwXVuVa4J/bBDZ+XzGKK1YCyeb9w0HUZS3CfG5hNyTsSaqDWvjS1dmOTz+xygtrATpyViFLsZRcxyX7tukzyu63D1C3kajY6QxZuMalTFkXW/7B+GxdqwehLP/AAAAAElFTkSuQmCC');
+
+            ht.Default.setImage('radioIcon', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABtElEQVR4Xu2XzUsbYRCHJ1EbQ1cIGCESkQSFCDF+UDSE3uIHKii0Nyl6KY3gpdS/oD1JD7kJEtFT0JMseAnBEi9iERFcBUPxowmaiKURGtyybWyy/hZyyGElS3eTXPaFh5nDDDy8OzDvGkRRpFoeo6Kq5ISrcDn6omoCPyI25tdu11uB837Nnw2JKPgGDoWjQfEu5jhJbTILibDBXBGB/ciHjT9kvUe6CnwyPR4QBEfJ9XqX5gJ2PjTdSBklvS5wmGabXikpxo0FnxRQAQPYzJe2EL/fbZMryOz0dqbY5i2kC2UEVBEA5w+nL2NiYmyRbt4H8sl3n35zk2xxfqaeaqwn7Q4D/BIqZkArtBfQBXQBXUAXuAXxqgkU6Bld/x2Q0nFgIkek1dix7ZZy4AVLIKdSQH4XZE0++l43Tz95C3mGh6Klxeb+g5yZ6IAA1usaIgucmt7AheUzCYbWso3OGZFD6AcrCgR4MKv5EDre/MvaX9/PFT9VWqZEAMugB8Lhiq1j60gqitCG90A7Yh9oARyIW/3HgsIZUE+De+8KQYLqwHN9F/yngC7wsTRWmpr/nOoz8AgnY3oliLOzEAAAAABJRU5ErkJggg==');
+            
+            ht.Default.setImage('contextmenu_icon', "settings.png");
+            var iconSrc = 'contextmenu_icon';
+
+            function init() {
+                var json = [{
+                        label: "CheckMenuItems",
+                        items: [{
+                            label: "Check1",
+                            icon: iconSrc,
+                            type: "check"
+                        }, { 
+                            label: "Check2",
+                            icon: iconSrc,
+                            type: "check",
+                            selected: 1
+                        }, {
+                            label: "Check3",
+                            icon: iconSrc,
+                            type: "check",
+                            items: [{
+                                label: "AAAA"
+                            }, {
+                                label: "BBBB"
+                            }, {
+                                label: "CCCC"
+                            }, {
+                                label: "DDDD"
+                            }, {
+                                label: "EEEE"
+                            }]
+                        }]
+                    }, {
+                        label: "RadioMenuItems",
+                        items: [{
+                            label: "Radio1",
+                            icon: iconSrc,
+                            type: "radio",
+                            groupId: 1
+                        }, {
+                            label: "Radio2",
+                            icon: iconSrc,
+                            type: "radio",
+                            groupId: 1
+                        }, {
+                            label: "Radio3",
+                            icon: iconSrc,
+                            type: "radio",
+                            groupId: 1
+                        }]
+                    },
+                    "separator", {
+                        label: "Menu1(disabled)",
+                        disabled: true
+                    }, {
+                        label: "Menu2",
+                        action: function(item, event) {
+                            alert("you clicked:" + item.label + ",this=" + this);
+                        },
+                        scope: "hello"
+                    }, {
+                        label: "Menu3",
+                        icon: iconSrc,
+                        action: function(item) {
+                            alert(item.label);
+                        },
+                        items: [{
+                            label: "Homepage",
+                            href: "http://www.hightopo.com",
+                            linkTarget: "_blank",
+                            key: [Key.ctrl, Key.enter],
+                            suffix: "Ctrl+Enter",
+                            preventDefault: false
+                        }, {
+                            label: "submenu2",
+                            action: function(item) {
+                                alert(item.label);
+                            }
+                        }]
+                    }
+                ];
+                var contextmenu = new ht.widget.ContextMenu(json);
+                contextmenu.enableGlobalKey();
+                contextmenu.addTo(document.getElementById("div"));
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="div" style="width: 200px; height: 100px; background: #ddd; text-align: center;">Right Click Here!</div>
+    </body>
+</html>

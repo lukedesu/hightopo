@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Property</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>              
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script>
+            function init(){                                             
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                propertyView = new ht.widget.PropertyView(dataModel);
+                splitView = new ht.widget.SplitView(graphView, propertyView);
+        
+                view = splitView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);                          
+
+                node1 = new ht.Node();
+                node1.setName('Node 1');
+                node1.s({
+                    'body.color': 'red',
+                    'select.type': 'circle',
+                    'select.padding': 30
+                });
+                node1.a({                    
+                    age: 35,
+                    sex: 1,
+                    hidden: false
+                });
+                node1.setPosition(100, 100);
+                dataModel.add(node1);
+                
+                node2 = new ht.Node();
+                node2.setName('Node 2');
+                node2.s({
+                    'body.color': 'green',
+                    'select.type': 'rect',
+                    'select.padding': 3
+                });
+                node2.a({                    
+                    age: 65,
+                    sex: 2,
+                    hidden: false
+                });
+                node2.setPosition(200, 100);
+                dataModel.add(node2);
+                
+                dataModel.sm().ss(node1);
+                graphView.setVisibleFunc(function(data){
+                    if(data.a('hidden')){
+                        return false;
+                    }
+                    return true;
+                });
+            
+                propertyModel = propertyView.getPropertyModel();
+                
+                var property = new ht.Property();
+                property.setName('name');   
+                property.setDisplayName('Name'); 
+                property.setAlign('center');
+                property.setEditable(true);
+                propertyModel.add(property);   
+                
+                property = new ht.Property();
+                property.setName('image');   
+                property.setDisplayName('Image'); 
+                property.setEditable(true);
+                property.setEnum({                    
+                    values: ['node_image', 'group_image', 'subGraph_image'],
+                    labels: ['Node', 'Group', 'SubGraph'],
+                    icons: ['node_icon', 'group_icon', 'subGraph_icon']
+                }); 
+                propertyModel.add(property); 
+                
+                property = new ht.Property();  
+                property.setDisplayName('Position'); 
+                property.getValue = function(data){
+                    var position = data.getPosition();
+                    return 'X: ' + parseInt(position.x) + '  Y: ' + parseInt(position.y);
+                };
+                propertyModel.add(property);                 
+                
+                property = new ht.Property();
+                property.setName('body.color');
+                property.setAccessType('style');
+                property.setValueType('color');
+                property.setCategoryName('Style Properties');
+                propertyModel.add(property);
+                
+                property = new ht.Property();
+                property.setName('select.type');
+                property.setAccessType('style');                
+                property.setCategoryName('Style Properties');
+                property.setEditable(true);
+                property.setEnum(['rect', 'circle', 'roundRect', 'star']);                
+                propertyModel.add(property);
+                
+                property = new ht.Property();
+                property.setName('select.padding');
+                property.setAccessType('style');     
+                property.setValueType('int');
+                property.setAlign('right');
+                property.setCategoryName('Style Properties');
+                property.setEditable(true);
+                property.setSlider({
+                    min: 0,
+                    max: 50,
+                    step: 1,
+                    leftBackground: 'yellow',
+                    background: 'white'
+                });   
+                propertyModel.add(property);
+                
+                property = new ht.Property();
+                property.setName('age');
+                property.setDisplayName('Age'); 
+                property.setAccessType('attr');
+                property.setValueType('int');
+                property.setAlign('right');
+                property.setEditable(true);
+                property.setCategoryName('Attr Properties');
+                propertyModel.add(property);                     
+                
+                property = new ht.Property();
+                property.setName('hidden');
+                property.setDisplayName('Hidden this node'); 
+                property.setColor('red');
+                property.setIcon('images/alert.gif');
+                property.setAccessType('attr');
+                property.setValueType('boolean');
+                property.setEditable(true);
+                property.setCategoryName('Attr Properties');
+                propertyModel.add(property);                 
+                
+                property = new ht.Property();
+                property.setName('sex');
+                property.setDisplayName('Sex'); 
+                property.setAccessType('attr');                
+                property.setEditable(true);
+                property.setEnum([1, 2], ['Male', 'Female']); 
+                property.setCategoryName('Attr Properties');
+                propertyModel.add(property);  
+                
+                
+
+            }           
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

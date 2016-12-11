@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Icons</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }               
+        </style>    
+                               
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+                             
+        <script>                                        
+
+            function init(){
+                ht.Default.setImage('alarm-star', {
+                    width: 100,
+                    height: 100,
+                    comps: [
+                        {
+                            type: 'star',
+                            rect: [2, 2, 96, 96],
+                            background: '#C800FF'
+                        },                        
+                        {
+                            type: 'circle',
+                            rect: [40, 40, 20, 20],
+                            background: 'white'
+                        }
+                    ]
+                });                
+                
+                ht.Default.setImage('alarm-triangle', {
+                    width: 100,
+                    height: 100,
+                    comps: [
+                        {
+                            type: 'triangle',
+                            rect: [2, 2, 96, 96],
+                            background: 'red'
+                        },
+                        {
+                            type: 'rect',
+                            rect: [42, 30, 16, 32],
+                            background: 'white'
+                        },                        
+                        {
+                            type: 'circle',
+                            rect: [35, 65, 30, 30],
+                            background: 'white'
+                        }
+                    ]
+                });   
+                
+                ht.Default.setImage('alarm-circle', {
+                    width: 100,
+                    height: 100,
+                    comps: [
+                        {
+                            type: 'circle',
+                            rect: [1, 1, 98, 98],
+                            background: 'orange'
+                        },
+                        {
+                            type: 'rect',
+                            rect: [40, 10, 20, 50],
+                            background: 'white'
+                        },
+                        {
+                            type: 'circle',
+                            rect: [36, 65, 28, 28],
+                            background: 'white'
+                        }                        
+                    ]
+                });                
+                
+                dataModel = new ht.DataModel();
+                         
+                         
+                g2d = new ht.graph.GraphView(dataModel);   
+                g2d.translate(200, 100); 
+                
+                g3d = new ht.graph3d.Graph3dView(dataModel);                   
+                g3d.setEye(0, 50, 200);
+                
+                splitView = new ht.widget.SplitView(g2d, g3d, 'v', 0.5);
+                
+                formPane = new ht.widget.FormPane();  
+                formPane.getView().style.background = 'rgba(200, 200, 200, 0.3)';
+                
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setCenterView(splitView);
+                borderPane.setRightView(formPane, 250);                
+                borderPane.addToDOM();                                                     
+                
+                node = new ht.Node();
+                dataModel.add(node);                
+                node.s3(50, 50, 50);
+                node.s({                
+                    'all.transparent': true,
+                    'all.reverse.cull': true,
+                    'all.opacity': 0.7,
+                    'wf.visible': true,
+                    'wf.color': 'red'
+                });    
+                node.a({
+                    'alarm.position': 25,
+                    'alarm.direction': 'north',
+                    'alarm.gap': 5,
+                    'alarm.width': 18,
+                    'alarm.height': 18,
+                    'alarm.visible': true,
+                    'alarm.opacity': 1,
+                    'alarm.rotation': 0,
+                    'alarm.stretch': 'fill',
+                    'alarm.light': false,
+                    'alarm.texture.scale': 2,
+                    'alarm.discard.selectable': true,
+                    'alarm.face': 'front',
+                    'alarm.reverse.flip': false,
+                    'alarm.reverse.cull': false,
+                    'alarm.reverse.color': 'gray',
+                    'alarm.autorotate': false
+                });
+                
+                node.addStyleIcon('alarm', {                    
+                    names: ['alarm-star', 'alarm-triangle', 'alarm-circle'],                    
+                    position: {func: 'attr@alarm.position'},
+                    direction: { func: 'attr@alarm.direction' },
+                    gap: { func: 'attr@alarm.gap' },
+                    width: { func: 'attr@alarm.width' },
+                    height: { func: 'attr@alarm.height' },
+                    visible: { func: 'attr@alarm.visible' },                    
+                    rotation: { func: 'attr@alarm.rotation' },
+                    stretch: { func: 'attr@alarm.stretch' },
+                    opacity: { func: 'attr@alarm.opacity' },
+                    transparent: { func: function(data){ return data.a('alarm.opacity') < 1; } },
+                    light: { func: 'attr@alarm.light' },
+                    textureScale: { func: 'attr@alarm.texture.scale' },
+                    discardSelectable: { func: 'attr@alarm.discard.selectable' },
+                    r3: { func: function(data) { return [0, 0, -data.a('alarm.rotation')]; } },
+                    face: { func: 'attr@alarm.face' },
+                    reverseFlip: { func: 'attr@alarm.reverse.flip' },
+                    reverseCull: { func: 'attr@alarm.reverse.cull' },
+                    reverseColor: { func: 'attr@alarm.reverse.color' },
+                    autorotate: { func: 'attr@alarm.autorotate' }
+                });  
+                
+                formPane.addRow([
+                    'Opacity', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 1,
+                            value: node.a('alarm.opacity'),                            
+                            onValueChanged: function(){     
+                                 node.a('alarm.opacity', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);  
+                formPane.addRow([
+                    'Gap', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 20,
+                            value: node.a('alarm.gap'),                            
+                            onValueChanged: function(){     
+                                 node.a('alarm.gap', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);  
+                formPane.addRow([
+                    'Width', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 30,
+                            value: node.a('alarm.width'),                            
+                            onValueChanged: function(){     
+                                 node.a('alarm.width', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Height', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 30,
+                            value: node.a('alarm.height'),                            
+                            onValueChanged: function(){     
+                                 node.a('alarm.height', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);                 
+                formPane.addRow([
+                    'Rotation', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: Math.PI*2,
+                            value: node.a('alarm.rotation'),                            
+                            onValueChanged: function(){     
+                                 node.a('alarm.rotation', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);
+                formPane.addRow([
+                    'Direction', 
+                    {
+                        comboBox: {              
+                            values: ['north', 'south', 'west', 'east'],  
+                            value: node.a('alarm.direction'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.direction', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Stretch', 
+                    {
+                        comboBox: {              
+                            values: ['fill', 'uniform', 'centerUniform'],  
+                            value: node.a('alarm.stretch'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.stretch', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);
+                formPane.addRow([
+                    'Position', 
+                    {
+                        comboBox: {              
+                            values: (function(){
+                                var array = [];
+                                for(var i=1; i<=55; i++){
+                                    array.push(i);
+                                }
+                                return array;
+                            })(),  
+                            value: node.a('alarm.position'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.position', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);                 
+                formPane.addRow([
+                    'Visible', 
+                    {
+                        checkBox: {        
+                            value: node.a('alarm.visible'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.visible', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                
+                formPane.addRow([], [0.1], 1.01, {background: '#43AFF1'});                
+                formPane.addRow([
+                    'Light', 
+                    {
+                        checkBox: {        
+                            value: node.a('alarm.light'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.light', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);  
+                formPane.addRow([
+                    'Texture Scale', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 10,
+                            value: node.a('alarm.texture.scale'),                            
+                            onValueChanged: function(){     
+                                 node.a('alarm.texture.scale', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);
+                formPane.addRow([
+                    'Discard Select', 
+                    {
+                        checkBox: {        
+                            value: node.a('alarm.discard.selectable'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.discard.selectable', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Face', 
+                    {
+                        comboBox: {              
+                            values: ['front', 'back', 'left', 'right', 'top', 'bottom', 'center'],  
+                            value: node.a('alarm.face'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.face', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Reverse Flip', 
+                    {
+                        checkBox: {        
+                            value: node.a('alarm.reverse.flip'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.reverse.flip', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Reverse Cull', 
+                    {
+                        checkBox: {        
+                            value: node.a('alarm.reverse.cull'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.reverse.cull', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Reverse Color', 
+                    {
+                        colorPicker: {        
+                            instant: true,
+                            value: node.a('alarm.reverse.color'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.reverse.color', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Autorotate', 
+                    {
+                        comboBox: {              
+                            values: [false, true, 'y'],  
+                            value: node.a('alarm.autorotate'),
+                            onValueChanged: function(){     
+                                 node.a('alarm.autorotate', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);                 
+            }                     
+            
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

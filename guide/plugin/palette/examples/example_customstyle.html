@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Palette</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            htconfig = {
+                Default: {
+                    paletteTitleLabelColor: 'black',
+                    paletteContentBackground: 'rgb(240, 239, 238)',
+                    paletteTitleBackground: 'rgb(240, 239, 238)',
+                    paletteItemHoverBorderColor: 'rgb(199,199,199)',
+                    paletteItemSelectBackground: 'rgb(221, 221, 221)',
+                    paletteSeparatorColor: 'rgb(197, 193, 189)',
+                    paletteTitleHoverBackground: 'rgb(215, 214, 213)'
+                }
+            }
+        </script>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-palette.js"></script>
+
+        <script type="text/javascript">
+            function init() {
+                var palette = window.palette = new ht.widget.Palette(),
+                    dataModel = palette.getDataModel(),
+                    view = palette.getView(),
+                    style = view.style,
+                    mapGroup = new ht.Group(),
+                    phoneGroup = new ht.Group(),
+                    routerGroup = new ht.Group();
+
+                mapGroup.setName("Map");
+                for (var i = 1; i < 3; i++) {
+                    var node = new ht.Node();
+                    node.setImage("res/map" + i + ".png");
+                    node.setName("map" + i);
+                    dataModel.add(node);
+                    node.setParent(mapGroup);
+                }
+                dataModel.add(mapGroup);
+
+                phoneGroup.setName("Phone");
+                phoneGroup.setExpanded(true);
+                for (var i = 1; i < 50; i++) {
+                    var node = new ht.Node();
+                    node.setName('node' + i);
+                    dataModel.add(node);
+                    node.setParent(phoneGroup);
+                }
+                dataModel.add(phoneGroup);
+
+                routerGroup.setName("Router");
+                for (var i = 1; i < 3; i++) {
+                    var node = new ht.Node();
+                    node.setImage("res/router" + i + ".png");
+                    node.setName("router" + i);
+                    dataModel.add(node);
+                    node.setParent(routerGroup);
+                }
+                dataModel.add(routerGroup);
+                palette.setLayout('smallicons');
+                style.position = "absolute";
+                style.top = "0";
+                style.right = "0";
+                style.bottom = "0";
+                style.left = "0";
+                document.body.appendChild(view);
+                window.addEventListener("resize", function(e) {
+                    palette.iv();
+                });
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

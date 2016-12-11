@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>shape3d</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script>
+            htconfig = {
+                Default:{                     
+                    toolTipDelay: 100,
+                    toolTipContinual: true
+                }
+            };            
+        </script>
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="texture.js"></script>   
+        
+        <script>                         
+            function init(){                   
+                
+                dataModel = new ht.DataModel();                
+                g3d = new ht.graph3d.Graph3dView(dataModel);                  
+               
+                view = g3d.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function (e) {
+                    g3d.invalidate();
+                }, false);   
+                
+                g3d.setCenter([0, 0, -300]);
+                g3d.setEye([0, 500, 500]);
+                g3d.enableToolTip();
+                g3d.getToolTip = function(e){
+                    var data = this.getDataAt(e);
+                    if(data){
+                        return '<pre>' + JSON.stringify(data.getStyleMap(), null, 4) + '</pre>';
+                    }
+                    return null;
+                };
+                     
+                createNode('box', [-50, 0, 100]).s({
+                    'shape3d.image': 'fab'
+                });  
+                createNode('box', [50, 0, 100]);   
+    
+                i = 0;
+                ['star', 'rect', 'roundRect', 'triangle', 'rightTriangle', 'parallelogram', 'trapezoid'].forEach(function(shape){
+                    var visible = i % 2 === 0,
+                        x = 50 + i * 100,
+                        z = 0;
+                    createNode(shape, [x, 0, z]).s({
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible
+                    }); 
+                    createNode(shape, [-x, 0, z]).s({
+                        'shape3d.image': 'colors',
+                        'shape3d.top.image': 'fab',
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible
+                    }); 
+                    i++;
+                });
+                
+                i = 0;
+                ['star', 'rect', 'roundRect', 'triangle', 'rightTriangle', 'parallelogram', 'trapezoid'].forEach(function(shape){
+                    var visible = i % 2 === 1,
+                        x = 50 + i * 100,
+                        z = -100;
+                    createNode(shape, [x, 0, z], [Math.PI/6, 0, 0]).s({
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible,
+                        'shape3d.reverse.flip': true
+                    }); 
+                    createNode(shape, [-x, 0, z], [Math.PI/6, 0, 0]).s({
+                        'shape3d.image': 'colors',
+                        'shape3d.top.image': 'fab',
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible,
+                        'shape3d.reverse.flip': true
+                    }); 
+                    i++;
+                }); 
+                
+                i = 0;
+                ['star', 'rect', 'roundRect', 'triangle', 'rightTriangle', 'parallelogram', 'trapezoid'].forEach(function(shape){
+                    var x = 50 + i * 100,
+                        z = -200;
+                    createNode(shape, [x, 0, z]).s({
+                        'shape3d.visible': false
+                    }); 
+                    createNode(shape, [-x, 0, z]).s({
+                        'shape3d.visible': false,
+                        'shape3d.top.image': 'fab',
+                        'shape3d.bottom.image': 'fab'
+                    }); 
+                    i++;
+                });                
+                
+                i = 0;
+                ['star', 'rect', 'roundRect', 'triangle', 'rightTriangle', 'parallelogram', 'trapezoid'].forEach(function(shape){
+                    var x = 50 + i * 100,
+                        z = -300;
+                    createNode(shape, [x, 0, z]).s({
+                        'shape3d.visible': false,
+                        'shape3d.top.visible': false
+                    }); 
+                    createNode(shape, [-x, 0, z]).s({
+                        'shape3d.visible': false,
+                        'shape3d.top.visible': false,                        
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.reverse.flip': true
+                    }); 
+                    i++;
+                });  
+                
+                for(i=0; i<7; i++){
+                    var visible = i % 2 === 1,
+                        x = 50 + i * 100,
+                        z = -400,
+                        side = i === 0 ? 0 : i+2;
+                    createNode('cylinder', [x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible
+                    }); 
+                    createNode('cylinder', [-x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.image': 'colors',
+                        'shape3d.top.image': 'fab',                        
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible
+                    }); 
+                }
+                
+                for(i=0; i<7; i++){
+                    var visible = i % 2 === 0,
+                        x = 50 + i * 100,
+                        z = -500,
+                        side = i === 0 ? 0 : i+2;
+                    createNode('cylinder', [x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible,
+                        'shape3d.reverse.flip': true
+                    }); 
+                    createNode('cylinder', [-x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.image': 'colors',
+                        'shape3d.top.image': 'fab',                        
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.top.visible': visible,
+                        'shape3d.bottom.visible': visible,
+                        'shape3d.reverse.flip': true
+                    }); 
+                }                
+                
+                for(i=0; i<7; i++){
+                    var visible = i % 2 === 1,
+                        x = 50 + i * 100,
+                        z = -600,
+                        side = i === 0 ? 0 : i+2;
+                    createNode('cone', [x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.bottom.visible': visible
+                    }); 
+                    createNode('cone', [-x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.image': 'colors',                      
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.bottom.visible': visible
+                    }); 
+                }
+                
+                for(i=0; i<7; i++){
+                    var visible = i % 2 === 0,
+                        x = 50 + i * 100,
+                        z = -700,
+                        side = i === 0 ? 0 : i+2;
+                    createNode('cone', [x, 0, z], [Math.PI, 0, 0]).s({
+                        'shape3d.side': side,
+                        'shape3d.bottom.visible': visible,
+                        'shape3d.reverse.flip': true                        
+                    }); 
+                    createNode('cone', [-x, 0, z], [Math.PI, 0, 0]).s({
+                        'shape3d.side': side,
+                        'shape3d.image': 'colors',                      
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.bottom.visible': visible,
+                        'shape3d.reverse.flip': true
+                    }); 
+                }  
+                
+                for(i=0; i<7; i++){
+                    var x = 50 + i * 100,
+                        z = -800,
+                        side = i === 0 ? 0 : i+2;
+                    createNode('torus', [x, 0, z]).s({
+                        'shape3d.side': side
+                    }); 
+                    createNode('torus', [-x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.image': 'colors'          
+                    }); 
+                }   
+                
+                for(i=0; i<7; i++){
+                    var x = 50 + i * 100,
+                        z = -900,
+                        side = i === 0 ? 0 : i+2;
+                    createNode('sphere', [x, 0, z]).s({
+                        'shape3d.side': side
+                    }); 
+                    createNode('sphere', [-x, 0, z]).s({
+                        'shape3d.side': side,
+                        'shape3d.image': 'colors'       
+                    }); 
+                }  
+                    
+                shapes = ['cylinder', 'cone', 'torus', 'sphere'];
+                for(i=0; i<7; i++){
+                    var x = 50 + i * 100,
+                        z = -1000,
+                        type = shapes[Math.floor(i/2)],  
+                        t = i % 2 === 0 ? 10 : 1;
+  
+                    createNode(type, [x, 0, z]).s({
+                        'shape3d.side': 5 * t,
+                        'shape3d.side.from': 1 * t,
+                        'shape3d.side.to': 4 * t,
+                        'shape3d.from.visible': false
+                    }); 
+                    createNode(type, [-x, 0, z]).s({
+                        'shape3d.side': 5 * t,
+                        'shape3d.side.from': 1 * t,
+                        'shape3d.side.to': 4 * t,
+                        'shape3d.image': 'colors',
+                        'shape3d.top.image': 'fab',
+                        'shape3d.bottom.image': 'fab',
+                        'shape3d.from.image': 'fab',
+                        'shape3d.to.image': 'fab',
+                        'shape3d.top.visible': false
+                    }); 
+                }                               
+                
+            } 
+            
+            function createNode(shape, p3, r3){
+                var node = new ht.Node();
+                node.setStyle('shape3d', shape);
+                node.p3(p3);                
+                node.s3(65, 65, 65);                
+                if(r3){
+                    node.r3(r3);
+                }
+                dataModel.add(node);
+                return node;
+            }
+                        
+           
+            
+        </script>
+    </head>
+    <body onload="init();">                          
+    </body>
+</html>

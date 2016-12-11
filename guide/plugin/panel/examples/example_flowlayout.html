@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Panel</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-panel.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+
+        <script type="text/javascript">
+            function init() {
+                var panel1 = new ht.widget.Panel(),
+                    panel2 = new ht.widget.Panel(),
+                    formPane1 = new ht.widget.FormPane(),
+                    formPane2 = new ht.widget.FormPane();
+                initFormPane(formPane1);
+                initFormPane(formPane2);
+                panel1.setConfig({
+                    title: "Form1",
+                    flowLayout: true,
+                    contentHeight: 250,
+                    content: formPane1
+                });
+                panel2.setConfig({
+                    title: "Form2",
+                    flowLayout: true,
+                    position: "relative",
+                    contentHeight: 250,
+                    content: formPane2
+                });
+                document.body.appendChild(panel1.getView());
+                document.body.appendChild(panel2.getView());
+                window.addEventListener("resize", function() {
+                    panel1.invalidate();
+                    panel2.invalidate();
+                });
+            }
+            function initFormPane(formPane) {
+                var stringComboBox = new ht.widget.ComboBox();
+                stringComboBox.setValues(['www.hightopo.com', 'HT for Web', 'HT']);
+                stringComboBox.setValue('HT for Web');
+
+                var numberComboBox = new ht.widget.ComboBox();
+                numberComboBox.setValues([2002, 2005, 2013]);
+                numberComboBox.setValue(2013);
+                numberComboBox.setEditable(true);                
+
+                var iconComboBox = new ht.widget.ComboBox();
+                iconComboBox.setValues(['Node', 'Group', 'Shape', 'Edge']);
+                iconComboBox.setIcons(['node_icon', 'group_icon', 'shape_icon', 'edge_icon']);
+                iconComboBox.setValue('Group');
+
+                var labelComboBox = new ht.widget.ComboBox();
+                labelComboBox.setValues([1, 2, 3, 4]);
+                labelComboBox.setLabels(['ht.Node', 'ht.Group', 'ht.Shape', 'ht.Edge']);
+                labelComboBox.setValue(4);  
+                labelComboBox.onValueChanged = function(){
+                    alert('Select Value:' + labelComboBox.getValue());
+                };                  
+                  
+                var basicSlider = new ht.widget.Slider();
+                
+                var colorSlider = new ht.widget.Slider();
+                colorSlider.setThickness(8);
+                colorSlider.setBackground('black');
+                colorSlider.setLeftBackground('red');
+                
+                var stepSlider = new ht.widget.Slider();
+                stepSlider.setWidth(120);
+                stepSlider.setStep(25);
+                stepSlider.setMin(100);
+                stepSlider.setMax(200);
+                stepSlider.setValue(125);
+                stepSlider.setThickness(1);   
+                
+                formPane.addRow(['stringComboBox:', stringComboBox, 'numberComboBox:', numberComboBox, 'basicSlider:', basicSlider], [100, 0.4, 110, 0.4, 70, 0.2]);
+                formPane.addRow(['input1:', ht.Default.createElement('input'), 'input2:', ht.Default.createElement('input'), 'input3:', ht.Default.createElement('input')], [100, 0.4, 110, 0.4, 70, 0.2]);
+                formPane.addRow([{element: 'textArea:', align: 'left'}, ht.Default.createElement('textarea')], [100, 0.1], 0.1);
+                formPane.addRow([colorSlider], [1]);  
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .wrapper{
+                overflow: hidden;
+            }
+            .table_title{
+                height:30px;
+                line-height: 30px;
+                padding-left: 10px;
+                font-size: 14px;
+                background-image: -webkit-linear-gradient(top, rgb(155,160,163), rgb(129,130,132));
+                position:relative;
+            }
+            .expand{
+                display:inline-block;
+                width:16px;
+                height:16px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA9ElEQVR4XqXPrU7EQBRH8fOnpWmDqMHxCEgSXmGfAYddtQ+AXg+qFoVBI/BYDAkeg+Nr+ey23b2EhpsGJktCe5Jm0tzJb2Z0MmEfGPP/ir1DO46B8WhysJskCWmaEmfbEG8R1NzSfFxTliVVVXF+NAVoATI9QA311/dyw19FQCY8WkCLR3rlgC2fhgHSYiAwnw0DnudXwwDMPSFgc+c9AO4uM98aAut1BIAJZCtOaiIwQL8BH3Y+rxe5/7tKTIQXAvUafOPWrV3BdMUNZIYhF5DAMORvM2EKAe/nUH4LYQIchgAoTs/u6VHhD8uBjR7Am5nNPgEJsVESEq8SbwAAAABJRU5ErkJggg==);
+                background-repeat: no-repeat;
+            }
+            .table_title span{
+                position: absolute;
+                display: inline-block;
+                width:16px;
+                height:16px;
+                top:7px;
+                right:5px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA9ElEQVR4XqXPrU7EQBRH8fOnpWmDqMHxCEgSXmGfAYddtQ+AXg+qFoVBI/BYDAkeg+Nr+ey23b2EhpsGJktCe5Jm0tzJb2Z0MmEfGPP/ir1DO46B8WhysJskCWmaEmfbEG8R1NzSfFxTliVVVXF+NAVoATI9QA311/dyw19FQCY8WkCLR3rlgC2fhgHSYiAwnw0DnudXwwDMPSFgc+c9AO4uM98aAut1BIAJZCtOaiIwQL8BH3Y+rxe5/7tKTIQXAvUafOPWrV3BdMUNZIYhF5DAMORvM2EKAe/nUH4LYQIchgAoTs/u6VHhD8uBjR7Am5nNPgEJsVESEq8SbwAAAABJRU5ErkJggg==);
+                background-repeat: no-repeat;
+            }
+            .list_table{
+                font-weight:bold;
+                font-size:14px;
+                border-collapse:collapse;
+                width:18em;
+            }
+            .list_table tr:hover{
+                background-image: -webkit-linear-gradient(top, rgba(240,217,108,0.6), rgba(250,204,114,0.6));
+                background-image: -moz-linear-gradient(top, rgba(240,217,108,0.6), rgba(250,204,114,0.6));
+                background-image: linear-gradient(top, rgba(240,217,108,0.6), rgba(250,204,114,0.6));
+            }
+            .list_table td{
+                padding:5px;
+                text-align: center;
+                background-image: -webkit-linear-gradient(top, rgb(255,255,255), rgb(249,247,244));
+                border:1px solid rgb(218,218,219);
+            }
+        </style>
+        <script type="text/javascript">
+            function tableIconClickHandler(e) {
+                var maxInnerHTML = document.getElementById("table-template").innerHTML,
+                    minInnerHTML = document.getElementById("table-min-template").innerHTML;
+
+                if (e.target.className === "shrink") {
+                    var nodeid = e.currentTarget.getAttribute("nodeid"),
+                        node = dataModel.getDataById(nodeid),
+                        host = node.getHost(),
+                        newWidth = 16 + node._padding,
+                        newHeight = 16 + node._padding,
+                        originWidth = node._originWidth,
+                        originHeight = node._originHeight,
+                        differenceWidth = originWidth - newWidth,
+                        differenceHeight = originHeight - newHeight;
+
+                    ht.Default.startAnim({
+                        finishFunc: function() {
+                            node.setHtml(minInnerHTML);
+                            node.setPosition({x: host.getPosition().x + host.getWidth() / 2 + node.getWidth() / 2 + 10, y: host.getPosition().y - host.getHeight() / 2 + node.getHeight() / 2});
+                        },
+                        action: function(t) {
+                            node.setWidth(originWidth - differenceWidth * t);
+                            node.setHeight(originHeight - differenceHeight * t);
+                            node.setPosition({x: host.getPosition().x + host.getWidth() / 2 + node.getWidth() / 2 + 10, y: host.getPosition().y - host.getHeight() / 2 + node.getHeight() / 2});
+                        }
+                    });
+                } else if (e.target.className === "expand") {
+                    var nodeid = e.currentTarget.getAttribute("nodeid"),
+                        node = dataModel.getDataById(nodeid),
+                        host = node.getHost(),
+                        originWidth = node._originWidth,
+                        originHeight = node._originHeight;
+                            
+                    node.setHtml(maxInnerHTML);
+
+                    var newWidth = node.getWidth(),
+                        newHeight = node.getHeight(),
+                        differenceWidth = newWidth - originWidth,
+                        differenceHeight = newHeight - originHeight;
+
+                    node.setWidth(originWidth);
+                    node.setHeight(originHeight);
+
+                    ht.Default.startAnim({
+                        action: function(t) {
+                            node.setWidth(originWidth + differenceWidth * t);
+                            node.setHeight(originHeight + differenceHeight * t);
+                            node.setPosition({x: host.getPosition().x + host.getWidth() / 2 + node.getWidth() / 2 + 10, y: host.getPosition().y - host.getHeight() / 2 + node.getHeight() / 2});
+                        }
+                    });
+                }
+            }
+        </script>
+        <script id="table-template" type="text/x-handlebars-template">
+            <div class="wrapper" nodeid="{{id}}" onclick="tableIconClickHandler(event)">
+            <div class="table_title">Real-time monitoring<span class="shrink"></span></div>
+            <table class="list_table">
+            {{#each rows}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{temperature}}</td>
+                    <td>{{pressure}}</td>
+                    <td>{{time}}</td>
+                </tr>
+            {{/each}}
+            </table>
+            </div>
+        </script>
+        <script id="table-min-template" type="text/x-handlebars-template">
+            <span class="expand" nodeid="{{id}}" onclick="tableIconClickHandler(event)"></span>
+        </script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="handlebars.js"></script>
+        <script src="../../../../lib/core/ht.js"></script>        
+        <script src="../../../../lib/plugin/ht-htmlnode.js"></script>
+        <script type="text/javascript">
+            function init() {
+                var graphView = new ht.graph.GraphView(),
+                    dataModel = graphView.getDataModel();
+
+                window.dataModel = dataModel;
+                var tableNode = new ht.HtmlNode();
+                tableNode.setHtml(document.getElementById("table-template").innerHTML);
+                tableNode.setPosition(230, 100);
+                tableNode.setContext({
+                    id: tableNode.getId(),
+                    rows: [
+                        {
+                            id: 1,
+                            temperature: 23.3,
+                            pressure: 231.6,
+                            time: "18:12"
+                        },
+                        {
+                            id: 2,
+                            temperature: 29.3,
+                            pressure: 231,
+                            time: "18:13"
+                        },
+                        {
+                            id: 3,
+                            temperature: 25,
+                            pressure: 211.6,
+                            time: "18:14"
+                        },
+                        {
+                            id: 4,
+                            temperature: 22.4,
+                            pressure: 111.6,
+                            time: "18:15"
+                        },
+                        {
+                            id: 5,
+                            temperature: 37.4,
+                            pressure: 171.6,
+                            time: "18:19"
+                        }
+                    ]
+                });
+                tableNode.setWidth(300);
+                tableNode.setHeight(200);
+                dataModel.add(tableNode);
+
+                var host = new ht.Node();
+                host.setName("This is Host");
+                host.setPosition(100,50);
+                dataModel.add(host);
+                tableNode.setHost(host);
+                
+
+                tableNode.setPosition({x: host.getPosition().x + host.getWidth() / 2 + tableNode.getWidth() / 2 + 10, y: host.getPosition().y - host.getHeight() / 2 + tableNode.getHeight() / 2});
+
+                var view = graphView.getView();
+                view.className = "view";
+                document.body.appendChild(view);
+
+                graphView.isMovable = function(data) {
+                    if (data instanceof ht.HtmlNode) {
+                        return false;
+                    }
+                    return true;
+                }
+                
+                var style = graphView.getView().style;
+                style.left = '0';
+                style.top = '0';
+                style.right = '0';
+                style.bottom = '0';
+                document.body.appendChild(graphView.getView());
+            }
+        </script>
+    </head>
+    <body onload="init()">
+
+    </body>
+</html>

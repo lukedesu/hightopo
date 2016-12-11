@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MultiComboBox</title>
+        <meta charset="UTF-8">
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;
+            }
+            .main {
+                margin: 0;
+                padding: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <link rel="stylesheet" href="leaflet.css" />
+        <script src="leaflet.js"></script>
+        <script>
+            function DropDownList(master) {
+                var self = this;
+                DropDownList.superClass.constructor.call(self, master);
+                var listView = self._listView = new ht.widget.ListView();
+                listView.setCheckMode(true);
+                listView.sm().ms(function(e) {
+                    master.setValue(self.getValue());
+                });
+                for (var i = 0; i < 10; i++) {
+                    var data = new ht.Data();
+                    data._id = i;
+                    data.setName("data" + i);
+                    data.setTag("data" + i);
+                    listView.dm().add(data);
+                }
+                listView.getView().style.background = "white";
+            }
+            ht.Default.def(DropDownList, ht.widget.BaseDropDownTemplate, {
+                getView: function() {
+                    return this._listView.getView();
+                },
+                onOpened: function(v) {
+                    if (v) {
+                        var listView = this._listView,
+                            nameArr = v.split(",");
+                        listView.dm().toDatas().each(function(data) {
+                            if (nameArr.indexOf(data.getName()) >= 0) {
+                                listView.sm().as(data);
+                            }
+                        });
+                    }
+                },
+                onClosed: function() {},
+                getValue: function() {
+                    var names = "",
+                        listView = this._listView;
+                    listView.sm().each(function(data) {
+                        names += data.getName() + ",";
+                    });
+                    if (names !== "") names = names.substr(0, names.length - 1);
+                    return names;
+                },
+                getHeight: function() {
+                    return 100;
+                }
+            });
+
+            function DropDownMap(master) {
+                var self = this;
+                DropDownMap.superClass.constructor.call(self, master);
+                var mapDiv = self._mapDiv = document.createElement("div"),
+                    map = self._map = L.map(mapDiv, {
+                        zoomAnimation: false,
+                        trackResize: false
+                    }).setView([39.9123, 116.3913], 15);
+                L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'www.hightopo.com',
+                    maxZoom: 18,
+                    minZoom: 3
+                }).addTo(map);
+                map.on('click', function(e) {
+                    var latlng = e.latlng;
+                    self._latlng = latlng.lat + "," + latlng.lng;
+                    master.close();
+                });
+            }
+            ht.Default.def(DropDownMap, ht.widget.BaseDropDownTemplate, {
+                getView: function() {
+                    return this._mapDiv;
+                },
+                getValue: function() {
+                    return this._latlng;
+                },
+                onOpened: function(v) {
+                    this._latlng = v;
+                    if (v) {
+                        var latlng = v.split(","),
+                            map = this._map;
+                        map.setView([latlng[0], latlng[1]], 15);
+                        L.marker([latlng[0], latlng[1]]).addTo(map).bindPopup('Here!').openPopup();
+                    }
+                },
+                getHeight: function() {
+                    return 200;
+                },
+                getWidth: function() {
+                    return 400;
+                },
+                invalidate: function() {
+                    this._map.invalidateSize();
+                }
+            });
+
+            function DropDownBorderPane(master) {
+                DropDownBorderPane.superClass.constructor.call(this, master);
+                var self = this,
+                    borderPane = self._borderPane = new ht.widget.BorderPane(),
+                    tablePane = self._tablePane = new ht.widget.TablePane(),
+                    toolbar = new ht.widget.Toolbar([{
+                        label: "OK",
+                        action: function() {
+                            master.close();
+                        }
+                    }, {
+                        label: "Cancel",
+                        action: function() {
+                            master.close();
+                        }
+                    }]);
+                tablePane.getTableView().sm().setSelectionMode("single");
+                tablePane.getTableView().setCheckMode(true);
+                tablePane.getTableView().sm().ms(function(e) {
+                    master.setValue(self.getValue());
+                });
+
+                borderPane.setCenterView(tablePane);
+                borderPane.setBottomView(toolbar);
+                self.initColumn();
+                for (var i = 0; i < 10; i++) {
+                    var data = new ht.Data();
+                    data._id = i;
+                    data.setName("data" + i);
+                    data.setTag("data" + i);
+                    tablePane.getTableView().dm().add(data);
+                }
+                self.bindingHandleInputValueChange = self.handleInputValueChange.bind(self);
+            }
+            ht.Default.def(DropDownBorderPane, ht.widget.BaseDropDownTemplate, {
+                getView: function() {
+                    return this._borderPane.getView();
+                },
+                handleInputValueChange: function() {
+                    var inputValue = this._master._input.value,
+                        tableView = this._tablePane.getTableView();
+                    tableView.setVisibleFunc(function(data) {
+                        var name = data.getName();
+                        if (name) {
+                            if (name.indexOf(inputValue) >= 0) {
+                                return true;
+                            }
+                        }
+                    });
+                },
+                initColumn: function() {
+                    var columnModel = this._tablePane.getTableView().getColumnModel();
+                    var column = new ht.Column();
+                    column.setName("id");
+                    columnModel.add(column);
+                    column = new ht.Column();
+                    column.setName("name");
+                    columnModel.add(column);
+                },
+                getValue: function() {
+                    var names = "",
+                        sm = this._tablePane.getTableView().dm().sm();
+                    sm.each(function(data) {
+                        names += data.getName() + ",";
+                    });
+                    if (names !== "") names = names.substr(0, names.length - 1);
+                    return names;
+                },
+                onClosed: function() {
+                    this._master._input.removeEventListener("keyup", this.bindingHandleInputValueChange);
+                },
+                onOpened: function(v) {
+                    if (v) {
+                        var nameArr = v.split(","),
+                            dm = this._tablePane.getTableView().dm(),
+                            sm = dm.sm();
+                        dm.toDatas().each(function(data) {
+                            if (nameArr.indexOf(data.getName()) >= 0) {
+                                sm.as(data);
+                            }
+                        }, this);
+                    }
+                    this.bindingHandleInputValueChange();
+                    this._master._input.addEventListener("keyup", this.bindingHandleInputValueChange);
+                },
+                getHeight: function() {
+                    return 200;
+                }
+            });
+
+            function init() {
+                var multiComboBox = new ht.widget.MultiComboBox();
+                multiComboBox.setEditable(true);
+                multiComboBox.setDropDownComponent(DropDownList);
+
+                var multiComboBox2 = new ht.widget.MultiComboBox();
+                multiComboBox2.setEditable(true);
+                multiComboBox2.setValue("39.914607996070885,116.39087677001953");
+                multiComboBox2.setDropDownComponent(DropDownMap);
+
+                var multiComboBox3 = new ht.widget.MultiComboBox();
+                multiComboBox3.setEditable(true);
+                multiComboBox3.setDropDownComponent(DropDownBorderPane);
+
+                var form = new ht.widget.FormPane(),
+                    view = form.getView();
+                form.addRow(['Map:', multiComboBox2, 'MultiSelection:', multiComboBox, "Table:", multiComboBox3], [40, 0.15, 90, 0.1, 50, 0.15]);
+                view.style.width = "100%";
+                view.style.height = "100%";
+
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();"></body>
+</html>

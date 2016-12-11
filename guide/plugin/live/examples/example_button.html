@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Button</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-live.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            dataModel.setAutoAdjustIndex(false);
+            var graphView = new ht.graph.GraphView(dataModel);
+            
+            function init() {
+                addButton(200, 50, 'Normal');
+                
+                // Set button shape to 'roundRect'
+                addButton(350, 50, 'Round rect').s('live.shape', 'roundRect');
+                
+                addButton(500, 50, 'Uneditable', false);
+                addButton(650, 50, 'Disabled', true, false);
+                
+                initBody();
+            }
+            
+            function addButton(x, y, label, editable, enable) {
+                var button = new ht.ButtonNode();
+                button.setPosition(x, y);
+                
+                // Set button label
+                button.s('live.label', label);
+                
+                // Set button editable
+                if (editable !== undefined) button.setEditable(editable);
+                
+                // Set button enabled
+                if (enable !== undefined) button.setEnabled(enable);
+                
+                // Add click action
+                var clicked = false;
+                button.onClicked = function () {
+                    if (clicked) return;
+                    clicked = true;
+                    alert(button.s('live.label') + ' is clicked');
+                    setTimeout(function () {
+                        clicked = false;
+                    }, 100);
+                };
+                
+                dataModel.add(button);
+                return button;
+            }
+            
+            function initBody () {
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '0px';
+                style.top = '0px';
+                style.right = '0px';
+                style.bottom = '0px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

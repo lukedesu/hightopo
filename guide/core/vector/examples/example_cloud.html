@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cloud</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init() {
+                var dataModel = new ht.DataModel(),
+                        graphView = new ht.graph.GraphView(dataModel),
+                        view = graphView.getView();
+
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    graphView.invalidate();
+                }, false);
+
+                ht.Default.setImage('cloud', {
+                    width: 300,
+                    height: 300,
+                    comps: [
+                        {
+                            type: "shape",
+                            points: [
+                                96, 209, 43, 211, -1, 199, 7, 126,
+                                54, 127, 41, 89, 98, 60, 114, 95,
+                                159, -3, 290, 66, 251, 137, 296, 155,
+                                289, 199, 260, 213, 149, 213, 77, 261, 96, 209
+                            ],
+                            segments: [1, 2, 4, 4, 4, 4, 2, 2, 2],
+                            background: "#d6f0fd",
+                            gradientColor: "#A6f0fd",
+                            gradient: "linear.north"
+                        }
+                    ]
+                });
+                
+                ht.Default.setImage('cloud-rect', {
+                    width: 300,
+                    height: 300,
+                    clip: true,
+                    comps: [
+                        {
+                            type: 'rect',                            
+                            rect: [0, 0, 300, 300],
+                            background: '#3498DB'
+                        },                         
+                        {
+                            type: 'image',
+                            name: 'cloud',
+                            rect: [0, 0, 300, 300]
+                        },                       
+                        {
+                            type: 'text',
+                            text: new Date(),
+                            rect: [0, 120, 300, 100],
+                            color: '#34495E',
+                            font: 'bold 36px Arial',
+                            align: 'center'
+                        }
+                    ]
+                });                
+
+                ht.Default.setImage('cloud-oval', {
+                    width: 300,
+                    height: 300,
+                    clip: function(g, width, height, data) {
+                        g.beginPath();
+                        g.arc(width / 2, height / 2, Math.min(width, height) * 0.42, 0, Math.PI * 2, true);
+                        g.clip();
+                    },
+                    comps: [
+                        {
+                            type: 'rect',                            
+                            rect: [0, 0, 300, 300],
+                            background: '#3498DB'
+                        },                
+                        {
+                            type: 'image',
+                            name: 'cloud',
+                            rect: [0, 0, 300, 300]
+                        },                         
+                        {
+                            type: 'text',
+                            text: new Date(),
+                            rect: [0, 120, 300, 100],
+                            color: '#34495E',
+                            font: 'bold 18px Arial',
+                            align: 'center'
+                        }
+                    ]
+                });
+
+                var node = new ht.Node();
+                node.setPosition(150, 110);
+                node.setSize(200, 200);
+                node.setImage('cloud-rect');
+                dataModel.add(node);
+                
+                node = new ht.Node();
+                node.setPosition(400, 110);
+                node.setSize(200, 200);
+                node.setImage('cloud-oval');
+                dataModel.add(node);                
+
+                graphView.setEditable(true);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

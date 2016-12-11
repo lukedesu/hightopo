@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dialog</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=1024, height=768" />
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-autolayout.js"></script>
+        <script src="../../../../lib/plugin/ht-dialog.js"></script>
+
+        <script type="text/javascript">
+            function init() {
+                var dialog = window.dialog = new ht.widget.Dialog(),
+                    graph = new ht.graph.GraphView(),
+                    dm = graph.dm();
+                var root = new ht.Node();
+                for (var i = 0; i < 8; i++) {
+                    var child = new ht.Node(),
+                        edge = new ht.Edge(root, child);
+                    child.setParent(root);
+                    dm.add(child);
+                    dm.add(edge);
+                }
+                dm.add(root);
+
+                var autoLayout = new ht.layout.AutoLayout(graph);
+                autoLayout.layout("circular");
+
+                dialog.setConfig({
+                    title: "title",
+                    titleIcon: 'node_image',
+                    content: graph,
+                    width: 250,
+                    height: 250,
+                    draggable: true,
+                    closable: true,
+                    maximizable: true,
+                    resizeMode: "wh",
+                    buttons: [{
+                        label: "Close",
+                        action: function(button, e) {
+                            dialog.hide();
+                        }
+                    }],
+                    buttonsAlign: "center",
+                    action: function(item, e) {
+                        console.log(item, e);
+                    }
+                });
+
+                graph.translate(-20, -20);
+                dialog.addEventListener(function(e) {
+                    document.getElementById("info").innerHTML += e.kind + "<br>";
+                });
+                dialog.show();
+            }
+
+            function openDialog() {
+                dialog.show();
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <input type="button" value="Open Dialog" onclick="openDialog();">
+        <div id="info"></div>
+    </body>
+</html>

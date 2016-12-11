@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContextMenu</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script src="key.js"></script>
+        <script src="../../../../lib/plugin/ht-contextmenu.js"></script>
+        <script type="text/javascript">
+            function init() {
+                var json1 = [
+                        {
+                            label: "sendToTop"
+                        },
+                        {
+                            label: "sendToBottom"
+                        }
+                    ],
+                    json2 = [
+                        {
+                            label: "Copy"
+                        },
+                        {
+                            label: "Paste"
+                        }
+                    ];
+                var graphView = new ht.graph.GraphView(),
+                    view = graphView.getView(),
+                    style = view.style,
+                    dataModel = graphView.dm();
+                
+                var node1 = new ht.Node(),
+                    node2 = new ht.Node();
+                
+                node1.setName("First Node");
+                node2.setName("Second Node");
+                node1.setPosition(100, 50);
+                node2.setPosition(200, 50);
+                dataModel.add(node1);
+                dataModel.add(node2);
+                
+                style.position = "absolute";
+                style.top = "0";
+                style.right = "0";
+                style.bottom = "0";
+                style.left = "0";
+                document.body.appendChild(view);
+                
+                var contextmenu = new ht.widget.ContextMenu();
+                contextmenu.enableGlobalKey();
+                contextmenu.beforeShow = function(e) {
+                    var data = graphView.getDataAt(e);
+                    if (data === node1) {
+                        this.setItems(json1);
+                    } else if(data === node2) {
+                        this.setItems(json2);
+                    } else {
+                        this.setItems(null);
+                    }
+                };
+                contextmenu.addTo(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

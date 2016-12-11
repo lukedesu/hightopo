@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Structure</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="../../../../lib/plugin/ht-form.js"></script>   
+        <script>
+
+            function init(){                     
+                toolbar = new ht.widget.Toolbar();                     
+                                               
+                dataModel = new ht.DataModel();
+                treeTablePane = new ht.widget.TreeTablePane(dataModel);                
+
+                borderPane = new ht.widget.BorderPane();                
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(treeTablePane); 
+
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                                                  
+                
+                tableHeader = treeTablePane.getTableHeader();
+                if(!ht.Default.isTouchable){
+                    tableHeader.getView().style.background = 'url(images/header.png) repeat-x';
+                }                
+                tableHeader.setColumnLineColor('#C8C8C8');
+                tableHeader.setInsertColor('#6DCDF3');                  
+                
+                treeTableView = treeTablePane.getTableView();  
+                treeColumn = treeTableView.getTreeColumn();
+                treeColumn.setDisplayName('目录结构');
+                treeColumn.setAlign('center');
+                treeColumn.setWidth(260);
+                
+                treeTableView.addColumns([
+                    {
+                        displayName: '文件路径',
+                        width: 160,
+                        getValue: function(data){
+                            return data.a('js') || data.getName();
+                        },
+                        drawCell: function (g, data, selected, column, x, y, w, h) {
+                            var guide_url = data.a('guide_url');
+                            if(guide_url){
+                                var name = data.getName(),                                    
+                                    href = createHref(guide_url, h);                                
+                                href.setAttribute('title', name);
+                                href.innerHTML = 'ht-' + name + '-guide.html';
+                                return href;  
+                            }
+                            var js_url = data.a('js_url');
+                            if(js_url){
+                                var js = data.a('js'),                                    
+                                    href = createHref(js_url, h);                                
+                                href.setAttribute('title', js);
+                                href.innerHTML = js;
+                                return href;  
+                            }
+                        }
+                    },                           
+                    {
+                        name: 'description',  
+                        displayName: '说明',
+                        accessType: 'attr',
+                        width: 500,
+                        sortable: false
+                    }                            
+                ]);                             
+                
+                treeTableView.drawRowBackground = function(g, data, selected, x, y, width, height){                    
+                    if((!this.getCheckMode() && selected) || 
+                        (this.getCheckMode() && data === this.getFocusData())) {
+                        g.fillStyle = '#87A6CB';
+                    }
+                    else if(this.getRowIndex(data) % 2 === 0){
+                        g.fillStyle = '#F1F4F7';
+                    }
+                    else{
+                        g.fillStyle = '#FAFAFA';
+                    }
+                    g.beginPath();
+                    g.rect(x, y, width, height);
+                    g.fill();
+                };
+                treeTableView.isChildrenSortable = function(data){
+                    if(data){
+                        var name = data.getName();
+                        return name === 'core' || name === 'plugin';
+                    }
+                    return false;
+                };
+                if(!ht.Default.isTouchable){
+                    toolbar.getView().style.background = 'url(images/header.png) repeat-x';                
+                }                
+                toolbar.setItems([                    
+                    {
+                        id: 'text',
+                        label: 'Search',
+                        icon: 'images/search.png',
+                        unfocusable: true,   
+                        textField: {
+                            width: 120
+                        }
+                    },
+                    'separator',
+                    {
+                        label: 'Check Mode:',
+                        unfocusable: true,                        
+                        comboBox: {
+                            width: 120,
+                            values: [null, 'all', 'descendant', 'children', 'default'],
+                            onValueChanged: function(){
+                                treeTableView.sm().cs();
+                                treeTableView.setCheckMode(this.getValue());
+                            }                            
+                        }
+                    }                   
+                ]);         
+                
+                textField = toolbar.getItemById('text').element;
+                textField.getElement().onkeyup = function(e){
+                    if(e.keyCode === 27){
+                        textField.getElement().value = '';
+                    }
+                    treeTableView.invalidateModel();
+                };
+                treeTableView.setVisibleFunc(function(data){   
+                    if(data.isEmpty()){
+                        var text = toolbar.v('text');
+                        if(text){                        
+                            return data.getName().toLowerCase().indexOf(text.toLowerCase()) >= 0;
+                        }   
+                    }
+                    return true;
+                });                 
+                
+                initModel();
+                treeTableView.expandAll();                          
+            }              
+
+            function createHref(url, height){
+                var href = document.createElement('a');
+                href.setAttribute('href', url);
+                href.setAttribute('target', '_blank');
+                href.style.whiteSpace = 'nowrap';
+                href.style.font = ht.Default.labelFont;
+                href.style.paddingLeft = '4px';
+                href.onParentAdded = function(div){
+                    div.style.lineHeight = height + 'px';                                    
+                    div.style.verticalAlign = 'middle';
+                };
+                return href;             
+            }
+
+            function initModel(){
+                root = create('HT for Web');
+                    lib = create('lib', root, '产品类库目录');
+                        core = create('core', lib, '核心类库目录');
+                            createLib('ht.js', core, '核心产品包，包含数据模型、通用组件、2D拓扑和3D引擎');
+                        plugin = create('plugin', lib, '扩展类库目录');                        
+                            createLib('ht-dialog.js', plugin, '对话框扩展包，提供可弹出和关闭的对话框组件'); 
+                            createLib('ht-palette.js', plugin, '组件面板扩展包，提供可折叠的分类管理组件');  
+                            createLib('ht-contextmenu.js', plugin, '右键菜单扩展包，提供多级右键菜单组件');            
+                            createLib('ht-menu.js', plugin, '菜单扩展包，提供工具栏下拉菜单组件');                                                   
+                            createLib('ht-panel.js', plugin, '面板容器扩展包，提供可容纳任意组件，并可嵌套、拖拽、吸附等功能一体化的容器');                                                    
+                            createLib('ht-rulerframe.js', plugin, '刻度尺扩展包，提供适配2D拓扑，以及通用组件的刻度尺组件');         
+                            createLib('ht-xeditinteractor.js', plugin, '编辑交互扩展包，增强拓扑图的编辑交互功能');    
+                            createLib('ht-flow.js', plugin, '流动扩展包，提供连线和多边形的流动动画效果');      
+                            createLib('ht-dashflow.js', plugin, '虚线流动扩展包，提供连线和多边形的虚线流动动画效果');           
+                            createLib('ht-htmlnode.js', plugin, 'HtmlNode扩展包，增加普通html元素在2D拓扑上的呈现功能');    
+                            createLib('ht-live.js', plugin, '交互式图元扩展包，在2D拓扑的基础上增加按钮、进度条，组合框等可交互式图元');    
+                            createLib('ht-telecom.js', plugin, '电信扩展包，包含告警模型，告警渲染和告警传播等功能');    
+                            createLib('ht-autolayout.js', plugin, '自动布局扩展包，提供多种自动布局算法');    
+                            createLib('ht-forcelayout.js', plugin, '弹力布局扩展包，提供2D和3D的力导向布局算法');    
+                            createLib('ht-modeling.js', plugin, '建模扩展包，提供自定义3D建模函数功能');    
+                            createLib('ht-edgetype.js', plugin, '连线类型扩展包，提供曲线、折线等多种自定义连线类型');    
+                            createLib('ht-propertypane.js', plugin, '属性面板扩展包，增强属性组件的可视化排序、过滤和分组功能');    
+                            createLib('ht-form.js', plugin, '表单扩展包，提供下拉菜单、滑动条和按钮等组件，及具有组件布局功能的表单面板');    
+                            createLib('ht-overview.js', plugin, '鹰眼扩展包，提供鸟瞰图功能，支持在鹰眼上定位、缩放等导航功能');    
+                            createLib('ht-animation.js', plugin, '动画扩展包，提供图元任意属性动画变化功能');
+                            createLib('ht-cssanimation.js', plugin, 'CSS动画扩展包，提供对HTML元素的CSS动画操作封装');
+                            createLib('ht-quickfinder.js', plugin, '快速查询器扩展包，提供数据容器中指定属性图元的快速查找功能');                                
+                    guide = create('guide', root, '开发手册');
+                        core = create('core', guide, '核心手册目录');
+                            createGuide('beginners', core, '入门手册');
+                            createGuide('datamodel', core, '数据模型手册');  
+                            createGuide('vector', core, '矢量手册');
+                            createGuide('3d', core, '3D手册');        
+                            createGuide('theme', core, '风格手册');   
+                            createGuide('schedule', core, '调度手册');   
+                            createGuide('position', core, '位置手册'); 
+                            createGuide('shape', core, '形状手册'); 
+                            createGuide('serialization', core, '序列化手册');
+                            createGuide('batch', core, '批量手册');
+                            createGuide('lighting', core, '灯光手册');
+                            createGuide('propertyview', core, '属性组件手册');        
+                            createGuide('listview', core, '列表组件手册');        
+                            createGuide('treeview', core, '树组件手册');        
+                            createGuide('tableview', core, '表格组件手册');        
+                            createGuide('treetableview', core, '树表组件手册');
+                            createGuide('toolbar', core, '工具条组件手册');        
+                            createGuide('splitview', core, '分割组件手册'); 
+                            createGuide('borderpane', core, '边框面板手册');                               
+                            createGuide('accordionview', core, '折叠组件手册');
+                            createGuide('tabview', core, '页签组件手册');
+                            createGuide('databinding', core, '数据绑定手册');
+                        plugin = create('plugin', guide, '扩展手册目录');
+                            createGuide('autolayout', plugin, '自动布局手册');
+                            createGuide('forcelayout', plugin, '弹力布局手册');
+                            createGuide('modeling', plugin, '建模手册');
+                            createGuide('obj', plugin, 'OBJ手册');
+                            createGuide('edgetype', plugin, '连线类型手册');
+                            createGuide('overview', plugin, '鹰眼手册');    
+                            createGuide('propertypane', plugin, '属性面板手册');
+                            createGuide('form', plugin, '表单面板手册');
+                            createGuide('quickfinder', plugin, '快速查询器手册');
+                            createGuide('animation', plugin, '动画手册');
+                            createGuide('cssanimation', plugin, 'CSS动画手册');
+                            createGuide('htmlnode', plugin, 'HtmlNode手册');  
+                            createGuide('dialog', plugin, '对话框手册');
+                            createGuide('palette', plugin, '组件面板手册');   
+                            createGuide('menu', plugin, '菜单手册');        
+                            createGuide('contextmenu', plugin, '右键菜单手册');        
+                            createGuide('rulerframe', plugin, '刻度尺手册');
+                            createGuide('xeditinteractor', plugin, '编辑交互手册'); 
+                            createGuide('flow', plugin, '流动手册'); 
+                            createGuide('dashflow', plugin, '虚线流动手册'); 
+                            createGuide('panel', plugin, '面板手册');             
+                            createGuide('live', plugin, '交互式图元手册');
+                            createGuide('telecom', plugin, '电信扩展手册'); 
+                            createGuide('historymanager', plugin, '撤销重做手册'); 
+            }
+                       
+            function create(name, parent, description){
+                var data = new ht.Data();
+                data.setName(name);
+                data.a('description', description);
+                data.setParent(parent);
+                dataModel.add(data);
+                return data;
+            }
+            
+            function createLib(js, parent, description){                
+                var data = create(js, parent, description),
+                    package = parent === core ? 'core' : 'plugin';
+                data.a('js_url', '../../../../lib/' + package + '/' + js);  
+                data.a('js', js);
+                return data;
+            }
+            
+            function createGuide(name, parent, description){
+                var data = create(name, parent, description),
+                    package = parent === core ? 'core' : 'plugin';
+                data.a('guide_url', '../../../../guide/' + package + '/' + name + '/ht-' + name + '-guide.html');                
+                return data;
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

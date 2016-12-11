@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PropertyPane</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-propertypane.js"></script>   
+        <script>
+            function init(){                                                                
+                dataModel = new ht.DataModel();
+                tablePane = new ht.widget.TablePane(dataModel);
+                propertyPane = new ht.widget.PropertyPane(dataModel);                    
+                splitView = new ht.widget.SplitView(tablePane, propertyPane, 'h', 0.6);                                
+        
+                view = splitView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);   
+                
+                var attributes = [
+                    {
+                        name: 'id',
+                        displayName: 'Id'                        
+                    },                    
+                    {
+                        name: 'superClass',
+                        displayName: 'Super Class',   
+                        categoryName: 'Class',
+                        getValue: function(data){
+                            var superClass = data.getClass().superClass;
+                            return superClass.getClassName ? superClass.getClassName() : 'Object';
+                        }
+                    },                    
+                    {
+                        name: 'className',
+                        displayName: 'Class',
+                        categoryName: 'Class'
+                    },  
+                    {
+                        name: '_image',                        
+                        displayName: 'Image',  
+                        categoryName: 'Image',
+                        accessType: 'field',
+                        width: 110
+                    },                             
+                    {
+                        name: 'icon',
+                        displayName: 'icon',  
+                        categoryName: 'Image',
+                        width: 120,
+                        enum: {
+                            values: ['node_icon', 'edge_icon', 'group_icon', 'shape_icon', 'subGraph_icon', 'grid_icon'], 
+                            icons: ['node_icon', 'edge_icon', 'group_icon', 'shape_icon', 'subGraph_icon', 'grid_icon']
+                        }                        
+                    }                                       
+                ];
+                
+                tablePane.addColumns(attributes);
+                propertyPane.addProperties(attributes);
+                                                
+                [ht.Data, ht.Node, ht.Edge, ht.Group, ht.Grid, ht.Shape, ht.SubGraph, ht.Grid].forEach(function(clazz){
+                    data = new clazz();
+                    dataModel.add(data);                    
+                });
+                dataModel.sm().ss(data);
+            }
+             
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

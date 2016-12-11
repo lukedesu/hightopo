@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Palette</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-palette.js"></script>
+
+        <script type="text/javascript">
+            function init() {
+                var palette = window.palette = new ht.widget.Palette(),
+                    dataModel = palette.getDataModel(),
+                    view = palette.getView(),
+                    style = view.style,
+                    mapGroup = new ht.Group(),
+                    phoneGroup = new ht.Group(),
+                    routerGroup = new ht.Group();
+
+                mapGroup.setName("Map");
+                mapGroup.setExpanded(true);
+                for (var i = 1; i < 3; i++) {
+                    var node = new ht.Node();
+                    node.setImage("res/map" + i + ".png");
+                    node.setName("map" + i);
+                    dataModel.add(node);
+                    node.setParent(mapGroup);
+                }
+                dataModel.add(mapGroup);
+
+                phoneGroup.setName("Phone");
+                phoneGroup.setExpanded(true);
+                for (var i = 1; i < 3; i++) {
+                    var node = new ht.Node();
+                    node.setImage("res/phone" + i + ".png");
+                    node.setName("phone" + i);
+                    dataModel.add(node);
+                    node.setParent(phoneGroup);
+                }
+                dataModel.add(phoneGroup);
+
+                routerGroup.setName("Router");
+                for (var i = 1; i < 3; i++) {
+                    var node = new ht.Node();
+                    node.setImage("res/router" + i + ".png");
+                    node.setName("router" + i);
+                    dataModel.add(node);
+                    node.setParent(routerGroup);
+                }
+                dataModel.add(routerGroup);
+
+                style.position = "absolute";
+                style.top = "0";
+                style.right = "0";
+                style.bottom = "0";
+                style.left = "0";
+                document.body.appendChild(view);
+                window.addEventListener("resize", function(e) {
+                    palette.iv();
+                });
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

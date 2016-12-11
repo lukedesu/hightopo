@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JSON</title>
+        <meta charset="UTF-8">     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script> 
+                           
+            function init(){ 
+                // define package
+                com = {};
+                com.hightopo = {};
+
+                // define MyData
+                var MyData = com.hightopo.MyData = function(age, attr1, attr2){    
+                    MyData.superClass.constructor.call(this);
+                    this.setAge(age);
+                    this.setAttr('attr1', attr1);
+                    this.setAttr('attr2', attr2);
+                };
+                ht.Default.def('com.hightopo.MyData', ht.Data, {
+                    _age: 1,
+                    getAge: function(){
+                        return this._age;
+                    },
+                    setAge: function(age){
+                        if(age !== this._age){
+                            var oldValue = this._age;
+                            this._age = age;
+                            this.firePropertyChange('age', oldValue, age);
+                        }
+                    },
+                    getSerializableProperties: function(){
+                        var map = MyData.superClass.getSerializableProperties.call(this);        
+                        map.age = true;              
+                        return map;
+                    },
+                    getSerializableAttrs: function(){
+                        return {
+                            attr2: 1
+                        }; 
+                    }                         
+                });                
+                
+                var dataModel = new ht.DataModel();
+                dataModel.setAttr('website', 'www.hightopo.com');                
+                
+                var data = new MyData(34, 'tw', 'ht');
+                data.setTag('20130301');
+                dataModel.add(data);                                                  
+                
+                var jsonString = dataModel.serialize();
+                console.log(jsonString); 
+                
+                dataModel.clear();
+                dataModel.setAttr('website', null);
+                dataModel.deserialize(jsonString);
+                data = dataModel.getDataByTag('20130301');
+                
+                console.log(data.getAge());
+                console.log(data.getAttr('attr1'));
+                console.log(data.getAttr('attr2'));
+                console.log(dataModel.getAttr('website'));
+                
+            }     
+        </script>
+    </head>
+    <body onload="init();">
+        <pre id="defaultOutput">
+        </pre>  
+        <pre id="customOutput">
+        </pre>          
+    </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SubGraph</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+
+            function init(){                                
+                var dataModel = new ht.DataModel(),
+                    graphView = new ht.graph.GraphView(dataModel),
+                    view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);                         
+                
+                var subGraph1 = new ht.SubGraph();
+                subGraph1.setName('SubGraph1'); 
+                subGraph1.setPosition(80, 80);
+                subGraph1.setStyle('note', 'double click to drill down'); 
+                dataModel.add(subGraph1);
+    
+                var node1 = new ht.Node();
+                node1.setName('Node1');
+                node1.setPosition(80, 80);
+                subGraph1.addChild(node1);
+                dataModel.add(node1);
+                
+                var node2 = new ht.Node();
+                node2.setName('Node2');              
+                node2.setPosition(180, 80);
+                subGraph1.addChild(node2);
+                dataModel.add(node2);
+                
+                var subGraph2 = new ht.SubGraph();
+                subGraph2.setName('SubGraph1'); 
+                subGraph2.setPosition(280, 80);
+                subGraph2.setStyle('note', 'double click to drill down'); 
+                subGraph1.addChild(subGraph2);
+                dataModel.add(subGraph2);
+                
+                var node3 = new ht.Node();
+                node3.setPosition(180, 80);
+                node3.setName('i am the last one, double click the background for up level');
+                subGraph2.addChild(node3);                
+                dataModel.add(node3);
+            }
+                        
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

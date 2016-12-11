@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .view {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-animation.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init() {
+                var graph = window.graph = new ht.graph.GraphView(),
+                    dm = window.dm = graph.dm(),
+                    view = graph.getView();
+                var node1 = new ht.Node(),
+                    node2 = new ht.Node();
+                node1.setName("node1");
+                node2.setName("node2");
+                
+                node1.setPosition(100, 100);
+                node2.setPosition(200, 100);
+                
+                dm.add(node1);
+                dm.add(node2);
+                
+                dm.getDataAnimation = function(data) {
+                    if (data.getName() === "node1") {
+                        if (data.getAnimation() != null) {
+                            return data.getAnimation();
+                        } else {
+                            return {
+                                hide: {
+                                    property: "opacity",
+                                    accessType: "style", 
+                                    from: 1, 
+                                    to: 0,
+                                    frames: 1,
+                                    next: "show"
+                                },
+                                show: {
+                                    property: "opacity",
+                                    accessType: "style", 
+                                    from: 0, 
+                                    to: 1,
+                                    frames: 1,
+                                    next: "hide"
+                                },
+                                start: ["hide"]
+                            };
+                        }
+                    } else {
+                        return null;
+                    }
+                };
+                dm.enableAnimation(500);
+                view.className = "view";
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

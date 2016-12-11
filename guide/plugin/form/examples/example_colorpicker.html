@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ColorPicker</title>
+        <meta charset="UTF-8">
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;
+            }
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>
+
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <script>
+            function init() {
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar(true));
+                toolbar = createToolbar();
+                toolbar.setStickToRight(true);
+                borderPane.setBottomView(toolbar);
+
+                dataModel = new ht.DataModel();
+                tablePane = new ht.widget.TablePane(dataModel);
+                propertyView = new ht.widget.PropertyView(dataModel);
+                splitView = new ht.widget.SplitView(tablePane, propertyView, 'h', 0.6);
+                borderPane.setCenterView(splitView);
+
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    borderPane.invalidate();
+                }, false);
+
+                for (var color in ht.Color) {
+                    value = ht.Color[color];
+                    if (typeof value === 'string') {
+                        data = new ht.Data();
+                        data.a({
+                            'name': color,
+                            'value': value,
+                            'array': ht.Default.toColorData(value)
+                        });
+                        dataModel.add(data);
+                    }
+                }
+                dataModel.sm().ss(data);
+
+                var attributes = [
+                    {
+                        name: 'name',
+                        accessType: 'attr',
+                        displayName: 'Name',
+                        width: 150
+                    }, 
+                    {
+                        name: 'value',
+                        accessType: 'attr',
+                        displayName: 'Value',
+                        width: 200,
+                        editable: true,
+                        colorPicker: {
+                            instant: true
+                        }
+                    }, 
+                    {
+                        name: 'value',
+                        accessType: 'attr',
+                        valueType: 'color',
+                        editable: true,
+                        displayName: 'Color'
+                    }];
+
+                tableHeader = tablePane.getTableHeader();
+                tableHeader.getView().style.background = '#4799BC';
+                tableHeader.getLabelColor = function(column) {
+                    return 'white';
+                };
+                tablePane.addColumns(attributes);
+                tablePane.getTableView().setSelectBackground('#1BBCD5');
+                propertyView.addProperties(attributes);
+                propertyView.setSelectBackground('#1BBCD5');
+            }
+
+            function createToolbar(instant) {
+                var toolbar = new ht.widget.Toolbar([{
+                        label: 'Color Picker',
+                        unfocusable: true,
+                        colorPicker: {
+                            width: 160,
+                            instant: instant,
+                            onValueChanged: function(){
+                                toolbar.setLabelColor(this.getValue());
+                            }
+                        }
+                    }]);
+
+                return toolbar;
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Dial pad</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-live.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            dataModel.setAutoAdjustIndex(false);
+            var graphView = new ht.graph.GraphView(dataModel);
+            var inputNode = new ht.Node();
+            var clearNode = new ht.ButtonNode();
+            
+            function init() {
+                graphView.isMovable = function (data) {
+                    return false;
+                };
+                inputNode.setPosition(420, 30);
+                inputNode.setSize(0, 0);
+                inputNode.setName('');
+                inputNode.s('label.position', 17);
+                inputNode.s('label.font', '20px arial, sans-serif');
+                inputNode.s('select.width', -1);
+                dataModel.add(inputNode);
+                
+                setClearButtonImage();
+                clearNode.setPosition(530, 30);
+                clearNode.setSize(30, 30);
+                clearNode.setImage('ClearButton');
+                dataModel.add(clearNode);
+                clearNode.onClicked = function () {
+                    inputNode.setName('');
+                };
+                
+                setDialButtonImage();
+                
+                for (var i = 1, charCode = 65; i < 10; i++) {
+                    var count = 3,
+                        text = '';
+                    if (i === 1) {
+                        count = 0;
+                    } else if (i === 7 || i === 9) {
+                        count = 4;
+                    }
+                    for (var j = 0; j < count; j++) {
+                        text += String.fromCharCode(charCode++);
+                    }
+                    addDialButton(350 + ((i-1) % 3) * 70, 80 + Math.floor((i - 1) / 3) * 70, '' + i, text);
+                }
+                
+                addDialButton(350, 290, '*', '').s('live.label.offset.y', 0);
+                addDialButton(420, 290, '0', '+');
+                addDialButton(490, 290, '#', '').s('live.label.offset.y', 0);
+                
+                initBody();
+            }
+            
+            function addDialButton (x, y, name, label2) {
+                var button = new ht.ButtonNode();
+                button.setPosition(x, y);
+                button.setSize(50, 50);
+                button.s('live.label', name);
+                button.s('live.label.font', '20px arial, sans-serif');
+                button.s('live.label.offset.y', -8);
+                button.s('live.shape', 'circle');
+                button.s('live.background', 'white');
+                button.s('live.background.hover', null);
+                button.s('live.background.active', '#84969F');
+                button.s('live.label.color', 'black');
+                button.s('live.label.hover', null);
+                button.s('live.label.active', 'white');
+                button.s('live.border.color', '#5F9EB7');
+                button.a('label2', label2);
+                
+                button.setImage('DialButton');
+                button.onClicked = function () {
+                    inputNode.setName(inputNode.getName() + this.s('live.label'));
+                };
+                dataModel.add(button);
+                return button;
+            }
+            
+            function setDialButtonImage () {
+                var image = clone(ht.Default.getImage('button_image'));
+                image.comps.push({
+                    type: 'text',
+                    text: { func: 'attr@label2' },
+                    rect: [0, 0, 1, 1],
+                    relative: true,
+                    offsetY: 8,
+                    color: {
+                        func: function (data) {
+                            return data.isPressed() ? 'white' : 'black';
+                        }
+                    },
+                    font: '12px arial, sans-serif',
+                    align: 'center'
+                });
+                ht.Default.setImage('DialButton', image);
+            }
+            
+            function setClearButtonImage () {
+                ht.Default.setImage('ClearButton', {
+                    width: { func: 'getWidth' },
+                    height: { func: 'getHeight' },
+                    comps: [
+                        {
+                            type: 'circle',
+                            background: '#0B65F6',
+                            rect: [0.15, 0.15, 0.7, 0.7],
+                            relative: true
+                        },
+                        {
+                            type: 'shape',
+                            background: '#0B65F6',
+                            points: {
+                                func: function (data) {
+                                    var width = data.getWidth(),
+                                        height = data.getHeight();
+                                    return [
+                                        width * 0.03, height * 0.5, width * 0.3, height * 0.25, width * 0.3, height * 0.75
+                                    ];
+                                }
+                            }
+                        },
+                        {
+                            type: 'shape',
+                            borderColor: '#FFF',
+                            borderWidth: {
+                                func: function (data) {
+                                    return data.getWidth() * 0.1;
+                                }
+                            },
+                            points: {
+                                func: function (data) {
+                                    var width = data.getWidth(),
+                                        height = data.getHeight();
+                                    return [
+                                        width * 0.35, height * 0.35, width * 0.65, height * 0.65,
+                                        width * 0.65, height * 0.35, width * 0.35, height * 0.65
+                                    ];
+                                }
+                            },
+                            segments: [1, 2, 1, 2]
+                        }
+                    ]
+                });
+            }
+            
+            function clone (o) {
+                var result;
+                if(o instanceof Array){
+                    result = [];
+                    o.forEach(function (e) {
+                        result.push(clone(e, true));
+                    });
+                    return result;
+                }
+                if(typeof o === 'object'){
+                    var name;
+                    result = {};
+                    for (name in o) {
+                        result[name] = clone(o[name]);
+                    }
+                    return result;
+                }
+                return o;
+            }
+            
+            function initBody () {
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '0px';
+                style.top = '0px';
+                style.right = '0px';
+                style.bottom = '0px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

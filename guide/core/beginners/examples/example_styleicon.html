@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HT icon</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            ht.Default.setImage('china', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABxElEQVR4XqXOv2uddRTH8df5Pk/u9aY3FU0UQk0QInFwS92cnQSHbiKUjB38HyyIiLOr4KJDIXVw7T9QUqjUhN57QTAGx1J/Dab35vkeH7mThNTBN7w5cPh8DsdFhMuJSxe3iSD8N5IMfEzGj6PRbGdvb9digaAEEcAfcwquDAhArUCEB4eHB+XJYtF69IjJtHfG439m7+EP7L/ErXXuf8/jCdMpsxmTCUdHjhmVnrQy4M9n3NjpfYPf5qyvcfshnx7z7g4vr+lzDIcs1fTdVqIEpzfZehHBZ29z/TvGQ359xufXee8eiQBEKL2twLxj+0vyEzRsfsHaiCYZYO8broxZCTKplUzZW8Ci8sFbvP81N77iwx0WHRW/n9Htc7WlQ8TSTJYfBAN8e0JFFBoMCpsjNoaMD1htaFyg6JLzyqBZhkYNw5azyjsbfPQmf3V0yKD6l60XklESSVPIirI8dPeEOz+xuUImKhlAh6jaeBVXk0iiEoEKKIAKQFa6SqTmaWhXrmVYr0AEEsVFoCLIjtCXUzt6/by1W5knmQjPJZIsrDLsahvGr2yVNrauvbatbRqlFM+j1mpxPvfLz6fR56f+L38Do/yhNQTmXlAAAAAASUVORK5CYII=');
+            ht.Default.setImage('spain', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABxElEQVR4XqWRT2sTQRiHn3dmkzSxWJQUFN1QFYv4p4eA0n4FT+3FqyJ4ETx40oPfwqNSjwoRFEHoRW9eAj3kIDVIkabUklaobpqa3ezOKGF3QEhCwAd+l+Hlx/O+wxCE0cjIh3sggDAZ1gLPwcq7qWLzRrU6H8V9EAFRgB0tYA1YKIiwVq+/llXYXEKfD9GAmkDCAoZpYl5g3nvV/UV7qXwBMEy2hU3jceXjulXRtx4QAB3gME2XHiGbW0e0druEdIFfwM9/ZpPvfTywQOKaQQERzac7NN60iHcDFh/Mcfl+hQFuXmOtRTEgTleIgIDaqwB/KsasB/iPX1K+e4faswBQabQrU2DSgh4QDnK6eZ3W2x3yy7NE+Xna9XN/364CEQ4EIDPoA9YdMZ9o5GaBvR8z7K3eovTpEapwYtj3pgZuLwNAoyoUp3PMnfnNtc4hheMen5cybeMigJc76ZRc58ryBmUuUrl9CoulyD4rNDNhZ5qbAe/gyVc5OJsnSrIShfYM7URQygAQWIVWlnasyIyPaUtnI0QaD9laWKBC6M4wFjdTgtoH1oTSrO9p8X2/gtYaUYpxJMYQRxHb2y3xtP7C//IHEJ6sQVAi0voAAAAASUVORK5CYII=');
+            ht.Default.setImage('usa', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACmUlEQVR4nJ2SS0jVeRzFP9///1f3Xv/am4Ls0vPeSctykaA9xoq6TYMVNUGL3MymRbSIaO+mKNrUIlyEhJRFpUQTJrloUKgJcnpMafSwmnDiSoyPvOr//f+1KGImlaCzPF8O53w5B8ZCxuEmvH0h8gsrZNj2pMCKkRtxKbBi5HI2UwryGMr2s7d6PctShXh+AKBFhJqaGi3FmUPP5y1Znl66YCb3u3pYXbqQto5uMmvSNLc/5ZdNKzh96Q5/ttaQVP93f/TmVZP6t29ALVhmcK29k7LiQs63dLC5PE1t4112bSjmREMbW35aRcv8KsrcYRwM0CH5KBr6/0pIeuP+7rmplYsTBgw7DrOmWmT7hkjOmcbf2UFS82bwx8v3nNm2nHWp2Yx6ISBY8QR1v11uNnwvpL8vBxIxlLPxvQDHCbBtj8gP+DDi4I3aaNcjcDy0HxAFARKGSKhRtuNQvmgO7R3PyKxO03rnOT+vK+LqzQfs3FjClZsP2VxVRtfh41hhjpEICCMsUbz1e1FTrDxab3eyvbKISzceUL21lLqL7eyvrqS2/ncO7tvCqSNNHBu9yw9fVfj+8T3Ui9dZfqxMU3+ujcymEurqbrFjdzm1J5vZ8+sGTh1tJHOgikYpZi1DjAKgSSDcZgA5feF699KS0sWGDnH9iFhM4boB8ZjCdn0S8ckMOgHlhoMVhYQIojV58QRnrzU1q6LuLipUhBsGoA0wNOixE3TFICcCESAaicXx3mVR/zTU83LadDwAQ8YVj9luqLFMg8Hed6iKJ52SiqlvqMbHinsdqDc7Z6vUwgJsL0Lrz/bjJREg+kSKAYmYovfRgBLJn540DUkmk0lM08Q0BT3BG1pARxGe69PT0yOTTPPZd0X/Lz4CYK8Rm1Y2mGwAAAAASUVORK5CYII=');
+            
+            ht.Default.setImage('arrow', {
+                width: 100,
+                height: 50,
+                comps: [
+                    {
+                        type: 'shape',
+                        points: [20, 25, 70, 25],
+                        borderWidth: 5,
+                        borderColor: 'black',
+                        border3d: true
+                    },
+                    {
+                        type: 'shape',
+                        points: [60, 10, 60, 40, 80, 25, 60, 10],
+                        background: {
+                            value: 'black',
+                            func: 'attr@arrow.color' 
+                        },
+                        borderWidth: 1,
+                        borderColor: '#40ACFF',
+                        gradient: 'spread.vertical'
+                    }
+                ]
+            });
+            function init(){
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();
+            
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function() {
+                    graphView.invalidate();
+                }, false);
+            
+                node1 = new ht.Node();
+                node2 = new ht.Node();
+                edge = new ht.Edge(node1,node2);
+                
+                node1.setPosition(50,100);
+                node2.setPosition(300,100);
+                
+                dataModel.add(node1);
+                dataModel.add(node2);
+                dataModel.add(edge);
+                
+                edge.addStyleIcon("flags", {
+                    position: 17,
+                    direction: 'east',
+                    offsetX: -26,
+                    gap: 10,
+                    names: ['china', 'spain', 'usa']
+                });
+                
+                edge.addStyleIcon("arrow1", {
+                    position: 2,
+                    width: 50,
+                    height: 25,
+                    keepOrien: true,
+                    names: ['arrow']
+                });
+                
+                edge.addStyleIcon("arrow2", {
+                    position: 4,
+                    width: 50,
+                    height: 25,
+                    positionFixed: true,
+                    names: ['arrow']
+                });                
+                
+                node2.setStyle("icons", {
+                    flags: {
+                        position: 2,
+                        direction: 'east',
+                        rotation: Math.PI / 4,
+                        names: ['china', 'spain', 'usa']
+                    }
+                });
+                                
+                node1.setStyle("icons", {
+                    flags: {
+                        position: 30,
+                        direction: 'east',
+                        offsetY: 3,
+                        names: [
+                            {
+                                width: 10,
+                                height: 10,
+                                comps: [
+                                    {
+                                        type: 'circle',
+                                        rect: [0, 0, 10, 10],
+                                        background: 'red',
+                                        gradient: 'radial.center'
+                                    },
+                                    {
+                                        type: 'circle',
+                                        rect: [0, 0, 10, 10],
+                                        borderColor: '#3498DB',
+                                        borderWidth: 1,
+                                        visible: {
+                                            func: function(data){
+                                                return data.a('select.index') === 0;
+                                            }
+                                        }
+                                    }
+                                ]                                
+                            },
+                            {
+                                width: 10,
+                                height: 10,
+                                comps: [
+                                    {
+                                        type: 'circle',
+                                        rect: [0, 0, 10, 10],
+                                        background: 'yellow',
+                                        gradient: 'radial.center'
+                                    },
+                                    {
+                                        type: 'circle',
+                                        rect: [0, 0, 10, 10],
+                                        borderColor: '#3498DB',
+                                        borderWidth: 1,
+                                        visible: {
+                                            func: function(data){
+                                                return data.a('select.index') === 1;
+                                            }
+                                        }
+                                    }
+                                ]                                
+                            },
+                            {
+                                width: 10,
+                                height: 10,
+                                comps: [
+                                    {
+                                        type: 'circle',
+                                        rect: [0, 0, 10, 10],
+                                        background: '#1ABC9C',
+                                        gradient: 'radial.center'
+                                    },
+                                    {
+                                        type: 'circle',
+                                        rect: [0, 0, 10, 10],
+                                        borderColor: '#3498DB',
+                                        borderWidth: 1,
+                                        visible: {
+                                            func: function(data){
+                                                return data.a('select.index') === 2;
+                                            }
+                                        }
+                                    }
+                                ]                                
+                            }
+                        ]
+                    }
+                });
+                
+                graphView.onDataClicked = function(data, e) {
+                    if(data === node1){
+                        var info = this.getIconInfoAt(e, data);
+                        if(info){
+                            edge.a('arrow.color', info.name.comps[0].background);
+                            node1.a('select.index', info.index);
+                        } 
+                    }                                       
+                };
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

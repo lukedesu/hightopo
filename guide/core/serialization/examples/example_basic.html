@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic</title>
+        <meta charset="UTF-8">        
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>     
+            
+            function init(){ 
+                
+                // define package
+                com = {};
+                com.hightopo = {};
+
+                // define Person class constructor
+                com.hightopo.Person = function(firstName, lastName){    
+                    com.hightopo.Person.superClass.constructor.call(this);
+                    this.setFirstName(firstName);
+                    this.setLastName(lastName);
+                };
+                
+                // define Person class properties and methods
+                ht.Default.def('com.hightopo.Person', Object, {
+                    _firstName: null,
+                    _lastName: null,
+                    getFirstName: function(){
+                        return this._firstName;
+                    },
+                    setFirstName: function(firstName){
+                        this._firstName = firstName;
+                    },
+                    getLastName: function(){
+                        return this._lastName;
+                    },
+                    setLastName: function(lastName){
+                        this._lastName = lastName;
+                    },
+                    getDescription: function(){
+                        return 'firstName:' + this._firstName + ' lastName:' + this._lastName;
+                    }
+                });  
+                
+                var person = new com.hightopo.Person('eric', 'lin');
+                console.log('FirstName - ' + person.getFirstName());
+                console.log('LastName - ' + person.getLastName());
+                console.log('Description - ' + person.getDescription());
+                
+                // define Student class constructor
+                com.hightopo.Student = function(firstName, lastName, grade){
+                    com.hightopo.Student.superClass.constructor.call(this, firstName, lastName);
+                    this.setGrade(grade);
+                };
+                
+                // define Student class properties and methods
+                ht.Default.def('com.hightopo.Student', com.hightopo.Person, {
+                    _grade: null,
+                    getGrade: function(){
+                        return this._grade;
+                    },
+                    setGrade: function(grade){
+                        this._grade = grade;
+                    },
+                    // override getDescription method                                
+                    getDescription: function(){
+                        var desc = com.hightopo.Student.superClass.getDescription.call(this);
+                        return desc + ' grade:' + this._grade;
+                    }        
+                });  
+                
+                var student = new com.hightopo.Student('ben', 'lin', 2);
+                console.log('FirstName - ' + student.getFirstName());
+                console.log('LastName - ' + student.getLastName());
+                console.log('Grade - ' + student.getGrade());
+                console.log('Description - ' + student.getDescription());
+                
+                
+            }     
+        </script>
+    </head>
+    <body onload="init();">         
+    </body>
+</html>

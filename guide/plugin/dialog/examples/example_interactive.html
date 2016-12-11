@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dialog</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-form.js"></script>
+        <script src="../../../../lib/plugin/ht-cssanimation.js"></script>
+        <script src="../../../../lib/plugin/ht-autolayout.js"></script>
+        <script src="../../../../lib/plugin/ht-dialog.js"></script>
+
+        <script type="text/javascript">
+            function init() {
+                var dialog = new ht.widget.Dialog();
+                dialog.setConfig({
+                    title: "Test",
+                    closable: false,
+                    draggable: true,
+                    contentPadding: 10,
+                    content: document.getElementById("content"),
+                    buttons: [
+                         {
+                             label: "OK"
+                         }
+                     ],
+                     buttonsAlign: "right",
+                     action: function(item, e) {
+                         dialog.hide();
+                         var username = dialog.getView().querySelector(".username").value,
+                             alertDialog = new ht.widget.Dialog({
+                                title: "Alert",
+                                closable: false,
+                                draggable: true,
+                                contentPadding: 10,
+                                content: "<p>welcome, " + username + "!</p>",
+                                buttons: [
+                                     {
+                                         label: "OK"
+                                     }
+                                 ],
+                                 buttonsAlign: "right",
+                                 action: function() {
+                                     alertDialog.hide();
+                                 }
+                            });
+                            alertDialog.show();
+                     }
+                });
+                dialog.show();
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="content">
+            Your Name: <input class="username" style="font-size: 14px;">
+        </div>
+    </body>
+</html>

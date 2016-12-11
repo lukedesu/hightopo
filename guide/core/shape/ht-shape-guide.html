@@ -1,0 +1,373 @@
+<!doctype html>
+<html>
+    <head>
+        <title>HT for Web 形状手册</title>
+        <meta charset="UTF-8">    
+        <meta name="viewport" content="user-scalable=yes, width=1024">
+        <style type="text/css"> 
+            h1, h2, h3, h4, h5, h6, p, blockquote {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+                font-size: 13px;
+                line-height: 18px;
+                color: #737373;
+                background-color: white; 
+                margin: 10px 13px 10px 13px;
+            }
+            table {
+                margin: 10px 0 15px 0;
+                border-collapse: collapse;
+            }
+            td,th {	
+                border: 1px solid #ddd;
+                padding: 3px 10px;
+            }
+            th {
+                padding: 5px 10px;	
+            }
+            a {
+                color: #0069d6;
+            }
+            a:hover {
+                color: #0050a3;
+                text-decoration: none;
+            }
+            a img {
+                border: none;
+            }
+            p {
+                margin-bottom: 9px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                color: #404040;
+                line-height: 36px;
+            }
+            h1 {
+                margin-bottom: 18px;
+                font-size: 30px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 18px;
+            }
+            h4 {
+                font-size: 16px;
+            }
+            h5 {
+                font-size: 14px;
+            }
+            h6 {
+                font-size: 13px;
+            }
+            hr {
+                margin: 0 0 19px;
+                border: 0;
+                border-bottom: 1px solid #ccc;
+            }
+            blockquote {
+                padding: 13px 13px 21px 15px;
+                margin-bottom: 18px;
+                font-family:georgia,serif;
+                font-style: italic;
+            }
+            blockquote:before {
+                content:"\201C";
+                font-size:40px;
+                margin-left:-10px;
+                font-family:georgia,serif;
+                color:#eee;
+            }
+            blockquote p {
+                font-size: 14px;
+                font-weight: 300;
+                line-height: 18px;
+                margin-bottom: 0;
+                font-style: italic;
+            }
+            code, pre {
+                font-family: Monaco, Andale Mono, Courier New, monospace;
+            }
+            code {
+                background-color: #fee9cc;
+                color: rgba(0, 0, 0, 0.75);
+                padding: 1px 3px;
+                font-size: 12px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+            }
+            pre {
+                display: block;
+                padding: 14px;
+                margin: 0 0 18px;
+                line-height: 16px;
+                font-size: 11px;
+                border: 1px solid #d9d9d9;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            pre code {
+                background-color: #fff;
+                color:#737373;
+                font-size: 11px;
+                padding: 0;
+            }
+            sup {
+                font-size: 0.83em;
+                vertical-align: super;
+                line-height: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact;
+            }
+            @media screen and (min-width: 914px) {
+                body {
+                    width: 854px;
+                    margin:10px auto;
+                }
+            }
+            @media print {
+                body,code,pre code,h1,h2,h3,h4,h5,h6 {
+                    color: black;
+                }
+                table, pre {
+                    page-break-inside: avoid;
+                }
+            }                        
+            iframe{
+                width: 100%;
+                border: 1px solid #34495E;
+                margin: 0;                
+            }            
+            .logo{
+                vertical-align: middle;
+            }
+
+        </style>        
+        <script>
+            function init() {
+                var logoSrc = 'data:image/png;base64,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',
+                    logos = document.querySelectorAll('.logo'),
+                    i = 0;
+                for (; i < logos.length; i++) {
+                    logos[i].src = logoSrc;
+                }
+                
+                var iframes = document.querySelectorAll('iframe'),
+                    func = function(){};
+                for (i=0; i < iframes.length; i++) {
+                    var iframe = iframes[i];
+                    
+                    // a small hack to make it work on android
+                    iframe.ontouchstart = func;
+                    
+                    var div = document.createElement('div');
+                    div.innerHTML = '<a href="' + iframe.src + '" target="_blank">独立运行→</a>';
+                    iframe.parentNode.insertBefore(div, iframe);
+                }   
+            }
+        </script>    
+    </head>
+    <body onload="init();">
+        <a href="http://www.hightopo.com"><img class="logo"></a>HT for Web 形状手册
+        <hr style="margin: 1px 0 20px 0">
+<p>索引</p>
+
+<ul><li><a href="#ref_overview">概述</a></li><li><a href="#ref_2d">二维</a><ul><li><a href="#ref_basic">基础属性</a></li><li><a href="#ref_style">样式属性</a> </li><li><a href="#ref_different">管线差异</a>  </li><li><a href="#ref_host">吸附功能</a>  </li></ul></li><li><a href="#ref_3d">三维</a><ul><li><a href="#ref_floor">地板类型</a></li><li><a href="#ref_wall">墙面类型</a></li><li><a href="#ref_pipeline">管道类型</a></li><li><a href="#ref_polyline">空间管线</a></li><li><a href="#ref_csgshape">挖空墙面</a></li><li><a href="#ref_rotation">旋转功能</a></li></ul></li></ul>
+
+<hr/>
+
+<div id="ref_overview"></div>
+
+<h2>概述</h2>
+
+<p><code>HT</code>提供的<code>ht.Shape</code>是极其强大的图元类型，其在<code>GraphView</code>和<code>Graph3dView</code>组件上都能展示出各种二维和三维的形状效果，
+其扩展子类<code>ht.Polyline</code>可实现三维空间管道的功能，扩展子类<code>ht.CSGShape</code>可实现挖空等功能效果，本手册将逐一进行详细介绍。</p>
+
+<div id="ref_2d"></div>
+
+<h2>二维</h2>
+
+<div id="ref_basic"></div>
+
+<h3>基础属性</h3>
+
+<p><code>ht.Shape</code>类型在<code>GraphView</code>组件上用于呈现多边形图元，其形状主要由<code>points</code>和<code>segments</code>这两个属性描述：
+<code>points</code>为<code>ht.List</code>类型数组的顶点信息，顶点为<code>{x:100, y:200}</code>格式的对象；<code>segments</code>为<code>ht.List</code>类型的线段数组信息，
+线段为<code>1~5</code>的整数，分别代表不同的顶点连接方式。</p>
+
+<p>如果<code>segments</code>为空，则代表<code>points</code>数组中的顶点按数组顺序依次直线连接，因此直线段的类型无需设置<code>segments</code>参数。
+<code>segments</code>主要用于需要绘制曲线，或者有跳跃断点的情况，其<code>1~5</code>的取值含义说明如下：</p>
+
+<ul><li>1: <code>moveTo</code>，占用<code>1</code>个点信息，代表一个新路径的起点</li><li>2: <code>lineTo</code>，占用<code>1</code>个点信息，代表从上次最后点连接到该点</li><li>3: <code>quadraticCurveTo</code>，占用<code>2</code>个点信息，第一个点作为曲线控制点，第二个点作为曲线结束点</li><li>4: <code>bezierCurveTo</code>，占用<code>3</code>个点信息，第一和第二个点作为曲线控制点，第三个点作为曲线结束点</li><li>5: <code>closePath</code>，不占用点信息，代表本次路径绘制结束，并闭合到路径的起始点</li></ul>
+
+<p><img src="data:image/png;base64,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"></p>
+
+<p><code>ht.Shape</code>的主要属性函数：</p>
+
+<ul><li><code>getPoints()</code>和<code>setPoints(points)</code>获取和设置点数组，参数为<code>Array</code>类型则内部转换成<code>ht.List</code>，为空则清除所有点</li><li><code>addPoint(point, index)</code>在指定的索引位置插入新点，<code>index</code>为空则插入到最后</li><li><code>setPoints(index, point)</code>在指定的索引位置替换新点</li><li><code>removePointAt(index)</code>删除指定索引位置的点</li><li><code>toPoints()</code>拷贝一份新的<code>ht.List</code>类型顶点数组</li><li><code>segments</code>属性为<code>Array</code>或<code>ht.List</code>类型，用于描述点连接样式，数组元素为整型值:  <ul><li>1: <code>moveTo</code>，占用<code>1</code>个点信息，代表一个新路径的起点</li><li>2: <code>lineTo</code>，占用<code>1</code>个点信息，代表从上次最后点连接到该点</li><li>3: <code>quadraticCurveTo</code>，占用<code>2</code>个点信息，第一个点作为曲线控制点，第二个点作为曲线结束点</li><li>4: <code>bezierCurveTo</code>，占用<code>3</code>个点信息，第一和第二个点作为曲线控制点，第三个点作为曲线结束点</li><li>5: <code>closePath</code>，不占用点信息，代表本次路径绘制结束，并闭合到路径的起始点</li></ul></li><li><code>isClosePath()</code>和<code>setClosePath(true)</code>获取和设置多边形是否闭合，默认为<code>false</code>，<a href="#ref_wall">墙面类型</a>通过设置闭合可无缝连接起始点    </li><li><code>getLength(resolution)</code>获取多边形长度，<code>resolution</code>为曲线微分片数，不传入则<code>HT</code>会采用系统默认值</li></ul>
+
+<blockquote><p><code>ht.Shape</code>类型的<code>points</code>值与<code>width</code>、<code>height</code>和<code>position</code>这三个大小和位置信息存在联动关系，
+即修改<code>points</code>会影响<code>width</code>、<code>height</code>和<code>position</code>相应值，同理修改<code>width</code>、<code>height</code>和<code>position</code>值也会影响<code>points</code>信息。</p></blockquote>
+
+<div id="ref_style"></div>
+
+<h3>样式属性</h3>
+
+<p><code>ht.Shape</code>相关的<code>style</code>属性：</p>
+
+<ul><li><code>shape.border.width</code>边框宽度，默认值为<code>0</code>表示不绘制边框</li><li><code>shape.border.color</code>边框颜色</li><li><code>shape.border.cap</code>边框末端线帽的样式，可选参数为<code>butt|round|square</code>
+<img src="data:image/png;base64,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"></li><li><code>shape.border.join</code>边框当两条线交汇时创建边角的类型，可选参数为<code>bevel|round|miter</code>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcYAAACFCAMAAAD2B6htAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEXUExURXt5/7W2972+/3t59//PzrW2tdbX1r2+93Nxc//Hxu/v7wgICM7PzikoKefn55yenO++vVpZWsbHxs6mpRAQEDEoKRAICDEwMb2+vZx5e2NJSqWGhN7f3lJRUnt5e2NhY2tpa6WmpTk4OUpJSoSG/5SWlDEgIVJBQiEYGK2urYyOjISGhGNRUhgYGEIwMffHxu/HxikgIXNZWlpJSq2OjIRpa4xxc8aenLWOjJRxc9aurb2WlNampXthY+e2td62td6urb2enIRhY2tZWmtRUiEgITkwMUI4OZR5e0o4ObWWlEpBQtbPzsbH9+/n53Nx/72mpdbX95ye/62WlMaurZyGhMa+vaWenKWOjHtZWnNhYwAAAP///4IyFQcAABKmSURBVHjaYmBmGIVDHgYBBBADQ8woGPKAGSCAGJhHA2HoAwaAAGJQGQ2EYRCNAAE0mhuHRTQCBNBo3Tgs6kaAABrNjcMiNwIEEDXrRpnR8ByoaAQIICrmRh5u/tEAHaBoBAgg6tWNXNzR0TyjITowdSNAAFEtN3LxRkdHc4+WqwOTGwECiGp1o2A0CPByjYbpQEQjQABRKzfKRUOA8miYDkQ0AgQQlepG/mgYUBgN1AGoGwECiDq5kYcbHo3Ro83VAciNAAFElbqRCykWB1dzlUdOiTeaW0mQf3jX2QwAAUSN3AhupCLA4Gmu8usiXCU4nBvRDAABRI26UTAaFQyS5qqMEqqz5IZx3QgQQFTIjXLR6GBQNFd5uNGdJTh8cyNAAFFeN/JHYwKFwRiLgyIeuSSwAIpLLwaAAKI4N2ILrkHQXOXC6qwBT15ozQhqlV4MAAFEad2IPbgGvLmKPbgGPnkJYncWpcmLGSCAKMyNuIJroJurOIJroJOXHC5nUZi8GAACiMK6EWdwDWxzFWdwDWzy4sfpLAqTFwNAAFGWG3EH14A2V/EE10AmLx7uaBolLwaAAKKobkQJLg1pRwu1QdGeQAkuEUlzR/VBkbxQmxGm1uZGVEtezAABREluRAkuMQFOFk4Ww0HQnkANLmGgqzjVB0HyQm1GSINCy4xayYsBIIAoqBtRg8uIBeguFouBb0+gBpceC8hdwoOguYrSjNDgBLuLWs1VBoAAIj83ojVSbUGpnsV64NsTqK0uKU6wuwa+uYrajNADu4qTWs1VBoAAIr9uRGuk6oDTl+SAtyfQWl2ioDICLXUNRPJCa3WJ6IPcJUCt5iozQACRnRvRG6mS4PTlNdDNVfRGqhQovDitxAY4eaE3Ug05QaElIEql5MUAEEDk1o0YwcXC4mFrasciObDDX+jBJcrJImkaacdiPrDJC32sS8OA09rJVJjFXoQ6yYsBIIDIzI3owQUs650gNZHxQA5/YQSXADhdGQpwSg9k8kIf6xIT5hQGlg8iDmhtL7KTFwNAAJFXN6IHl5o+CyScTFlY9AZu+As9uESEWYTB6V2dhUVnAJMX+liXBae+BrisEKBS6cUMEEBk5UYcqQvSHxIwHLD2BHpwmbAIQEstFxbOgUte6M0IS3j/Wp2TxZkayYsBIIDIqhvRg8ucxQDWhhCzYrEZqPYEenCZIbUhJKnXnqC0GQFs00vBe9ucLOpUSF4MAAFETm5EDy5gDlRDHs0ZoPYEenAZs3BKIY/mCIsMSPLC0uoywxF2ZCcvBoAAIqNuxEhdLCxS2OpJOrcn0INLjYXFFLmedGBxHIjkhaXVZYLMt+G0ozx5MQMEEOm5EaORysliiycX0Ks9gRlcaK1TqrUnqNPqgpde9pyUN1cZAAKI5LoRPbiwhI4tC4s7vdsTGK0uzDpanZOF/skLS6tLAy0ADSjvDTEABBCpuZFg6hqg9gRmm15ADN1ZwPYEvZurmK0uTlF0Z3mzcBpRmLwYAAKI1LoRPbgc4W16/HFL4/YERpuexUANc25WmlOfvskLy1iXDqazjNBm0khPXswAAURibpQjmO8g8SiAPhpN2/YERnBhjiZBmqvw/i1dkhdmq4vTEpuzKC69GAACiLS6ETN1cepgXZNA3/YERpueBa3VBU9edvTsDWG0uvTR5mORekMOFJVeDAABRFJuRA8uNxZOUxxrS+g5uopjJBUbUKPj6CqesS6M5EXh6CoDQACRUjdiNFIx21hIa03o1p4gqtUFb65ilh+0Sl4YrS4WAw1czqKw9GIGCCASciMJqYt64xMUjaRiA870Gl3FMpKqhttZwN6QC/nJiwEggEioGzFGUjn18QRXtIgNpxU9mqv4RlJp0p6gylgXluYqBaOrDAABRHxuxDKSaojPXaDRVToMf+EfScXenqBDbwj/SCqO0ovsuSEGgAAium7EN04P20BIuO5UoHlwYba65NDrTnva94bQmxGuaCOpoO1daNsvo61Y7MjtDTEDBBCxuZHgSGp0tFaMBOGcwU/b4NLAbIkKYkY1zXtDRLS6eDHbGuSPrjIABBCRdSMRI6mCWLKsEwsnTUdXMYILS30MVCaB0Vyl8egqllaXK6qILheW0QGy54YYAAKIuNxIVOrC5n4atycwggtjJFWXC1uNYMTJ4kbD5EV4JJUbbB168vIkd3SVASCAiKsb0YPLGqNNrwstxpXoObqK2abXxxpcmB6QxhhzpWLyImKsSxO7Smcym6vMAAFEVG4kPJIKCy7MfEvD0VUiRlI1YWqV6De6irEmFXMkVQtX/iCz9GIACCBi6kYixuk1cTcdadaewNKmd8IVXJjtCZqtXcWyJtUC9xkEGMmLrLWrDAABRERuxLEmFXtwYRb4tBpdJWIkVRBfHqHR6CoRY128+FodZI2uMgAEEOG6kYtwe0oQb+alzdpVoltduJIXjdau4lqTitmMoGLpxQwQQARzI4mpC2t7ghZrVwmPpOpy4a8baLJ2FfeaVIxmBK7kRcbaVQaAACJYN+JZk4ojuDAKfFqsXSU8ksrNQ8grNOgNETHWpUlIDxlrVxkAAohQbpQjPG/BQzgHU33tKhEjqZqYupRoPbpKxEiqFuGcQvrcEANAABGoG4kYp9ckwjvUXrtKYE0qjuDC1p6g6uA9oTWp0TgOykJPXiSvXWUGCCD8uZGokVRsgLajq0SNpBKVW6jaGyK51YWz9CJ1dJUBIIDw1o1EjqQSk42puXaViDWpvDi0YmlPUC95EV6TqstFZGFM4twQA0AA4cuNZKcuGrcnCK9J1eUitpag4tpVYkdSiUleJK5dZQAIIHx1I+E1qbp4imyaja4SXpPKzUO8p6i2dpWksS7CyYuktavMAAGEJzeSMJJKVF6m0ugqKSOpxLQnqDS6SsSaVC1SihiSSi8GgADCXTcSP05PbOubKu0JItakapHWEKHK2lUi1qQSOM1ViYK1qwwAAYQzNxKxJlWLgNdoMbpK4kgqUfmGCqOrZIx1EdEbIrq5ygAQQLjqRiLWpAqSXP5RvnaVolYX7tFViteuEl6TqstFcjlDfOnFDBBAOHIjFVIXdcYnKB5JJSZ5Ubx2lfCaVG4iDJQge+0qA0AA4agbCa9J1SWqHaBE3bWr5Iyk0qE3ROZYFxHNVSJHVxkAAgh7biS8JpW44MI2ukrB8Bd5I6nEtSco6A2RN5JKZOlF1NwQA0AAYa0byRmnJ9aLFKxdJWJNqha5dSwFa1eJWZNKrFlkrl1lBgggbLmR7JFU2o6ukj2SStveEFVaXRSOrjIABBCWupGCkVRiSkJy164SuSaV3ORF9tpV4takkj2KQNTcEANAAGHJjcpUTF1EtifIad6YkDCSSuToKvraVS4yjCFlJJWY5IVl7aoEZjQCBBCWupGHl8g1qWQW+Bjpgjh/cikRuSaV3OSFsXaVnNxI8lgXEb0htOYqlru2mAECCFvdiBJgkmS26YkfXeWVISPcSR1JJX10lWhv8hO5JpU6pRfW69wZAAIIe79RkMxxenLaE8pcZCRUvGtSyW5PIK9dJTpxActBbuLWpJKdvJDWrmJPXAwAAYRjFIefuDWp5Bb4SHmJpOFLWIBpUNbqwpW8kNauKpNSccCqITLHukgYXcXRm2UACCBcY6qQACO4JpXcAh++dpXEwUtIgFHc6sLTXNUhZ2wcWg0RWpNKcekliMM4ZoAAwj3DwUu11IV7fILkahYSYCYUt7pwJS/o2lV+svxHeE0q2ckLsnYV50WiDAABhHu+ERhgxKxJJbPAB6+fIaH+QQ4wM8pbXXjbE2SZxk/JWBcxvSF1btyJiwEggPCtxQklZk0q2e0JAc4I8tJEONkjqcS1J0xkyMtBAuSOpBJXetnjCXsGgADCu041hIrBhTk+EUCuSWFR1AsuzPZEsB+ZJvl4UKUZgSN5efHhUcwMEED416lKcFMtuDAKfArWqaINUFB21y1a8qJknaoSVZoRWJOXIN6SiwEggAjs4UAJMEqvBuanTvGMHmC8FDpLgnqbqgSp0ozAkrwI3JLOABBAhPZwIAUYpcGF7EuyGjfYjdKleJcwP5USF3WNQkpe3IQSFwNAABHe3yhIteBCFPjKlJvFT7XgQniR4sSFVA1pxtDRi8wAAUTEbmN+qgUXrMCnyrZeaIBpUsMsJWolLng1pEUNZwkSuw6BASCAiNn7Dw4wqgQXpMCn0hk04ACjSnBBkheVjiQAV0OC1DFLiWDjBhqNAAFE1EkcwACjTnCBCnxuqp1AAwwwKgUXKHlR74AjQSo0I+DJS44YdQwAAUTcuThcWlTzo6ZMDPUA9ZzFQ83jjTSpdvQPD3GFIDNAAFF20/goGByAASCAKLjbeBQMnmgECKDR3DgsohEggMi/23gUDB7ADBBAo7lxWORGgAAarRuHRTQCBBCe3MjKSpaRbKxstHMvH6sQWfrA2sj0EHFAiJUP5Hc+Eh1FrofQohEggPDUjdHR2EOSA2QxG073skYjhZYQB5o6RQ6K3MsWTZ5+sDYUD2E4hEORIpdxRLOB/M5GoqNQPYTuBkhYE1E3AgQQntwoL48jJFmhBI5kGS2EHKds6L6lLN1FK5IfjSgewnBINGUJTDE6hpxoRPUQuhvwBDNqbgQIIDx1IwcHvlzBiluKhoVqTDQr+dHIwUFDh7GSG43UKOkZAAJwWsZIAIMgEEwD5RX+Ia/K//8hHKCOM7GwsQkyCze58/A3cmq4VdC/IWnj5qeQ71XVSCuJQPBK2LdFRmSNJ0emhlfxaHdJxand0aNzKyjoX3ty7zJqkQ38iIk57rWMbVyv3snG7ay72GU0JkzkCcWFH18cTxeAMyvGARgEgZOJEwOLkzEdnHjS/f8fFURs0rRJ62gEjoscJLz0RiMiIxUAjbLuTLoXYpqLMNMSPTZAgDsGMtrtUG00OqsLSGhZwlHHRaHvbAlb/lzVMzUYtl0Hd/esT4oxdvk4jt4TSbtgPd0fI47MyCUiBzVrWhDQ4qJHROEtY5iiKgaZQ/TQetg89MZTAM6rXQdgEAROmk4MLEyGMHTyk+z/f0flTKSNaZq4OEDk5I5H/Ps3Hq30eK4PWKMRenajOU63Y71LsXeLUT7dQ6LwW/Asyc+6O1ml1WR0qefKoouMEZ6hMi9LJ2uDt/ZKr41DxpFu2p2seBHK4EGNFLDhCANxAKyPggUXswpNGYP8r268BRChfiO0JQBJn0Lw1g20buSDJBE+UAyxYksu4NBVhQUxHzycwUlQNprsaGSDOwdqGmo0IoyXF8fRfgGrlIXIgoMZGo3wACcvGsGuUAX6FDloIAEAdpasLMRGeayOAolALWcD6YflRiTfYo9GgAAinBuRgoENPRqBRoNqGXAqwlq9gwWhTgc3YTmi0bIO2Q0WSGjB0hJqNMLZ0MDEEY0wWbBBSNEYQ2E0gkIcOWgg9oDSDB+4FIOWBdijEdbSB4UaG1KuxddqZQAIIEJjqvijkRW26AdvNEKdC9ZDzWiE6UeyHd14mN+xRyNMFuFK6kQjUvMBUt3Jgy1ThNR/8HYF9miEhSPCgYSjkRkggCjLjchRNxqNaNHIhtyXZoVkeZS4oF40MgAEELF1I85ClYhohNZPrNQuVBVhhaoimYVqDLSRpR0dQ9VoBPkUtSoD1r4Qu5CbdbgKVVZ49Ul0NAIEENm5ETL4IC4ObZPii0ZogxvcnqBmNLJBwkQb2Q504yGNGD4c0QhudUFlqRiNYEuRggaU4lQhVR4HNJT4cEYjtF3LisgtREQjQACRWTcCHSnEBm5biwNrckVZVnzRCAxcVjYh+WhWKkcjMAK12di0wZHJB2zqs4H6fGjGAxv/QmyK4jiiEawL2JPjo1o0cgiBfCoUgxI0IIuiIe08PvFoRTY2VnkO3NHICnIyK1g90XUjQACRmRshvVgQLQvugbPhjUbw2IE4awy1oxHSw4aUCyAHyQphGg9SIiuEIxpj2EDOl2WLoV40wnruyEEDGVeAjXaDRGVZcUdjDHgEAjyIQnRuBAgg8ucb2eBDTGwESxn8iiia8mDDxkRVwocnfcJGyGjiIhy+ZsNpJSxi2Uh0FANAANF49l82OmZwAj5yBtxoDVjJnL+JYQAIIBquxWGT5ZCNVhyMcQismsSjhQaZozg4OMgaZQbXjQABRMPcyKfNoS00KLMiGweHKtugS1scHIrklu8MAAE0uhZnOAAGgAAaXRk3LKIRIIBG16kOB8AMEECjuXFY5EaAABqtG4dFNAIE0GhuHBbRCBBAo3XjsKgbAQJoNDcOi9wIEECjdeOwiEaAABrNjcMiGgECaLRuHBZ1I0AAjebGYZEbAQKIwZ+diZFpFA9tzAAQQAy+7IxMjKN4aONAgAADAP+ya9dsALXrAAAAAElFTkSuQmCC"></li><li><code>shape.border.pattern</code>显示虚线样式，<code>Array</code>类型，例如<code>[5, 5]</code></li><li><code>shape.background</code>背景填充颜色，为<code>null</code>代表不填充背景</li><li><code>shape.gradient</code>渐近色类型：<ul><li>为空代表不绘制渐近色效果，只用<code>shape.background</code>纯色填充背景。</li><li>支持类型：<code>&#39;linear.southwest&#39;,&#39;linear.southeast&#39;,&#39;linear.northwest&#39;,&#39;linear.northeast&#39;,
+&#39;linear.north&#39;,&#39;linear.south&#39;,&#39;linear.west&#39;,&#39;linear.east&#39;,
+&#39;radial.center&#39;,&#39;radial.southwest&#39;,&#39;radial.southeast&#39;,&#39;radial.northwest&#39;,&#39;radial.northeast&#39;,
+&#39;radial.north&#39;,&#39;radial.south&#39;,&#39;radial.west&#39;,&#39;radial.east&#39;,
+&#39;spread.horizontal&#39;,&#39;spread.vertical&#39;,&#39;spread.diagonal&#39;,&#39;spread.antidiagonal&#39;,
+&#39;spread.north&#39;,&#39;spread.south&#39;,&#39;spread.west&#39;,&#39;spread.east&#39;</code></li></ul></li><li><code>shape.gradient.color</code>背景渐近颜色 </li><li><code>shape.repeat.image</code>填充重复背景的图片，注意这里的图片不支持矢量</li><li><code>shape.dash</code>是否显示虚线，默认值为<code>false</code> </li><li><code>shape.dash.pattern</code>虚线样式，默认值为<code>[16, 16]</code></li><li><code>shape.dash.offset</code>虚线偏移，默认值为<code>0</code></li><li><code>shape.dash.color</code>虚线颜色</li><li><code>shape.dash.width</code>虚线宽度，默认为空代表采用<code>shape.border.width</code>值 </li><li><code>shape.dash.3d</code>虚线是否显示<code>3d</code>效果，默认值为<code>false</code></li><li><code>shape.dash.3d.color</code>虚线<code>3d</code>效果颜色，为空采用默认白色，呈现<code>3d</code>效果时连线的中间部分为该颜色</li><li><code>shape.dash.3d.accuracy</code>虚线<code>3d</code>效果精确度，该值越小<code>3d</code>渐进效果越好但影响性能，一般情况无需修改</li></ul>
+
+<p><iframe src="examples/example_shape.html" style="height:250px"></iframe>   </p>
+
+<div id="ref_different"></div>
+
+<h3>管线差异</h3>
+
+<p><code>ht.Polyline</code>类型继承于<code>ht.Shape</code>，其更多表现出与<code>ht.Edge</code>连线类似的特性，因此<code>ht.Polyline</code>上
+的<code>label</code>、<code>note</code>和<code>icons</code>等附属部分位置和方向与连线类型类似会考虑折线的角度，从以下例子可只看出两者附件摆放的差异。</p>
+
+<p><iframe src="examples/example_shapepolyline.html" style="height:270px"></iframe>  </p>
+
+<p>从以上例子可发现<code>ht.Polyline</code>关闭了<code>setRotation</code>的旋转功能，更多差异见<a href="#ref_polyline">空间管线</a>章节</p>
+
+<div id="ref_host"></div>
+
+<h3>吸附功能</h3>
+
+<p><code>ht.Node</code>图元通过<code>setHost(host)</code>函数可吸附到另外一个图元上，这样<code>host</code>图元进行移动和旋转时都会带动<code>attach</code>的吸附图元。
+当<code>host</code>图元为<code>ht.Shape</code>类型时，则如果<code>attach</code>图元设置上<code>attach.*</code>的相关属性，可使得图元吸附到<code>ht.Shape</code>的指定线段位置上。</p>
+
+<ul><li><code>attach.index</code>：默认值为<code>-1</code>，指定吸附到<code>ht.Shape</code>图元所在线段索引</li><li><code>attach.offset</code>：默认值为<code>0</code>，指定吸附在<code>ht.Shape</code>图元所在线段偏移位置</li><li><code>attach.offset.relative</code>：默认值为<code>false</code>，如果为<code>true</code>则偏移量代表所在线段长度乘以<code>attach.offset</code>值</li><li><code>attach.offset.opposite</code>：默认值为<code>false</code>，指定吸附到<code>ht.Shape</code>图元所在线段的正方向还是反方向偏移</li><li><code>attach.gap</code>：默认值为<code>0</code>，指定吸附到<code>ht.Shape</code>图元所在线段垂直方向的偏移</li><li><code>attach.gap.relative</code>：默认值为<code>false</code>，如果为<code>true</code>则与线段垂直方向的偏移为所<code>ht.Shape</code>的<code>thickness</code>值乘以<code>attach.gap</code></li><li><code>attach.thickness</code>：默认值为空，<code>CSGNode</code>默认值为<code>1.001</code>，为正值时吸附图元<code>height</code>属性值由<code>host</code>的<code>thickness</code>乘该值决定</li></ul>
+
+<blockquote><p>吸附到<code>ht.Shape</code>线段的功能目前不支持<code>segments</code>设置为曲线的情况，也不考虑<code>ht.Shape</code>设置了<code>rotation</code>旋转值的因素，
+当图元吸附到<code>ht.Shape</code>线段之后，其<code>rotation</code>和<code>position</code>位置会根据<code>ht.Shape</code>的自动变化同步；如果设置了<code>attach.thickness</code>值，
+则图元的<code>height</code>也会根据<code>host</code>的<code>thickness</code>值自动调节，这些联动属性一般不需要用户设置。</p></blockquote>
+
+<p><iframe src="examples/example_host.html" style="height:270px"></iframe></p>
+
+<div id="ref_3d"></div>
+
+<h2>三维</h2>
+
+<div id="ref_floor"></div>
+
+<h3>地板类型</h3>
+
+<p><code>ht.Shape</code>图元当<code>thickness</code>属性小于<code>0</code>时常用于呈现地板效果的多边形模型，这种类型下<code>tall</code>属性决定地板的厚度，
+一般常通过<code>floor.setElevation(floor.getTall()/2);</code>的方式将地板设置在海平面上。</p>
+
+<p>地板类型由<code>shape3d.top.*</code>控制顶面参数，<code>shape3d.bottom.*</code>控制底面参数，<code>shape3d.*</code>控制厚度四周参数。
+对于只需要平面不需要立体效果的情况，可通过将<code>shape3d.bottom.visible</code>和<code>shape3d.visible</code>的底面和四周可见参数设置为<code>false</code>实现。</p>
+
+<p><code>GraphView</code>的二维上<code>ht.Shape</code>实现平铺贴图可通过<code>shape.repeat.image</code>属性设置，<code>Graph3dView</code>三维的平铺
+可通过<code>shape3d.top.uv.scale</code>和<code>shape3d.top.bottom.scale</code>控制，但这种方式如果地板的大小发生变化时，
+一般还需要再设置参数因此并不方便，<code>HT</code>提供的<code>repeat.uv.length</code>参数可解决这种问题，通过设置该参数，
+贴图会根据图形大小自动调节平铺图片数，而且还能与<code>shape3d.top.uv.scale</code>和<code>shape3d.top.bottom.scale</code>的参数进行叠加，
+当然大部分情况下如果设置了<code>repeat.uv.length</code>，就不需要设置<code>shape3d.top.uv.scale</code>和<code>shape3d.top.bottom.scale</code>参数。</p>
+
+<p><iframe src="examples/example_floor.html" style="height:450px"></iframe></p>
+
+<div id="ref_wall"></div>
+
+<h3>墙面类型</h3>
+
+<p><code>ht.Shape</code>图元当<code>thickness</code>属性大于<code>0</code>时常用于呈现墙面效果的多边形模型，这种类型下<code>tall</code>属性决定墙面的高度，
+<code>thickness</code>代表墙厚度，一般常通过<code>wall.setElevation(wall.getTall()/2);</code>的方式将墙面设置在海平面上。</p>
+
+<p>处于墙面类型时，模型相当于长条的六面体，因此可通过<code>all.*</code>、<code>left.*</code>或<code>right.*</code>等六面体参数进行控制，
+参见<a href="../../core/3d/ht-3d-guide.html#ref_cube">3D手册六面体章节</a></p>
+
+<p><iframe src="examples/example_wall.html" style="height:500px"></iframe></p>
+
+<div id="ref_pipeline"></div>
+
+<h3>管道类型</h3>
+
+<p><code>ht.Shape</code>图元当<code>shape3d</code>属性为<code>cylinder</code>时，图元呈现为圆筒管道的模型效果，<code>tall</code>和<code>thickness</code>决定圆筒切面的宽高值，
+当<code>tall</code>和<code>thickness</code>值一样时呈现为圆形切面，管道的走向由<code>points</code>和<code>segments</code>决定。</p>
+
+<p>管道由<code>shape3d.top.*</code>控制顶面参数，<code>shape3d.bottom.*</code>控制底面参数，<code>shape3d.*</code>控制管道走向的中间部分效果。
+通过将<code>shape3d.top.visible</code>和<code>shape3d.bottom.visible</code>设置为<code>false</code>，可实现空心管道的效果。</p>
+
+<p><iframe src="examples/example_pipeline.html" style="height:500px"></iframe></p>
+
+<div id="ref_polyline"></div>
+
+<h3>空间管线</h3>
+
+<p>以上介绍的类型都是基于<code>{x: 10, y: 20}</code>的二维点信息描述图形走向，<code>ht.Polyline</code>继承于<code>ht.Shape</code>，
+支持<code>{x: 10, y: 20, e: 30}</code>格式的三维空间点描述，如果<code>e</code>值为空则取<code>elevation</code>的海拔值，
+修改<code>ht.Polyline</code>的<code>elevation</code>和<code>tall</code>值时，会自动调节<code>points</code>顶点中的<code>e</code>值；
+同理<code>points</code>顶点信息变化也会同步修改<code>ht.Polyline</code>的<code>elevation</code>和<code>tall</code>值。</p>
+
+<ul><li><code>x</code>代表三维的<code>x</code>轴坐标</li><li><code>y</code>代表三维的<code>z</code>轴坐标，参见<a href="../../core/3d/ht-3d-guide.html#ref_2drelation">3D手册</a></li><li><code>e</code>代表三维的<code>y</code>轴坐标，可理解为<code>elevation</code>的简写，代表三维<code>y</code>轴的海拔高度</li></ul>
+
+<p><code>ht.Polyline</code>同样支持<a href="#ref_basic">基础属性</a>章节介绍的<code>segments</code>参数，实现从二维的平面曲线延伸到了三维的空间曲线效果。
+<code>ht.Polyline</code>关闭了<code>setRotationX</code>、<code>setRotationY</code>、<code>setRotationZ</code>以及<code>setClosePath</code>的函数功能。</p>
+
+<p><code>ht.Edge</code>和<code>ht.Polyline</code>在展示效果上是很类似的，只不过<code>ht.Edge</code>的起始和结束点来自于<code>source</code>和<code>target</code>节点，
+<code>ht.Edge</code>的<code>edge.type</code>属性为<code>points</code>时，<code>edge.points</code>和<code>edge.segments</code>对应于
+<code>ht.Polyline</code>的<code>points</code>和<code>segments</code>属性，此时<code>edge.points</code>的顶点信息也可为<code>{x: 10, y: 20, e: 30}</code>的三维顶点格式，
+其中<code>e</code>值为空时代表<code>0</code>。</p>
+
+<p><code>ht.Edge</code>和<code>ht.Polyline</code>都有两种展示方式，默认显示为普通线框效果，当<code>shape3d</code>设置为<code>cylinder</code>时则显示为立体管线的效果，
+<code>HT</code>通过微分段的方式实现曲线，因此为达到更高的均分曲线效果，两种方式都可通过<code>shape3d.resolution</code>控制曲线微分段数。</p>
+
+<ul><li><p>普通线框效果：</p><ul><li><code>ht.Edge</code>通过<code>edge.width</code>控制宽度</li><li><code>ht.Edge</code>通过<code>edge.color</code>控制颜色</li><li><code>ht.Edge</code>通过<code>edge.gradient.color</code>控制颜色    </li><li><code>ht.Polyline</code>通过<code>shape.border.width</code>控制宽度</li><li><code>ht.Polyline</code>通过<code>shape.border.color</code>控制颜色    </li><li><p><code>ht.Polyline</code>通过<code>shape.border.gradient.color</code>控制渐进色</p></li></ul></li><li><p>立体管线的效果</p><ul><li><code>ht.Edge</code>通过<code>edge.width</code>控制宽度</li><li><code>ht.Polyline</code>通过<code>thickness</code>控制宽度 </li><li><code>ht.Edge</code>和<code>ht.Polyline</code>都可通过<code>shape3d.*</code>控制颜色和贴图等其他样式参数</li><li><code>ht.Edge</code>和<code>ht.Polyline</code>都可通过<code>shape3d.side</code>控制管道截面边数，如设置为<code>6</code>，则显示为六面体截面</li><li><code>ht.Edge</code>和<code>ht.Polyline</code>都可通过<code>shape3d.start.angle</code>控制管道截面起始边的角度</li><li><code>ht.Edge</code>和<code>ht.Polyline</code>都可通过<code>repeat.uv.length</code>控制贴图在管道走向方向上的自动平铺次数    </li><li><code>ht.Edge</code>和<code>ht.Polyline</code>都通过<code>shape3d.top.cap</code>和<code>shape3d.bottom.cap</code>控制起始结束部分，可取值如下：<ul><li><code>undefined</code>：默认值，代表镂空不封闭</li><li><code>flat</code>：代表平面进行封闭</li><li><code>round</code>：代表圆形体进行封闭</li></ul></li></ul></li></ul>
+
+<p><iframe src="examples/example_polyline.html" style="height:600px"></iframe></p>
+
+<p><code>Edge</code>和<code>Polyline</code>处于普通线框效果时可实现虚线的功能，有两种虚线效果：</p>
+
+<ul><li><p>实空交替：</p><ul><li><code>ht.Edge</code>通过<code>edge.pattern</code>控制虚线模式，默认为空，设为<code>[20, 10]</code>代表一段长度<code>20</code>的实线，一段长度<code>10</code>的镂空，重复交替</li><li><p><code>ht.Polyline</code>通过<code>shape.border.pattern</code>控制虚线模式，默认为空，设为<code>[20, 10]</code>代表一段长度<code>20</code>的实线，一段长度<code>10</code>的镂空，重复交替</p></li></ul></li><li><p>颜色交替：</p><ul><li><code>ht.Edge</code>通过<code>edge.dash</code>控制是否启用颜色交替虚线，默认为<code>false</code></li><li><code>ht.Edge</code>通过<code>edge.dash.pattern</code>控制虚线模式，默认为<code>[16, 16]</code>代表长度<code>16</code>的<code>edge.dash.color</code>颜色，和长度<code>16</code>的<code>edge.coor</code>颜色重复交替</li><li><code>ht.Polyline</code>通过<code>shape.dash</code>控制是否启用颜色交替虚线，默认为<code>false</code></li><li><code>ht.Polyline</code>通过<code>shape.dash.pattern</code>控制虚线模式，默认为<code>[16, 16]</code>代表长度<code>16</code>的<code>shape.dash.color</code>颜色，和长度<code>16</code>的<code>shape.border.coor</code>颜色重复交替</li></ul></li></ul>
+
+<blockquote><p><code>Graph3dView</code>默认关闭虚线功能，如需启用可通过<code>graph3dView.setDashDisabled(false)</code>启动虚线绘制功能。</p></blockquote>
+
+<div id="ref_csgshape"></div>
+
+<h3>挖空墙面</h3>
+
+<p><a href="#ref_host">吸附功能</a>章节介绍<code>ht.Node</code>可吸附到<code>ht.Shape</code>类型线段上，
+当引入<a href="../../plugin/modeling/ht-modeling-guide.html#ref_csgshape">ht-modeling.js</a>的建模扩展包后，
+通过继承于<code>ht.Node</code>的<code>CSGNode</code>，和继承于<code>ht.Shape</code>的<code>ht.CSGShape</code>，可实现多边形墙面挖空的效果。</p>
+
+<p><iframe src="examples/example_cull.html" style="height:600px"></iframe></p>
+
+<blockquote><p>以上例子将<code>attach.thickness</code>设置为<code>1.001</code>,将高度设置为了<code>setTall(80.001)</code>，
+此处的尾数<code>0.001</code>是为避免<code>js</code>浮点数运算的误差多预留的尺寸。</p></blockquote>
+
+<p><code>CSGNode</code>的<code>attach.operation</code>属性默认值为<code>subtract</code>，代表可对<code>CSGNode</code>和<code>CSGShape</code>类型的<code>host</code>图元进行裁决挖空，
+上例中通过将<code>3d.visible</code>设置为<code>false</code>隐藏了用于挖空的<code>CSGNode</code>，但对于门窗类型的应用，除了通过门窗模型挖空外，
+还需要保留门窗的模型，而门窗类型一般厚度比墙面薄些，但如果<code>attach.thickness</code>小于<code>1</code>时则无法凿穿墙厚度，
+为此<a href="../../plugin/modeling/ht-modeling-guide.html#ref_ext">建模扩展包</a>还提供了<code>DoorWindow</code>类型的图元，
+方便用户构建门窗类型的模型，<code>DoorWindow</code>类型图元提供了<code>dw.s3</code>参数，该参数默认值为<code>[0.999, 0.999, 0.5]</code>，
+代表真正显示在<code>3D</code>界面上的模型会参考<code>dw.s3</code>的尺寸再进行缩放，这样<code>attach.thickness</code>继续保持可凿穿的<code>1.001</code>即可。</p>
+
+<div id="ref_rotation"></div>
+
+<h3>旋转功能</h3>
+
+<p>以上介绍的<a href="#ref_floor">地板类型</a>、<a href="#ref_wall">墙面类型</a>和<a href="#ref_pipeline">管道类型</a>三种类型，
+都通过<code>{x: 10, y: 20}</code>的二维点信息描述图形走向，二维<code>y</code>坐标映射到三维的<code>z</code>坐标的转换关系请参见
+<a href="../../core/3d/ht-3d-guide.html#ref_2drelation">3D手册</a>。
+但这三种类型都支持<code>ht.Shape</code>的<code>rotationX</code>、<code>rotationY</code>和<code>rotationZ</code>的空间旋转功能，通过设置旋转参数可实现竖立的效果。</p>
+
+<p><iframe src="examples/example_rotation.html" style="height:500px"></iframe></p>
+
+<blockquote><p>以上例子通过不断改变<code>shape3d.uv.offset</code>参数可实现管道水平流动和截面方向旋转等特殊效果。</p></blockquote>    <hr id="contact" style="margin: 20px 0 1px 0">
+    <a href="http://www.hightopo.com"><img class="logo"></a>欢迎交流 <a href="mailto:service@hightopo.com">service@hightopo.com</a>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Collision</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script>            
+        <script>                         
+            function init(){                                                                                                                            
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);   
+                g3d.setNear(1);
+                g3d.setEye([0, -20, 50]);
+                g3d.setCenter([0, -20, -50]);
+                g3d.setGridSize(100);
+                g3d.setGridVisible(true);
+                g3d.setOriginAxisVisible(true);
+                g3d.setCenterAxisVisible(true);                              
+                g3d.setMoveStep(2);
+                g3d.setFirstPersonMode(true);
+                
+                g2d = new ht.graph.GraphView(dataModel);  
+                g2d.setTranslate(400, 100);
+                g2d.setZoom(0.3);
+                g2d.setEditable(true);
+                splitView = new ht.widget.SplitView(g3d, g2d, 'vertical', 0.6);
+                
+                view = splitView.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    splitView.invalidate();
+                }, false);   
+                
+                createHT([100, -20, 100], '#E74C3C');                  
+                createHT([-100, -20, 100], '#1ABC9C');                    
+                createHT([100, -20, -100], '#3498DB');                   
+                createHT([-100, -20, -100], '#9B59B6');   
+                createCurve([0, -20, 0]);
+                createCircle();
+                
+                updateBoundaries();
+                
+                interestedKinds = {
+                    endMove: true,
+                    endEditPoint: true,
+                    endEditRect: true,
+                    endEditRotation: true
+                };                
+                g2d.mi(function(e){
+                    if(interestedKinds[e.kind]){
+                        updateBoundaries();
+                    }
+                });                
+                g3d.mp(function(e){
+                   if(e.property === 'eye' || e.property === 'center'){
+                       g2d.redraw();
+                   } 
+                });
+                g2d.addTopPainter(function(g){
+                    var eye = g3d.getEye(),
+                        center = g3d.getCenter();
+                        
+                    g.fillStyle = 'red';
+                    g.strokeStyle = 'black';
+                    g.lineWidth = 1;
+                    g.beginPath();                    
+                    g.arc(eye[0], eye[2], 12, 0, Math.PI * 2, true);
+                    g.fill();
+                    g.stroke();  
+                    
+                    g.strokeStyle = 'black';
+                    g.lineWidth = 2;
+                    g.beginPath(); 
+                    g.moveTo(eye[0], eye[2]);
+                    g.lineTo(center[0], center[2]);                    
+                    g.stroke(); 
+                });
+            } 
+
+            function updateBoundaries(){
+                boundaries = [];
+                dataModel.each(function(data){                    
+                    boundaries = boundaries.concat(ht.Default.toBoundaries(data.getPoints(), data.getSegments()));                                        
+                }); 
+                g3d.setBoundaries(boundaries);
+            }
+
+            function createHT(p3, color){
+                shape = new ht.Shape();                
+                shape.s({
+                    'shape.background': null,
+                    'shape.border.width': 10,
+                    'shape.border.color': color,
+                    'all.color': color
+                });
+                shape.setTall(40);
+                shape.setThickness(5);
+                shape.setPoints([                    
+                    // draw H
+                    {x: 20, y: 0},
+                    {x: 20, y: 100},
+                    {x: 20, y: 50},
+                    {x: 80, y: 50},
+                    {x: 80, y: 0},
+                    {x: 80, y: 100},
+
+                    // draw T
+                    {x: 120, y: 0},
+                    {x: 180, y: 0},
+                    {x: 150, y: 0},
+                    {x: 150, y: 100}                    
+                ]);                                
+                shape.setSegments([
+                    // draw H
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+
+                    // draw T
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2 // lineTo
+                ]);                
+                shape.p3(p3);
+                dataModel.add(shape); 
+                return shape;
+            }
+               
+            function createCurve(p3){
+                shape = new ht.Shape();                
+                shape.s({
+                    'shape.background': null,
+                    'shape.border.width': 10,
+                    'shape.border.color': 'yellow',
+                    'all.color': 'yellow'
+                });
+                shape.setTall(40);
+                shape.setThickness(5);
+                h = 10;
+                shape.setPoints([                                        
+                    {x: 0, y: 0},
+                    {x: 25, y: -h},
+                    {x: 50, y: 0},                    
+                    {x: 75, y: h},
+                    {x: 100, y: 0},                                     
+                    {x: 125, y: -h},                    
+                    {x: 150, y: 0},                    
+                    {x: 175, y: h},                    
+                    {x: 200, y: 0},   
+                    
+                    {x: 300, y: 0},
+                    {x: 325, y: -h},
+                    {x: 350, y: 0},                    
+                    {x: 375, y: h},
+                    {x: 400, y: 0},                                     
+                    {x: 425, y: -h},                    
+                    {x: 450, y: 0},                    
+                    {x: 475, y: h},                    
+                    {x: 500, y: 0}                     
+                ]); 
+                
+                shape.setSegments([
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3 // quadraticCurveTo                    
+                ]); 
+                shape.p3(p3);
+                dataModel.add(shape); 
+                return shape;
+            }
+            
+            function createCircle(){
+                shape = new ht.Shape();                
+                shape.s({
+                    'shape.background': null,
+                    'shape.border.width': 10,
+                    'shape.border.color': '#D26911',
+                    'all.color': '#D26911'
+                });
+                shape.setTall(40);
+                shape.p3(0, -20, 0);
+                shape.setThickness(10);
+                
+                var r = 300;
+                for(var i=0; i<36; i++){
+                    var angle = Math.PI * 2 * i / 36;
+                    shape.addPoint({
+                        x: r * Math.cos(angle),
+                        y: r * Math.sin(angle)
+                    });
+                }
+                
+                dataModel.add(shape); 
+                return shape;
+            }            
+          
+        </script>
+    </head>
+    <body onload="init();">                  
+              
+    </body>
+</html>

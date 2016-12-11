@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Text</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script>                  
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                borderPane.setBottomView(createToolbar(true));
+                  
+                formPane = new ht.widget.FormPane();                                             
+                borderPane.setCenterView(formPane);              
+        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                          
+                
+                
+                formPane.getLabelFont = function(item){ return "bold 12px arial, sans-serif"; };
+                formPane.getLabelVAlign = function(item){ return 'top'; };
+                
+                formPane.addRow([                    
+                    'First Name:',
+                    {
+                        id: 'firstName',
+                        textField: {
+                            text: 'Eric'
+                        }
+                    }
+                ],
+                [100, 0.1]);
+                
+                formPane.addRow([
+                    'Last Name:',
+                    {
+                        id: 'lastName',
+                        textField: {
+                            text: 'Lin'
+                        }
+                    }
+                ],
+                [100, 0.1]); 
+                
+                formPane.addRow([
+                    'Password:',
+                    {
+                        id: 'password',
+                        textField: {
+                            text: 'ht for web',
+                            type: 'password'
+                        }
+                    },
+                    'Confirm Password:',
+                    {
+                        id: 'confirmPassword',
+                        textField: {
+                            text: 'ht for web',
+                            type: 'password'
+                        }
+                    }
+                ],
+                [100, 0.1, 120, 0.1]);                 
+                
+                formPane.addRow([
+                    'Description:',
+                    {
+                        id: 'description',
+                        textArea: {
+                            text: 'www.hightopo.com'
+                        }
+                    }
+                ],
+                [100, 0.1], 0.1); 
+                
+                formPane.addRow([
+                    null,
+                    {
+                        button: {
+                            label: 'Submit',
+                            onClicked: function(){
+                                alert(
+                                    'First Name:' + formPane.v('firstName') + '\n' +
+                                    'Last Name:' + formPane.v('lastName') + '\n' +
+                                    'Password:' + formPane.v('password') + '\n' +
+                                    'Confirm Password:' + formPane.v('confirmPassword') + '\n' +
+                                    'Description:' + formPane.v('description')
+                                );
+                            }
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Clear',
+                            onClicked: function(){
+                                formPane.v({
+                                    firstName: '',
+                                    lastName: '',
+                                    password: '',
+                                    confirmPassword: '',
+                                    description: ''
+                                });
+                            }
+                        }
+                    }
+                ],
+                [0.1, 100, 100]);  
+            }
+            function createToolbar(stickToRight){
+                var name = new ht.widget.TextField();
+                name.setText('Eric Lin');                  
+
+                var toolbar = new ht.widget.Toolbar([
+                    {
+                        id: 'name',
+                        label: 'Name:',
+                        element: name
+                    },                    
+                    {
+                        id: 'password',
+                        label: 'Password:',
+                        textField: {
+                            text: 'ht for web',
+                            type: 'password'
+                        }                        
+                    },
+                    {
+                        button: {
+                            label: 'Submit',
+                            onClicked: function(){
+                                alert(
+                                    'Name:' + toolbar.v('name') + '\n' +
+                                    'Password:' + toolbar.v('password') + '\n'
+                                );
+                            }
+                        }
+                    },
+                    {
+                        button: {
+                            label: 'Clear',
+                            onClicked: function(){
+                                toolbar.v('name', '');
+                                toolbar.v('password', '');
+                            }
+                        }
+                    }
+                ]);
+                toolbar.setStickToRight(stickToRight);
+                return toolbar;                
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

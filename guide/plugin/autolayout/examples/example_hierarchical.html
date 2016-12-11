@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hierarchical Layout</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+                 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-autolayout.js"></script>   
+        <script>
+            function init(){                
+                items = [ 
+                    {
+                        label: 'Hierarchical Layout',
+                        action: function(){
+                            layout(true);                           
+                        }                 
+                    },                                          
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        selected: false,
+                        action: function(item){
+                            graphView.setEditable(item.selected);
+                        }
+                    }                    
+                ];
+
+                dataModel = new ht.DataModel();                   
+                graphView = new ht.graph.GraphView(dataModel); 
+                toolbar = new ht.widget.Toolbar(items);
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(graphView);
+                        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                                                                                
+                          
+                initDataModel();
+    
+                autoLayout = new ht.layout.AutoLayout(graphView);     
+                layout(false);
+            }
+
+            function layout(animate){
+                autoLayout.setAnimate(animate);
+                autoLayout.layout('hierarchical', function(){
+                    graphView.fitContent(animate);
+                });                  
+            }
+
+            function createNode(name){
+                var node = new ht.Node();
+                node.setName(name);
+                dataModel.add(node);
+                return node;
+            }
+            
+            function createEdge(sourceNode, targetNode){
+                var edge = new ht.Edge(sourceNode, targetNode);
+                edge.s({
+                    'edge.width': 1,
+                    'edge.color': 'red'
+                });
+                dataModel.add(edge);
+                return edge;
+            }
+
+            function initDataModel(){
+                nodeA = createNode('A');
+                nodeB = createNode('B');
+                for (var i = 0; i < 10; i++) {
+                    node = createNode('AB-' + i);                                        
+                    createEdge(nodeA, node);                    
+                    createEdge(nodeB, node);                  
+                }            
+                        
+                nodeA = createNode('A');
+                nodeB = createNode('B');
+                nodeC = createNode('C');
+                nodeD = createNode('D');                
+                
+                nodeE = createNode('E');
+                nodeF = createNode('F');
+                nodeG = createNode('G');
+                nodeH = createNode('H');                                 
+                
+                for (var i = 0; i < 10; i++) {
+                    node = createNode('AB-' + i);                    
+                    createEdge(nodeA, node);                    
+                    createEdge(nodeB, node);                        
+                    createEdge(nodeC, node);                       
+                    createEdge(nodeD, node);                       
+                    createEdge(node, nodeE);                    
+                    createEdge(node, nodeF);                      
+                    createEdge(node, nodeG);                      
+                    createEdge(node, nodeH);                    
+                }                      
+            }
+            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

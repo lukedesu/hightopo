@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic Type</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init() {
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();
+
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    graphView.invalidate();
+                }, false);
+                
+                ht.Default.setImage('basic', {
+                    width: 750,
+                    height: 120,
+                    comps: [
+                        {
+                            type: 'rect',
+                            rect: [10, 20, 130, 80],
+                            borderWidth: 1,
+                            borderColor: '#34495E',
+                            background: '#E74C3C',
+                            depth: 5
+                        },  
+                        {
+                            type: 'oval',
+                            rect: [160, 20, 130, 80],
+                            borderWidth: 12,
+                            border3d: true,
+                            borderPattern: [12, 12],
+                            borderColor: '#34495E'
+                        },
+                        {
+                            type: 'polygon',
+                            polygonSide: 7,
+                            rect: [310, 20, 130, 80],
+                            borderWidth: 10,                                                        
+                            borderJoin: 'miter',
+                            borderColor: '#34495E',
+                            background: '#3498DB',
+                            gradient: 'spread.vertical',
+                            gradientColor: 'white'
+                        },
+                        {
+                            type: 'star',
+                            rect: [460, 20, 130, 80],
+                            background: 'red',
+                            gradient: 'radial.center',
+                            gradientColor: 'yellow'
+                        },
+                        {
+                            type: 'arc',
+                            rect: [610, 20, 130, 80],
+                            arcFrom: Math.PI / 2,
+                            arcTo: Math.PI * 2,
+                            arcClose: false,
+                            borderWidth: 6,
+                            borderColor: 'blue',
+                            dash: true,
+                            dashColor: 'yellow',
+                            dashPattern: [5, 12]
+                        } 
+                    ]
+                });
+                
+                ht.Default.setImage('dash', {
+                    width: 750,
+                    height: 120,
+                    comps: [
+                        {
+                            type: 'roundRect',
+                            rect: [10, 20, 130, 80],
+                            borderWidth: 5,
+                            borderColor: 'blue',
+                            repeatImage: 'ie.png',
+                            depth: 5,
+                            dash: true,
+                            dashColor: 'yellow',
+                            cornerRadius: 6
+                        },  
+                        {
+                            type: 'oval',
+                            rect: [160, 20, 130, 80],
+                            borderWidth: 12,
+                            border3d: true,
+                            borderColor: '#34495E',
+                            dash: true,
+                            dashWidth: 8,
+                            dash3d: true,
+                            dashColor: 'red',
+                            dash3dColor: 'yellow',
+                            dashPattern: [16, 16]
+                        },
+                        {
+                            type: 'polygon',
+                            polygonSide: 7,
+                            rect: [310, 20, 130, 80],
+                            borderWidth: 5,                                                        
+                            borderJoin: 'miter',
+                            borderColor: '#34495E',
+                            repeatImage: 'ie.png',
+                            gradient: 'spread.vertical',
+                            gradientColor: 'white',
+                            dash: true,
+                            dashPattern: [10],
+                            dashColor: 'yellow'
+                        },
+                        {
+                            type: 'star',
+                            rect: [460, 20, 130, 80],
+                            background: 'red',
+                            gradient: 'radial.center',
+                            gradientColor: 'yellow',
+                            borderWidth: 2,
+                            borderPattern: [10, 4, 4, 4],
+                            borderColor: '#34495E'
+                        },
+                        {
+                            type: 'arc',
+                            rect: [610, 20, 130, 80],
+                            arcFrom: Math.PI / 2,
+                            arcTo: Math.PI * 2,
+                            arcOval: true,
+                            arcClose: true,
+                            repeatImage: 'ie.png',
+                            gradient: 'radial.center',
+                            gradientColor: 'white'
+                        } 
+                    ]
+                });                
+
+                var node = new ht.Node();
+                node.setPosition(430, 90);
+                node.setImage('basic');
+                dataModel.add(node);                 
+
+                node = new ht.Node();
+                node.setPosition(430, 230);
+                node.setImage('dash');
+                node.s('image.stretch', 'uniform');
+                dataModel.add(node);
+
+                graphView.setEditable(true);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vector</title>
+        <meta charset="UTF-8">   
+        
+        <style>
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(200, 200, 200, 0.3);
+            } 
+        </style>
+        
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script>                              
+        
+        <script>                                        
+            ht.Default.setImage('switch', {
+                width: 100,
+                height: 50,
+                comps: [
+                    {
+                        type: 'roundRect',
+                        rect: [0, 0, 100, 50],
+                        background: {
+                            value: '#2C3E50',
+                            func: 'attr@switch.background'
+                        },
+                        gradient: 'linear.north'
+                    },
+                    {
+                        type: 'circle',
+                        rect: [10, 10, 10, 10],
+                        background: '#34495E',
+                        gradient: 'radial.center',
+                        visible: {
+                            value: true,
+                            func: 'attr@switch.visible'
+                        } 
+                    },
+                    {
+                        type: 'circle',
+                        rect: [80, 10, 10, 10],
+                        background: '#34495E',
+                        gradient: 'radial.center',
+                        visible: {
+                            value: true,
+                            func: 'attr@switch.visible'
+                        } 
+                    },
+                    {
+                        type: 'shape',
+                        points: [10, 40, 40, 40],
+                        borderWidth: {
+                            value: 8,
+                            func: 'attr@switch.thickness'
+                        },
+                        borderColor: '#40ACFF',
+                        border3d: true
+                    },
+                    {
+                        type: 'shape',
+                        points: [60, 40, 90, 40],
+                        borderWidth: {
+                            value: 8,
+                            func: 'attr@switch.thickness'
+                        },
+                        borderColor: '#40ACFF',
+                        border3d: true
+                    },
+                    {
+                        type: 'shape',
+                        points: [5, 40, 35, 40, 65, 40],
+                        segments: [1, 1, 2],
+                        borderWidth: {
+                            value: 8,
+                            func: 'attr@switch.thickness'
+                        },
+                        borderColor: '#40ACFF',
+                        border3d: true,
+                        borderCap: 'round',
+                        rotation: {
+                            value: -Math.PI/4,
+                            func: 'attr@switch.angle'
+                        }
+                    },
+                    {
+                        type: 'circle',
+                        rect: [30, 35, 10, 10],
+                        borderColor: 'red',
+                        borderWidth: 5,
+                        border3d: true,
+                    },
+                    {
+                        type: 'circle',
+                        rect: [60, 35, 10, 10],
+                        borderColor: 'red',
+                        borderWidth: 5,
+                        border3d: true                        
+                    }        
+                ]
+            });
+
+            function init(){                                                
+                dataModel = new ht.DataModel();
+                               
+                node = new ht.Node();
+                node.setImage('switch');
+                node.setPosition(150, 80);
+                node.setSize(200, 100);
+                node.a({
+                    'switch.angle': -Math.PI/4,
+                    'switch.thickness': 8,
+                    'switch.background': '#2C3E50',
+                    'switch.visible': true
+                });
+                dataModel.add(node);
+        
+                g2d = new ht.graph.GraphView(dataModel); 
+                g2d.addToDOM();   
+                g2d.setEditable(true);
+                
+                formPane = new ht.widget.FormPane();  
+                formPane.setWidth(250);
+                formPane.setHeight(120);                  
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());     
+                                   
+                formPane.addRow([
+                    'Angle', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: Math.PI/2,
+                            value: -node.a('switch.angle'),
+                            onValueChanged: function(){     
+                                 node.a('switch.angle', -this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);  
+                formPane.addRow([
+                    'Thickness', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 10,
+                            value: node.a('switch.thickness'),
+                            onValueChanged: function(){     
+                                 node.a('switch.thickness', this.getValue());                               
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);                  
+                formPane.addRow([
+                    'Background', 
+                    {
+                        colorPicker: {
+                            instant: true,
+                            value: node.a('switch.background'),
+                            onValueChanged: function(){
+                                node.a('switch.background', this.getValue());
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Visible', 
+                    {
+                        checkBox: {
+                            value: node.a('switch.visible'),
+                            onValueChanged: function(){
+                                node.a('switch.visible', this.getValue());
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]); 
+            }                                                                               
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

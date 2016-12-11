@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ColumnChart Type</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init() {
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+                view = graphView.getView();
+
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    graphView.invalidate();
+                }, false);
+                
+                var values = [56.15, 19.15, 17.17, 5.55, 1.58, 0.4],
+                    colors = ['#E74C3C', '#E2E2E2', '#34495E', '#3498DB', '#1ABC9C', 'yellow'];
+            
+                ht.Default.setImage('chart', {
+                    width: 540,
+                    height: 240,
+                    comps: [
+                        // column chart
+                        {
+                            type: 'columnChart',
+                            rect: [20, 30, 500, 200],
+                            label: true, 
+                            shadow: true,
+                            series: [
+                                {
+                                    values: values,
+                                    colors: colors
+                                }
+                            ]
+                        },
+                        // left vertical title
+                        {
+                            type: 'text',
+                            rect: [0, 0, 40, 240],
+                            text: 'Browser Market Share',
+                            align: 'center',
+                            rotation: -Math.PI/2,
+                            font: '18px Arial'
+                        },
+                        // legend icons
+                        {
+                            type: 'rect',
+                            rect: [300, 40, 16, 16],
+                            background: '#E74C3C'
+                        },
+                        {
+                            type: 'rect',
+                            rect: [300, 60, 16, 16],
+                            background: '#E2E2E2'
+                        },
+                        {
+                            type: 'rect',
+                            rect: [300, 80, 16, 16],
+                            background: '#34495E'
+                        }, 
+                        {
+                            type: 'rect',
+                            rect: [300, 100, 16, 16],
+                            background: '#3498DB'
+                        },  
+                        {
+                            type: 'rect',
+                            rect: [300, 120, 16, 16],
+                            background: '#1ABC9C'
+                        },   
+                        {
+                            type: 'rect',
+                            rect: [300, 140, 16, 16],
+                            background: 'yellow'                            
+                        },    
+                        // legent text
+                        {
+                            type: 'text',
+                            rect: [320, 40, 0, 16],
+                            align: 'left',
+                            text: 'IE'
+                        },
+                        {
+                            type: 'text',
+                            rect: [320, 60, 0, 16],
+                            align: 'left',
+                            text: 'Firefox'
+                        },
+                        {
+                            type: 'text',
+                            rect: [320, 80, 0, 16],
+                            align: 'left',
+                            text: 'Chrome'
+                        }, 
+                        {
+                            type: 'text',
+                            rect: [320, 100, 0, 16],
+                            align: 'left',
+                            text: 'Safari'
+                        },  
+                        {
+                            type: 'text',
+                            rect: [320, 120, 0, 16],
+                            align: 'left',
+                            text: 'Opera'
+                        },   
+                        {
+                            type: 'text',
+                            rect: [320, 140, 0, 16],
+                            align: 'left',
+                            text: 'Other'
+                        },            
+                        // pie chart
+                        {
+                            type: 'pieChart',
+                            hollow: true,
+                            startAngle: Math.PI/4,
+                            rect: [380, 40, 120, 120],
+                            values: values,
+                            colors: colors
+                        }                        
+                    ]
+                });
+            
+                var node = new ht.Node();
+                node.setPosition(300, 140);
+                node.setImage('chart');
+                node.setStyle('image.stretch', 'uniform');
+                dataModel.add(node);                 
+
+                graphView.setEditable(true);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

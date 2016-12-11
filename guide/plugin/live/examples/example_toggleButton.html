@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Toggle button</title>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-live.js"></script>
+        <script>
+            
+            var dataModel = new ht.DataModel();
+            dataModel.setAutoAdjustIndex(false);
+            var graphView = new ht.graph.GraphView(dataModel);
+            
+            function init() {
+                initBody();
+                
+                setRecentsImage();
+                setKeypadImage();
+                
+                var buttonGroup = new ht.ButtonGroup();
+                addButton(320, 60, 'Recents', buttonGroup, false);
+                addButton(480, 60, 'Keypad', buttonGroup, true);
+            }
+            
+            function addButton(x, y, image, buttonGroup, selected) {
+                var toggleButton = new ht.ToggleButtonNode();
+                toggleButton.setPosition(x, y);
+                toggleButton.setSize(75, 75);
+                toggleButton.setName(image);
+                toggleButton.setSelected(selected);
+                toggleButton.setImage(image);
+                toggleButton.s('label.position', 31);
+                toggleButton.s('label.font', '20px arial, sans-serif');
+                toggleButton.s('label.color', toggleButton.isSelected() ? '#0B6AFF' : '#929292');
+                toggleButton.onChanged = function (value) {
+                    this.s('label.color', value ? '#0B6AFF' : '#929292');
+                };
+                buttonGroup.add(toggleButton);
+                dataModel.add(toggleButton);
+            }
+            
+            function setRecentsImage () {
+                ht.Default.setImage('Recents', {
+                    width: { func: 'getWidth' },
+                    height: { func: 'getHeight' },
+                    comps: [
+                        {
+                            type: 'circle',
+                            borderColor: {
+                                func: function (data) {
+                                    return data.isSelected() ? '#0B6AFF' : '#929292';
+                                }
+                            },
+                            borderWidth: 3,
+                            rect: [0.1, 0.1, 0.8, 0.8],
+                            relative: true
+                        },
+                        {
+                            type: 'shape',
+                            borderColor: {
+                                func: function (data) {
+                                    return data.isSelected() ? '#0B6AFF' : '#929292';
+                                }
+                            },
+                            borderWidth: 2,
+                            points: {
+                                func: function (data) {
+                                    var width = data.getWidth(),
+                                        height = data.getHeight();
+                                    return [0.5 * width, 0.15 * height, 0.5 * width, 0.5 * height, 0.2 * width, 0.5 * height];
+                                }
+                            },
+                            segments: [1, 2, 2]
+                        }
+                    ]
+                });
+            }
+            
+            function setKeypadImage () {
+                var comps = [{
+                    type: 'rect',
+                    rect: [0, 0, 1, 1],
+                    relative: true,
+                    background: 'white'
+                }];
+                var getRect = function (i, j) {
+                    var width = 1 / 4,
+                        height = 1 / 4,
+                        radius = Math.min(width, height)/2,
+                        xgap = width/4,
+                        ygap = height/4;
+                    return [width * i - radius + xgap * (i - 2), height * j - radius + ygap * (j - 2), radius * 2, radius * 2];
+                };
+                for (var i=1; i<4; i++) {
+                    for (var j=1; j<4; j++) {
+                        comps.push({
+                            type: 'circle',
+                            rect: getRect(i, j),
+                            relative: true,
+                            background: {
+                                func: function (data) {
+                                    return data.isSelected() ? '#0B6AFF' : '#929292';
+                                }
+                            }
+                        });
+                    }
+                }
+                ht.Default.setImage('Keypad', {
+                    width: { func: 'getWidth' },
+                    height: { func: 'getHeight' },
+                    comps: comps
+                });
+            }
+            
+            function initBody () {
+                // Add graphView to document body
+                var style = graphView.getView().style;
+                style.left = '0px';
+                style.top = '0px';
+                style.right = '0px';
+                style.bottom = '0px';
+                document.body.appendChild(graphView.getView());
+                
+                // Invalidate graphView when window size changed
+                window.onresize = function () {
+                    graphView.iv();
+                };
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

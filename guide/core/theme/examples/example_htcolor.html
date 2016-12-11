@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ht.Color</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body, pre {
+                padding: 0px;
+                margin: 0px;                
+            }            
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>                                  
+            function init(){        
+                document.getElementById('output').innerHTML = JSON.stringify(ht.Color, null, 4);                
+                
+            }     
+        </script>
+    </head>
+    <body onload="init();">
+        <pre id="output">
+        </pre>            
+    </body>
+</html>

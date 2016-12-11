@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .view {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-animation.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init() {
+                ht.Default.setImage('basic', {
+                    width: 200,
+                    height: 200,
+                    comps: [
+                        {
+                            type: 'star',
+                            rect: [17, 180, 180],
+                            background: 'red',
+                            gradient: 'radial.center',
+                            gradientColor: 'yellow',
+                            borderWidth: 5,
+                            dashOffset: {
+                                func: function(data) {
+                                    return data.s("vector.dash.offset");
+                                }
+                            },
+                            dash: true,
+                            dashPattern: [10, 10],
+                            dashColor: '#1abc9c',
+                            borderColor: '#0069d6'
+                        }                          
+                    ]
+                });
+                var graph = window.graph = new ht.graph.GraphView(),
+                    dm = window.dm = graph.dm(),
+                    view = graph.getView();
+                var node1 = new ht.Node(),
+                    node2 = new ht.Node();
+                node1.setName("node1");
+                node1.setPosition(100, 100);
+                node1.setSize(100, 100);
+                node1.s({
+                    'shape': 'rect',
+                    'shape.background': 'pink',
+                    'shape.border.width': 3,
+                    'shape.dash': true,
+                    'shape.dash.width': 2,
+                    'shape.dash.color': 'yellow',
+                    'shape.dash.pattern': [10, 10]
+                });
+                node1.setAnimation({
+                    borderFlow: {
+                        property: "shape.dash.offset",
+                        accessType: "style",
+                        easing: "Linear",
+                        from: 1, 
+                        to: 20,
+                        frames: 19,
+                        onComplete: function() {
+                          this.s('shape.dash.offset', 0);
+                        },
+                        next: "borderFlow"
+                    },
+                    start: ["borderFlow"]
+                });
+                
+                
+                node2.setImage("basic");
+                node2.setPosition(500, 100);
+                node2.setSize(100, 100);
+                node2.setName("node2");
+                node2.setAnimation({
+                    borderFlow: {
+                        property: "vector.dash.offset",
+                        accessType: "style",
+                        easing: "Linear",
+                        from: 1, 
+                        to: 20,
+                        frames: 19,
+                        onComplete: function() {
+                          this.s('vector.dash.offset', 0);
+                        },
+                        next: "borderFlow"
+                    },
+                    start: ["borderFlow"]
+                });
+                
+                var edge1 = new ht.Edge(node1, node2);
+                edge1.s({
+                    'edge.width': 5,
+                    'edge.gap': 20,
+                    'edge.dash': true, 
+                    'edge.offset': 0
+                });
+                edge1.setAnimation({
+                    flowing: {
+                        property: 'edge.dash.offset',
+                        accessType: 'style',
+                        easing: 'Linear',
+                        from: 0, 
+                        to: 1000,
+                        frames: 500,
+                        interval: 30,
+                        onComplete: function() {
+                            this.s('edge.dash.offset', 0);
+                        },
+                        next: 'flowing'
+                    },
+                    start: ['flowing']
+                });  
+                
+                var edge2 = new ht.Edge(node1, node2);
+                edge2.s({
+                    'edge.width': 10,
+                    'edge.gap': 20,
+                    'edge.color': 'red',
+                    'edge.dash': true,
+                    'edge.dash.width': 6,
+                    'edge.dash.color': 'yellow',
+                    'edge.dash.pattern': [20, 10],
+                    'edge.offset': 0
+                });
+                edge2.setAnimation({
+                    flowing: {
+                        property: 'edge.dash.offset',
+                        accessType: 'style',
+                        easing: 'Linear',
+                        from: 0, 
+                        to: -1000,
+                        frames: 500,
+                        onComplete: function() {
+                            this.s('edge.dash.offset', 0);
+                        },
+                        next: 'flowing'
+                    },
+                    start: ['flowing']
+                });                 
+                
+                dm.add(node1);
+                dm.add(node2);
+                dm.add(edge1);
+                dm.add(edge2);
+                dm.enableAnimation(50);
+                view.className = "view";
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

@@ -1,0 +1,4 @@
+newmtl shebei
+	d 1.0000
+	Kd 0.8 0.8 0.2
+	map_Kd equipment.jpg

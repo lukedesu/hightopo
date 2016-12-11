@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Column</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init(){
+                dataModel = new ht.DataModel();
+                tableView = new ht.widget.TableView(dataModel);
+                view = tableView.getView();
+                columnModel = tableView.getColumnModel();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    tableView.invalidate();
+                }, false);                         
+    
+                var map = { 
+                    500: { name: 'Critical', color: '#FF0000'},
+                    400: { name: 'Major', color: '#FFA000'},
+                    300: { name: 'Minor', color: '#FFFF00'},
+                    200: { name: 'Warning', color: '#00FFFF'},
+                    100: { name: 'Indeterminate', color: '#C800FF'},
+                    0: { name: 'Cleared', color: '#00FF00'}
+                };
+
+                for(var key in map){
+                    var data = new ht.Data();
+                    data.setAttr('alarmSeverity', parseInt(key));                    
+                    dataModel.add(data);
+                }                    
+    
+                var column = new ht.Column();
+                column.setName("alarmSeverity");
+                column.setAccessType('attr');
+                column.setSortFunc(function(v1, v2, d1, d2){
+                    if(v1 === v2){
+                        return 0;
+                    }
+                    // keep 'Cleared' on top
+                    if(v1 === 0){
+                        return -1;
+                    }
+                    if(v2 === 0){
+                        return 1;
+                    }
+                    // compare value
+                    if(v1 > v2){
+                        return -1;
+                    }else{
+                        return 1;
+                    }                  
+                });
+                columnModel.add(column);                
+                tableView.setSortColumn(column);                
+                
+                column = new ht.Column();
+                column.setValueType('color');
+                column.getValue = function(data){
+                    var alarmSeverity = data.getAttr('alarmSeverity'),
+                        color = map[alarmSeverity].color;
+                    return tableView.isSelected(data) ? ht.Default.darker(color) : color;
+                };
+                columnModel.add(column);
+
+                column = new ht.Column();             
+                column.drawCell = function (g, data, selected, column, x, y, w, h, tableView) {
+                    var index = tableView.getRowIndex(data);
+                        
+                    // draw background
+                    var color = index % 2 === 0 ? 'lightblue' : '#3498DB';
+                    g.fillStyle = selected ? ht.Default.darker(color) : color;
+                    g.beginPath();
+                    g.rect(x, y, w, h);
+                    g.fill();
+                    
+                    // draw label
+                    color = selected ? 'white' : 'black';
+                    ht.Default.drawText(g, 'row ' + index, null, color, x, y, w, h, 'center');
+                };
+                columnModel.add(column);
+
+                column = new ht.Column();
+                column.setWidth(200);
+                column.drawCell = function (g, data, selected, column, x, y, w, h, tableView) {
+                    var alarmSeverity = data.getAttr('alarmSeverity'),
+                        info = map[alarmSeverity],
+                        color = info.color;
+                
+                    // draw background                    
+                    g.fillStyle = selected ? ht.Default.darker(color) : color;
+                    g.beginPath();
+                    g.rect(x, y, w, h);
+                    g.fill();
+                    
+                    // draw label     
+                    color = selected ? 'white' : 'black';
+                    ht.Default.drawText(g, info.name, null, color, x, y, w, h, 'center');
+                };
+                columnModel.add(column);
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SplitView Toggle</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+
+            function init(){                                                      
+                topView = new ht.widget.SplitView(createDiv('#1ABC9C'), createDiv('#9B59B6'), 'h', 0.3);
+                bottomView = new ht.widget.SplitView(createDiv('#34495E'), createDiv('#E74C3C'), 'h', 100);
+                mainView = new ht.widget.SplitView(topView, bottomView, 'v', -100);                
+                
+                topView.setDividerSize(8);
+                topView.setDividerBackground('#EEEEEE');
+                
+                bottomView.setDividerSize(2);
+                bottomView.setDividerBackground('#EEEEEE');
+                bottomView.setTogglable(false);
+                bottomView.setDraggable(false);
+                
+                mainView.setDividerSize(8);
+                mainView.setDividerBackground('#EEEEEE');
+                mainView.setTogglable(false);
+                
+                view = mainView.getView();                                
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    mainView.iv();
+                }, false);                         
+                                   
+            }
+            
+            function createDiv(background){
+                var div = document.createElement('div');  
+                div.style.position = 'absolute';                
+                div.style.background = background;    
+                div.style.color = 'white';
+                div.style.fontSize = '12px';
+                div.onLayouted = function(x, y, width, height){
+                    div.innerHTML = 'width:' + width + ' height:' + height;
+                };
+                return div;
+            }
+
+        </script>
+    </head>
+    <body onload="init();">                     
+    </body>
+</html>

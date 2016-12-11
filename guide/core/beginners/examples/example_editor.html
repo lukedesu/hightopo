@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editor</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script src="editor/CreateNodeInteractor.js"></script>
+        <script src="editor/CreateEdgeInteractor.js"></script>
+        <script src="editor/CreateShapeInteractor.js"></script>
+        <script>
+            var datas = '{"v":"1.0","d":[{"c":"ht.Node","i":1,"p":{"name":"192.168.0.0","position":{"x":473.07673988137316,"y":503.85789766570275}}},{"c":"ht.Node","i":2,"p":{"name":"192.168.0.1","parent":{"__i":1},"position":{"x":217.88506353976294,"y":683.1872004540196}}},{"c":"ht.Node","i":4,"p":{"name":"192.168.0.2","parent":{"__i":2},"position":{"x":276.55251250414136,"y":563.8620711297148}}},{"c":"ht.Node","i":6,"p":{"name":"192.168.0.3","parent":{"__i":2},"position":{"x":350.0304093586264,"y":668.423608930851}}},{"c":"ht.Node","i":8,"p":{"name":"192.168.0.4","parent":{"__i":2},"position":{"x":191.91668682485613,"y":552.7801474735818}}},{"c":"ht.Node","i":10,"p":{"name":"192.168.0.5","parent":{"__i":2},"position":{"x":331.77801068310833,"y":751.8075520069891}}},{"c":"ht.Node","i":12,"p":{"name":"192.168.0.6","parent":{"__i":2},"position":{"x":117.98236645796204,"y":595.4386553262972}}},{"c":"ht.Node","i":14,"p":{"name":"192.168.0.7","parent":{"__i":2},"position":{"x":266.590603621073,"y":806.9132139743698}}},{"c":"ht.Node","i":16,"p":{"name":"192.168.0.8","parent":{"__i":2},"position":{"x":85.21770622347744,"y":674.2581266519379}}},{"c":"ht.Node","i":18,"p":{"name":"192.168.0.9","parent":{"__i":2},"position":{"x":181.33176114953,"y":811.0316846550135}}},{"c":"ht.Node","i":20,"p":{"name":"192.168.0.10","parent":{"__i":2},"position":{"x":106.67060507599386,"y":761.3402639951283}}},{"c":"ht.Node","i":22,"p":{"name":"192.168.0.11","parent":{"__i":1},"position":{"x":213.11851034990298,"y":313.41712113405}}},{"c":"ht.Node","i":24,"p":{"name":"192.168.0.12","parent":{"__i":22},"position":{"x":352.3392008506001,"y":331.34297499123363}}},{"c":"ht.Node","i":26,"p":{"name":"192.168.0.13","parent":{"__i":22},"position":{"x":272.1865706263867,"y":440.7540802432328}}},{"c":"ht.Node","i":28,"p":{"name":"192.168.0.14","parent":{"__i":22},"position":{"x":334.1389114129583,"y":242.29891371473119}}},{"c":"ht.Node","i":30,"p":{"name":"192.168.0.15","parent":{"__i":22},"position":{"x":181.79878162159793,"y":450.24844610163694}}},{"c":"ht.Node","i":32,"p":{"name":"192.168.0.16","parent":{"__i":22},"position":{"x":265.2050955741243,"y":183.068647649778}}},{"c":"ht.Node","i":34,"p":{"name":"192.168.0.17","parent":{"__i":22},"position":{"x":104.54068207708251,"y":402.3811144547071}}},{"c":"ht.Node","i":36,"p":{"name":"192.168.0.18","parent":{"__i":22},"position":{"x":174.43581956982496,"y":178.48237270351083}}},{"c":"ht.Node","i":38,"p":{"name":"192.168.0.19","parent":{"__i":22},"position":{"x":72.8,"y":317.21877250998944}}},{"c":"ht.Node","i":40,"p":{"name":"192.168.0.20","parent":{"__i":22},"position":{"x":99.88289466601252,"y":230.4627225726098}}},{"c":"ht.Node","i":42,"p":{"name":"192.168.0.21","parent":{"__i":1},"position":{"x":564.1647512846068,"y":812.9678209061575}}},{"c":"ht.Node","i":44,"p":{"name":"192.168.0.22","parent":{"__i":42},"position":{"x":464.37605363204267,"y":714.2462289376064}}},{"c":"ht.Node","i":46,"p":{"name":"192.168.0.23","parent":{"__i":42},"position":{"x":594.4741021033435,"y":675.9091467809977}}},{"c":"ht.Node","i":48,"p":{"name":"192.168.0.24","parent":{"__i":42},"position":{"x":424.8155950969209,"y":796.0696088770732}}},{"c":"ht.Node","i":50,"p":{"name":"192.168.0.25","parent":{"__i":42},"position":{"x":672.0832584821392,"y":723.2051744196809}}},{"c":"ht.Node","i":52,"p":{"name":"192.168.0.26","parent":{"__i":42},"position":{"x":443.6723458284278,"y":884.9769670431848}}},{"c":"ht.Node","i":54,"p":{"name":"192.168.0.27","parent":{"__i":42},"position":{"x":704.4513944545441,"y":808.1310194722874}}},{"c":"ht.Node","i":56,"p":{"name":"192.168.0.28","parent":{"__i":42},"position":{"x":513.0412794618007,"y":943.6970354252647}}},{"c":"ht.Node","i":58,"p":{"name":"192.168.0.29","parent":{"__i":42},"position":{"x":678.0093128728993,"y":895.0845225981367}}},{"c":"ht.Node","i":60,"p":{"name":"192.168.0.30","parent":{"__i":42},"position":{"x":603.8419220025962,"y":947.6135004648256}}},{"c":"ht.Node","i":62,"p":{"name":"192.168.0.31","parent":{"__i":1},"position":{"x":576.2749919877836,"y":198.57754908542282}}},{"c":"ht.Node","i":64,"p":{"name":"192.168.0.32","parent":{"__i":62},"position":{"x":601.1597742095925,"y":336.7241542329007}}},{"c":"ht.Node","i":66,"p":{"name":"192.168.0.33","parent":{"__i":62},"position":{"x":472.6735154360824,"y":293.29011929818455}}},{"c":"ht.Node","i":68,"p":{"name":"192.168.0.34","parent":{"__i":62},"position":{"x":680.572427068407,"y":292.52318195679754}}},{"c":"ht.Node","i":70,"p":{"name":"192.168.0.35","parent":{"__i":62},"position":{"x":436.3681722210121,"y":209.9713492744775}}},{"c":"ht.Node","i":72,"p":{"name":"192.168.0.36","parent":{"__i":62},"position":{"x":716.2620660406417,"y":208.9388230476154}}},{"c":"ht.Node","i":74,"p":{"name":"192.168.0.37","parent":{"__i":62},"position":{"x":458.7138190208078,"y":121.87613116744174}}},{"c":"ht.Node","i":76,"p":{"name":"192.168.0.38","parent":{"__i":62},"position":{"x":693.2670712246777,"y":121.01086618723323}}},{"c":"ht.Node","i":78,"p":{"name":"192.168.0.39","parent":{"__i":62},"position":{"x":530.342833088306,"y":65.93527196823393}}},{"c":"ht.Node","i":80,"p":{"name":"192.168.0.40","parent":{"__i":62},"position":{"x":621.2272815761233,"y":65.6}}},{"c":"ht.Node","i":82,"p":{"name":"192.168.0.41","parent":{"__i":1},"position":{"x":795.2655658423673,"y":510.2085584968039}}},{"c":"ht.Node","i":84,"p":{"name":"192.168.0.42","parent":{"__i":82},"position":{"x":671.0508934483062,"y":575.5878523293015}}},{"c":"ht.Node","i":86,"p":{"name":"192.168.0.43","parent":{"__i":82},"position":{"x":673.7237567843263,"y":439.9851610362801}}},{"c":"ht.Node","i":88,"p":{"name":"192.168.0.44","parent":{"__i":82},"position":{"x":737.1385903815619,"y":637.97784910992}}},{"c":"ht.Node","i":90,"p":{"name":"192.168.0.45","parent":{"__i":82},"position":{"x":742.2187024924788,"y":380.24792142257957}}},{"c":"ht.Node","i":92,"p":{"name":"192.168.0.46","parent":{"__i":82},"position":{"x":827.5939676253936,"y":646.8050860447443}}},{"c":"ht.Node","i":94,"p":{"name":"192.168.0.47","parent":{"__i":82},"position":{"x":832.9516710349778,"y":374.992086218418}}},{"c":"ht.Node","i":96,"p":{"name":"192.168.0.48","parent":{"__i":82},"position":{"x":904.4968048762951,"y":598.3690559949065}}},{"c":"ht.Node","i":98,"p":{"name":"192.168.0.49","parent":{"__i":82},"position":{"x":907.8860717661603,"y":426.4209785969828}}},{"c":"ht.Node","i":100,"p":{"name":"192.168.0.50","parent":{"__i":82},"position":{"x":935.6083052890767,"y":512.9748528761179}}},{"c":"ht.Edge","i":3,"p":{"source":{"__i":1},"target":{"__i":2}}},{"c":"ht.Edge","i":5,"p":{"source":{"__i":2},"target":{"__i":4}}},{"c":"ht.Edge","i":7,"p":{"source":{"__i":2},"target":{"__i":6}}},{"c":"ht.Edge","i":9,"p":{"source":{"__i":2},"target":{"__i":8}}},{"c":"ht.Edge","i":11,"p":{"source":{"__i":2},"target":{"__i":10}}},{"c":"ht.Edge","i":13,"p":{"source":{"__i":2},"target":{"__i":12}}},{"c":"ht.Edge","i":15,"p":{"source":{"__i":2},"target":{"__i":14}}},{"c":"ht.Edge","i":17,"p":{"source":{"__i":2},"target":{"__i":16}}},{"c":"ht.Edge","i":19,"p":{"source":{"__i":2},"target":{"__i":18}}},{"c":"ht.Edge","i":21,"p":{"source":{"__i":2},"target":{"__i":20}}},{"c":"ht.Edge","i":23,"p":{"source":{"__i":1},"target":{"__i":22}}},{"c":"ht.Edge","i":25,"p":{"source":{"__i":22},"target":{"__i":24}}},{"c":"ht.Edge","i":27,"p":{"source":{"__i":22},"target":{"__i":26}}},{"c":"ht.Edge","i":29,"p":{"source":{"__i":22},"target":{"__i":28}}},{"c":"ht.Edge","i":31,"p":{"source":{"__i":22},"target":{"__i":30}}},{"c":"ht.Edge","i":33,"p":{"source":{"__i":22},"target":{"__i":32}}},{"c":"ht.Edge","i":35,"p":{"source":{"__i":22},"target":{"__i":34}}},{"c":"ht.Edge","i":37,"p":{"source":{"__i":22},"target":{"__i":36}}},{"c":"ht.Edge","i":39,"p":{"source":{"__i":22},"target":{"__i":38}}},{"c":"ht.Edge","i":41,"p":{"source":{"__i":22},"target":{"__i":40}}},{"c":"ht.Edge","i":43,"p":{"source":{"__i":1},"target":{"__i":42}}},{"c":"ht.Edge","i":45,"p":{"source":{"__i":42},"target":{"__i":44}}},{"c":"ht.Edge","i":47,"p":{"source":{"__i":42},"target":{"__i":46}}},{"c":"ht.Edge","i":49,"p":{"source":{"__i":42},"target":{"__i":48}}},{"c":"ht.Edge","i":51,"p":{"source":{"__i":42},"target":{"__i":50}}},{"c":"ht.Edge","i":53,"p":{"source":{"__i":42},"target":{"__i":52}}},{"c":"ht.Edge","i":55,"p":{"source":{"__i":42},"target":{"__i":54}}},{"c":"ht.Edge","i":57,"p":{"source":{"__i":42},"target":{"__i":56}}},{"c":"ht.Edge","i":59,"p":{"source":{"__i":42},"target":{"__i":58}}},{"c":"ht.Edge","i":61,"p":{"source":{"__i":42},"target":{"__i":60}}},{"c":"ht.Edge","i":63,"p":{"source":{"__i":1},"target":{"__i":62}}},{"c":"ht.Edge","i":65,"p":{"source":{"__i":62},"target":{"__i":64}}},{"c":"ht.Edge","i":67,"p":{"source":{"__i":62},"target":{"__i":66}}},{"c":"ht.Edge","i":69,"p":{"source":{"__i":62},"target":{"__i":68}}},{"c":"ht.Edge","i":71,"p":{"source":{"__i":62},"target":{"__i":70}}},{"c":"ht.Edge","i":73,"p":{"source":{"__i":62},"target":{"__i":72}}},{"c":"ht.Edge","i":75,"p":{"source":{"__i":62},"target":{"__i":74}}},{"c":"ht.Edge","i":77,"p":{"source":{"__i":62},"target":{"__i":76}}},{"c":"ht.Edge","i":79,"p":{"source":{"__i":62},"target":{"__i":78}}},{"c":"ht.Edge","i":81,"p":{"source":{"__i":62},"target":{"__i":80}}},{"c":"ht.Edge","i":83,"p":{"source":{"__i":1},"target":{"__i":82}}},{"c":"ht.Edge","i":85,"p":{"source":{"__i":82},"target":{"__i":84}}},{"c":"ht.Edge","i":87,"p":{"source":{"__i":82},"target":{"__i":86}}},{"c":"ht.Edge","i":89,"p":{"source":{"__i":82},"target":{"__i":88}}},{"c":"ht.Edge","i":91,"p":{"source":{"__i":82},"target":{"__i":90}}},{"c":"ht.Edge","i":93,"p":{"source":{"__i":82},"target":{"__i":92}}},{"c":"ht.Edge","i":95,"p":{"source":{"__i":82},"target":{"__i":94}}},{"c":"ht.Edge","i":97,"p":{"source":{"__i":82},"target":{"__i":96}}},{"c":"ht.Edge","i":99,"p":{"source":{"__i":82},"target":{"__i":98}}},{"c":"ht.Edge","i":101,"p":{"source":{"__i":82},"target":{"__i":100}}},{"c":"ht.Node","i":102,"p":{"name":"192.168.1.0","position":{"x":1426.48504517045,"y":503.85789766570275}}},{"c":"ht.Node","i":103,"p":{"name":"192.168.1.1","parent":{"__i":102},"position":{"x":1171.2933688288397,"y":683.1872004540196}}},{"c":"ht.Node","i":105,"p":{"name":"192.168.1.2","parent":{"__i":103},"position":{"x":1229.9608177932182,"y":563.8620711297148}}},{"c":"ht.Node","i":107,"p":{"name":"192.168.1.3","parent":{"__i":103},"position":{"x":1303.4387146477031,"y":668.423608930851}}},{"c":"ht.Node","i":109,"p":{"name":"192.168.1.4","parent":{"__i":103},"position":{"x":1145.324992113933,"y":552.7801474735818}}},{"c":"ht.Node","i":111,"p":{"name":"192.168.1.5","parent":{"__i":103},"position":{"x":1285.1863159721852,"y":751.8075520069891}}},{"c":"ht.Node","i":113,"p":{"name":"192.168.1.6","parent":{"__i":103},"position":{"x":1071.3906717470388,"y":595.4386553262972}}},{"c":"ht.Node","i":115,"p":{"name":"192.168.1.7","parent":{"__i":103},"position":{"x":1219.9989089101498,"y":806.9132139743698}}},{"c":"ht.Node","i":117,"p":{"name":"192.168.1.8","parent":{"__i":103},"position":{"x":1038.6260115125542,"y":674.2581266519379}}},{"c":"ht.Node","i":119,"p":{"name":"192.168.1.9","parent":{"__i":103},"position":{"x":1134.7400664386068,"y":811.0316846550135}}},{"c":"ht.Node","i":121,"p":{"name":"192.168.1.10","parent":{"__i":103},"position":{"x":1060.0789103650704,"y":761.3402639951283}}},{"c":"ht.Node","i":123,"p":{"name":"192.168.1.11","parent":{"__i":102},"position":{"x":1166.5268156389795,"y":313.41712113405}}},{"c":"ht.Node","i":125,"p":{"name":"192.168.1.12","parent":{"__i":123},"position":{"x":1305.7475061396767,"y":331.34297499123363}}},{"c":"ht.Node","i":127,"p":{"name":"192.168.1.13","parent":{"__i":123},"position":{"x":1225.5948759154633,"y":440.7540802432328}}},{"c":"ht.Node","i":129,"p":{"name":"192.168.1.14","parent":{"__i":123},"position":{"x":1287.547216702035,"y":242.29891371473119}}},{"c":"ht.Node","i":131,"p":{"name":"192.168.1.15","parent":{"__i":123},"position":{"x":1135.2070869106747,"y":450.24844610163694}}},{"c":"ht.Node","i":133,"p":{"name":"192.168.1.16","parent":{"__i":123},"position":{"x":1218.613400863201,"y":183.068647649778}}},{"c":"ht.Node","i":135,"p":{"name":"192.168.1.17","parent":{"__i":123},"position":{"x":1057.9489873661591,"y":402.3811144547071}}},{"c":"ht.Node","i":137,"p":{"name":"192.168.1.18","parent":{"__i":123},"position":{"x":1127.8441248589018,"y":178.48237270351083}}},{"c":"ht.Node","i":139,"p":{"name":"192.168.1.19","parent":{"__i":123},"position":{"x":1026.2083052890766,"y":317.21877250998944}}},{"c":"ht.Node","i":141,"p":{"name":"192.168.1.20","parent":{"__i":123},"position":{"x":1053.2911999550893,"y":230.4627225726098}}},{"c":"ht.Node","i":143,"p":{"name":"192.168.1.21","parent":{"__i":102},"position":{"x":1517.5730565736835,"y":812.9678209061575}}},{"c":"ht.Node","i":145,"p":{"name":"192.168.1.22","parent":{"__i":143},"position":{"x":1417.7843589211193,"y":714.2462289376064}}},{"c":"ht.Node","i":147,"p":{"name":"192.168.1.23","parent":{"__i":143},"position":{"x":1547.8824073924202,"y":675.9091467809977}}},{"c":"ht.Node","i":149,"p":{"name":"192.168.1.24","parent":{"__i":143},"position":{"x":1378.2239003859975,"y":796.0696088770732}}},{"c":"ht.Node","i":151,"p":{"name":"192.168.1.25","parent":{"__i":143},"position":{"x":1625.4915637712159,"y":723.2051744196809}}},{"c":"ht.Node","i":153,"p":{"name":"192.168.1.26","parent":{"__i":143},"position":{"x":1397.0806511175044,"y":884.9769670431848}}},{"c":"ht.Node","i":155,"p":{"name":"192.168.1.27","parent":{"__i":143},"position":{"x":1657.859699743621,"y":808.1310194722874}}},{"c":"ht.Node","i":157,"p":{"name":"192.168.1.28","parent":{"__i":143},"position":{"x":1466.4495847508774,"y":943.6970354252647}}},{"c":"ht.Node","i":159,"p":{"name":"192.168.1.29","parent":{"__i":143},"position":{"x":1631.417618161976,"y":895.0845225981367}}},{"c":"ht.Node","i":161,"p":{"name":"192.168.1.30","parent":{"__i":143},"position":{"x":1557.250227291673,"y":947.6135004648256}}},{"c":"ht.Node","i":163,"p":{"name":"192.168.1.31","parent":{"__i":102},"position":{"x":1529.6832972768602,"y":198.57754908542282}}},{"c":"ht.Node","i":165,"p":{"name":"192.168.1.32","parent":{"__i":163},"position":{"x":1554.5680794986692,"y":336.7241542329007}}},{"c":"ht.Node","i":167,"p":{"name":"192.168.1.33","parent":{"__i":163},"position":{"x":1426.081820725159,"y":293.29011929818455}}},{"c":"ht.Node","i":169,"p":{"name":"192.168.1.34","parent":{"__i":163},"position":{"x":1633.980732357484,"y":292.52318195679754}}},{"c":"ht.Node","i":171,"p":{"name":"192.168.1.35","parent":{"__i":163},"position":{"x":1389.7764775100889,"y":209.9713492744775}}},{"c":"ht.Node","i":173,"p":{"name":"192.168.1.36","parent":{"__i":163},"position":{"x":1669.6703713297184,"y":208.9388230476154}}},{"c":"ht.Node","i":175,"p":{"name":"192.168.1.37","parent":{"__i":163},"position":{"x":1412.1221243098846,"y":121.87613116744174}}},{"c":"ht.Node","i":177,"p":{"name":"192.168.1.38","parent":{"__i":163},"position":{"x":1646.6753765137544,"y":121.01086618723323}}},{"c":"ht.Node","i":179,"p":{"name":"192.168.1.39","parent":{"__i":163},"position":{"x":1483.7511383773826,"y":65.93527196823393}}},{"c":"ht.Node","i":181,"p":{"name":"192.168.1.40","parent":{"__i":163},"position":{"x":1574.6355868652001,"y":65.6}}},{"c":"ht.Node","i":183,"p":{"name":"192.168.1.41","parent":{"__i":102},"position":{"x":1748.673871131444,"y":510.2085584968039}}},{"c":"ht.Node","i":185,"p":{"name":"192.168.1.42","parent":{"__i":183},"position":{"x":1624.4591987373828,"y":575.5878523293015}}},{"c":"ht.Node","i":187,"p":{"name":"192.168.1.43","parent":{"__i":183},"position":{"x":1627.132062073403,"y":439.9851610362801}}},{"c":"ht.Node","i":189,"p":{"name":"192.168.1.44","parent":{"__i":183},"position":{"x":1690.5468956706386,"y":637.97784910992}}},{"c":"ht.Node","i":191,"p":{"name":"192.168.1.45","parent":{"__i":183},"position":{"x":1695.6270077815554,"y":380.24792142257957}}},{"c":"ht.Node","i":193,"p":{"name":"192.168.1.46","parent":{"__i":183},"position":{"x":1781.0022729144703,"y":646.8050860447443}}},{"c":"ht.Node","i":195,"p":{"name":"192.168.1.47","parent":{"__i":183},"position":{"x":1786.3599763240545,"y":374.992086218418}}},{"c":"ht.Node","i":197,"p":{"name":"192.168.1.48","parent":{"__i":183},"position":{"x":1857.9051101653718,"y":598.3690559949065}}},{"c":"ht.Node","i":199,"p":{"name":"192.168.1.49","parent":{"__i":183},"position":{"x":1861.294377055237,"y":426.4209785969828}}},{"c":"ht.Node","i":201,"p":{"name":"192.168.1.50","parent":{"__i":183},"position":{"x":1889.0166105781534,"y":512.9748528761179}}},{"c":"ht.Edge","i":104,"p":{"source":{"__i":102},"target":{"__i":103}}},{"c":"ht.Edge","i":106,"p":{"source":{"__i":103},"target":{"__i":105}}},{"c":"ht.Edge","i":108,"p":{"source":{"__i":103},"target":{"__i":107}}},{"c":"ht.Edge","i":110,"p":{"source":{"__i":103},"target":{"__i":109}}},{"c":"ht.Edge","i":112,"p":{"source":{"__i":103},"target":{"__i":111}}},{"c":"ht.Edge","i":114,"p":{"source":{"__i":103},"target":{"__i":113}}},{"c":"ht.Edge","i":116,"p":{"source":{"__i":103},"target":{"__i":115}}},{"c":"ht.Edge","i":118,"p":{"source":{"__i":103},"target":{"__i":117}}},{"c":"ht.Edge","i":120,"p":{"source":{"__i":103},"target":{"__i":119}}},{"c":"ht.Edge","i":122,"p":{"source":{"__i":103},"target":{"__i":121}}},{"c":"ht.Edge","i":124,"p":{"source":{"__i":102},"target":{"__i":123}}},{"c":"ht.Edge","i":126,"p":{"source":{"__i":123},"target":{"__i":125}}},{"c":"ht.Edge","i":128,"p":{"source":{"__i":123},"target":{"__i":127}}},{"c":"ht.Edge","i":130,"p":{"source":{"__i":123},"target":{"__i":129}}},{"c":"ht.Edge","i":132,"p":{"source":{"__i":123},"target":{"__i":131}}},{"c":"ht.Edge","i":134,"p":{"source":{"__i":123},"target":{"__i":133}}},{"c":"ht.Edge","i":136,"p":{"source":{"__i":123},"target":{"__i":135}}},{"c":"ht.Edge","i":138,"p":{"source":{"__i":123},"target":{"__i":137}}},{"c":"ht.Edge","i":140,"p":{"source":{"__i":123},"target":{"__i":139}}},{"c":"ht.Edge","i":142,"p":{"source":{"__i":123},"target":{"__i":141}}},{"c":"ht.Edge","i":144,"p":{"source":{"__i":102},"target":{"__i":143}}},{"c":"ht.Edge","i":146,"p":{"source":{"__i":143},"target":{"__i":145}}},{"c":"ht.Edge","i":148,"p":{"source":{"__i":143},"target":{"__i":147}}},{"c":"ht.Edge","i":150,"p":{"source":{"__i":143},"target":{"__i":149}}},{"c":"ht.Edge","i":152,"p":{"source":{"__i":143},"target":{"__i":151}}},{"c":"ht.Edge","i":154,"p":{"source":{"__i":143},"target":{"__i":153}}},{"c":"ht.Edge","i":156,"p":{"source":{"__i":143},"target":{"__i":155}}},{"c":"ht.Edge","i":158,"p":{"source":{"__i":143},"target":{"__i":157}}},{"c":"ht.Edge","i":160,"p":{"source":{"__i":143},"target":{"__i":159}}},{"c":"ht.Edge","i":162,"p":{"source":{"__i":143},"target":{"__i":161}}},{"c":"ht.Edge","i":164,"p":{"source":{"__i":102},"target":{"__i":163}}},{"c":"ht.Edge","i":166,"p":{"source":{"__i":163},"target":{"__i":165}}},{"c":"ht.Edge","i":168,"p":{"source":{"__i":163},"target":{"__i":167}}},{"c":"ht.Edge","i":170,"p":{"source":{"__i":163},"target":{"__i":169}}},{"c":"ht.Edge","i":172,"p":{"source":{"__i":163},"target":{"__i":171}}},{"c":"ht.Edge","i":174,"p":{"source":{"__i":163},"target":{"__i":173}}},{"c":"ht.Edge","i":176,"p":{"source":{"__i":163},"target":{"__i":175}}},{"c":"ht.Edge","i":178,"p":{"source":{"__i":163},"target":{"__i":177}}},{"c":"ht.Edge","i":180,"p":{"source":{"__i":163},"target":{"__i":179}}},{"c":"ht.Edge","i":182,"p":{"source":{"__i":163},"target":{"__i":181}}},{"c":"ht.Edge","i":184,"p":{"source":{"__i":102},"target":{"__i":183}}},{"c":"ht.Edge","i":186,"p":{"source":{"__i":183},"target":{"__i":185}}},{"c":"ht.Edge","i":188,"p":{"source":{"__i":183},"target":{"__i":187}}},{"c":"ht.Edge","i":190,"p":{"source":{"__i":183},"target":{"__i":189}}},{"c":"ht.Edge","i":192,"p":{"source":{"__i":183},"target":{"__i":191}}},{"c":"ht.Edge","i":194,"p":{"source":{"__i":183},"target":{"__i":193}}},{"c":"ht.Edge","i":196,"p":{"source":{"__i":183},"target":{"__i":195}}},{"c":"ht.Edge","i":198,"p":{"source":{"__i":183},"target":{"__i":197}}},{"c":"ht.Edge","i":200,"p":{"source":{"__i":183},"target":{"__i":199}}},{"c":"ht.Edge","i":202,"p":{"source":{"__i":183},"target":{"__i":201}}}]}';
+            r = ht.Default.setImage;
+                        
+            ['zoomIn', 'zoomOut', 'fitContent', 'default', 'edit', 'shape', 'node', 'edge'].forEach(function(name){
+                ht.Default.setImage(name, 'editor/' + name + '.png');
+            });
+            
+            function init() {
+                items = [
+                    {
+                        icon: 'zoomIn',
+                        action: function() {
+                            graphView.zoomIn(true);
+                        }
+                    },
+                    {
+                        icon: 'zoomOut',
+                        action: function() {
+                            graphView.zoomOut(true);
+                        }
+                    },
+                    {
+                        icon: 'fitContent',
+                        action: function() {
+                            graphView.fitContent(true);
+                        }
+                    },
+                    "separator",
+                    {
+                        icon: 'default',
+                        groupId: 'interaction',
+                        action: function() {
+                            graphView.setEditable(false);
+                        }
+                    },
+                    {
+                        icon: 'edit',
+                        groupId: 'interaction',
+                        action: function() {
+                            graphView.setEditable(true);
+                        }
+                    },
+                    {
+                        icon: 'node',
+                        groupId: 'interaction',
+                        action: function() {
+                            graphView.setInteractors([
+                                new ht.graph.DefaultInteractor(graphView),
+                                new ht.graph.TouchInteractor(graphView, {
+                                    selectable: false
+                                }),
+                                new CreateNodeInteractor(graphView)
+                            ]);
+                        }
+                    },
+                    {
+                        icon: 'edge',
+                        groupId: 'interaction',
+                        action: function() {
+                            graphView.setInteractors([
+                                new ht.graph.DefaultInteractor(graphView),
+                                new ht.graph.TouchInteractor(graphView, {
+                                    selectable: false
+                                }),
+                                new CreateEdgeInteractor(graphView)
+                            ]);
+                        }
+                    },
+                    {
+                        icon: 'shape',
+                        groupId: 'interaction',
+                        selected: true,
+                        action: function() {
+                            graphView.setInteractors([
+                                new ht.graph.DefaultInteractor(graphView),
+                                new ht.graph.TouchInteractor(graphView, {
+                                    selectable: false
+                                }),
+                                new CreateShapeInteractor(graphView)
+                            ]);
+                        }
+                    },
+                    "separator",
+                    {
+                        label: 'Image',
+                        action: function() {
+                            var doc = window.open().document;
+                            doc.open();
+                            doc.write("<img src='" + graphView.toDataURL() + "'/>");
+                            doc.close();
+                            doc.body.style.margin = '0';
+                            doc.title = 'Export image at ' + new Date();
+                        }
+                    },
+                    {
+                        label: 'JSON',
+                        action: function() {
+                            var doc = window.open().document;
+                            doc.open();
+                            doc.write("<pre>" + dataModel.serialize() + "</pre>");
+                            doc.close();
+                            doc.body.style.margin = '0';
+                            doc.title = 'Export JSON at ' + new Date();
+                        }
+                    }
+                ];
+
+                toolbar = new ht.widget.Toolbar(items);
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);
+
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(graphView);
+
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    borderPane.invalidate();
+                }, false);
+
+
+                dataModel.deserialize(datas);
+
+                initShape(dataModel);
+                graphView.translate(30, 30);
+                graphView.setInteractors([
+                    new ht.graph.DefaultInteractor(graphView),
+                    new ht.graph.TouchInteractor(graphView, {
+                        selectable: false
+                    }),
+                    new CreateShapeInteractor(graphView)
+                ]);
+            }
+            ;
+            function initShape(dataModel) {
+                var shape1 = new ht.Shape();
+                dataModel.add(shape1);
+                shape1.setStyle('shape.background', 'yellow');
+                shape1.setPoints([
+                    {x: 0, y: 100},
+                    {x: 0, y: 0},
+                    {x: 200, y: 0},
+                    {x: 200, y: 100}
+                ]);
+                shape1.setSegments([
+                    1, // moveTo
+                    4 // bezierCurveTo
+                ]);
+
+                var shape2 = new ht.Shape();
+                dataModel.add(shape2);
+                shape2.setStyle('shape.background', null);
+                shape2.setStyle('shape.border.width', 10);
+                shape2.setStyle('shape.border.color', '#1ABC9C');
+                shape2.setPoints([
+                    // draw H
+                    {x: 20, y: 0},
+                    {x: 20, y: 100},
+                    {x: 20, y: 50},
+                    {x: 80, y: 50},
+                    {x: 80, y: 0},
+                    {x: 80, y: 100},
+                    // draw T
+                    {x: 120, y: 0},
+                    {x: 180, y: 0},
+                    {x: 150, y: 0},
+                    {x: 150, y: 100}
+                ]);
+                shape2.setSegments([
+                    // draw H
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+
+                    // draw T
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2 // lineTo
+                ]);
+
+                var shape3 = new ht.Shape();
+                dataModel.add(shape3);
+                shape3.setStyle('shape.background', null);
+                shape3.setStyle('shape.border.width', 2);
+                shape3.setStyle('shape.border.color', '#3498DB');
+                var h = 10;
+                shape3.setPoints([
+                    {x: 0, y: 0},
+                    {x: 25, y: -h},
+                    {x: 50, y: 0},
+                    {x: 75, y: h},
+                    {x: 100, y: 0},
+                    {x: 125, y: -h},
+                    {x: 150, y: 0},
+                    {x: 175, y: h},
+                    {x: 200, y: 0}
+                ]);
+                shape3.setSegments([
+                    1, // moveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3, // quadraticCurveTo
+                    3 // quadraticCurveTo
+                ]);
+                shape3.translate(0, 120);
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

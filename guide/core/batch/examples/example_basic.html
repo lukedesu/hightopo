@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Batch Basic</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                background: #426AA1;
+            }
+        </style>                          
+
+        <script src="../../../../lib/core/ht.js"></script>         
+
+        <script>
+
+            function init() {
+                items = [
+                    {
+                        label: 'Enable Batch',
+                        type: 'check',
+                        selected: true,
+                        action: function() {
+                            switchBatch();
+                        }
+                    },
+                    {
+                        id: 'batchColor',
+                        label: 'Batch Color',
+                        type: 'check',
+                        action: function() {
+                            updateBatch();
+                        }
+                    },
+                    {
+                        id: 'batchBrightness',
+                        label: 'Batch Brightness',
+                        type: 'check',
+                        action: function() {
+                            updateBatch();
+                        }
+                    },
+                    {
+                        id: 'batchBlend',
+                        label: 'Batch Blend',
+                        type: 'check',
+                        action: function() {
+                            updateBatch();
+                        }
+                    }
+                ];
+
+                toolbar = new ht.widget.Toolbar(items);
+                dataModel = new ht.DataModel();
+
+                g3d = new ht.graph3d.Graph3dView(dataModel);
+                g3d.setGridVisible(true);
+                g3d.setGridColor('#74AADA');
+                g3d.setGridSize(100);
+                g3d.setEye(0, 800, 2000);
+                g3d.setFar(20000);
+
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(g3d);
+
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function(e) {
+                    borderPane.invalidate();
+                }, false);
+
+                var column = 40,
+                        row = 40,
+                        gap = 100,
+                        startX = -column * gap / 2 + gap / 2,
+                        startZ = row * gap / 2 - gap / 2,
+                        size = gap / 2;
+
+                for (var i = 0; i < row; i++) {
+                    for (var j = 0; j < column; j++) {
+                        createNode(startX + gap * j, startZ, size).s({
+                            'all.color': 'yellow',
+                            'top.color': 'lightblue',
+                            'bottom.color': 'lightblue',                            
+                            'all.blend': '#00FFFF'
+                        });
+                    }
+                    startZ -= gap;
+                }
+
+
+                var types = ['box', 'sphere', 'cylinder', 'cone', 'torus', 'star', 'rect', 'roundRect',
+                    'triangle', 'rightTriangle', 'parallelogram', 'trapezoid'];
+                for(var i=0; i<types.length; i++){                     
+                    var node = createNode(-types.length*gap+gap+gap*i*2, 0, gap*1.5);
+                    node.s({
+                        'shape3d': types[i],
+                        'shape3d.color': 'yellow',
+                        'shape3d.top.color': 'lightblue',
+                        'shape3d.bottom.color': 'lightblue',
+                        'shape3d.blend': '#00FFFF'                        
+                    });
+                    node.setElevation(gap * 2);
+                };
+
+            }
+
+            function updateBatch() {
+                ht.Default.setBatchInfo('firstBatch', {
+                    color: toolbar.v('batchColor') ? '#F5F5F6' : null,
+                    brightness: toolbar.v('batchBrightness'),
+                    blend: toolbar.v('batchBlend')
+                });
+                g3d.setBatchBlendDisabled(!toolbar.v('batchBlend'));
+                g3d.setBatchBrightnessDisabled(!toolbar.v('batchBrightness'));
+                g3d.invalidateBatch('firstBatch');
+            }
+
+            function createNode(x, z, size) {
+                var node = new ht.Node();
+                node.s({
+                    'batch': 'firstBatch'
+                });
+                node.s3(size, size, size);
+                node.p3(x, size / 2, z);
+                dataModel.add(node);
+                return node;
+            }
+
+            function switchBatch() {
+                g3d.invalidateBatch('firstBatch');
+                dataModel.each(function(node) {
+                    if (node.s('batch')) {
+                        node.s('batch', null);
+                    } else {
+                        node.s('batch', 'firstBatch');
+                    }
+                });
+            }
+
+        </script>
+    </head>
+    <body onload="init();">                                  
+    </body>
+</html>

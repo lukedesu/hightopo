@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HT for Web Overview</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>                    
+        <script src="../../../../lib/core/ht.js"></script>                
+        <script>
+            function init(){
+
+                ht.Default.setImage('sunrise', {
+                    width: 220,
+                    height: 150,
+                    comps: [
+                        {
+                            type: 'shape',
+                            points: [10, 110, 10, 10, 210, 10, 210, 110],
+                            segments: [1, 4],
+                            background: 'yellow',
+                            gradient: 'linear.north'
+                        },
+                        {
+                            type: 'shape',
+                            points: [30, 10, 30, 110, 30, 60, 90, 60, 90, 10,
+                                90, 110, 130, 10, 190, 10, 160, 10, 160, 110
+                            ],
+                            segments: [
+                                1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+                            ],
+                            borderWidth: 12,
+                            borderColor: '#1ABC9C',
+                            borderCap: 'round'                            
+                        },
+                        {
+                            type: 'shape',
+                            points: [10, 130, 35, 120, 60, 130, 85, 140,
+                                110, 130, 135, 120, 160, 130, 185, 140, 210, 130
+                            ],
+                            segments: [
+                                1, 3, 3, 3, 3
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#3498DB'
+                        }
+                    ]
+                });
+
+                items = [   
+                    {
+                        label: 'Zoom In',
+                        action: function(){                             
+                            graphView.zoomIn(true);
+                        }
+                    },  
+                    {
+                        label: 'Zoom Out',
+                        action: function(){                             
+                            graphView.zoomOut(true);
+                        }
+                    },
+                    {
+                        label: 'Fit Content',
+                        action: function(){                             
+                            graphView.fitContent(true, 20, true);
+                        }
+                    },                            
+                    "separator",                            
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        selected: false,
+                        action: function(item){
+                            graphView.setEditable(item.selected);
+                        }
+                    },                                                 
+                    {
+                        label: 'Export Image',
+                        action: function(){                             
+                            var canvas = graphView.toCanvas(document.body.style.background),
+                                win = window.open(),
+                                doc = win.document;                        
+                            doc.title = canvas.width + "|" + canvas.height;
+                            img = doc.createElement('img');
+                            img.src = canvas.toDataURL();
+                            doc.body.appendChild(img);                            
+                        }
+                    }                            
+                ];
+                
+                dataModel = new ht.DataModel();                   
+                graphView = new ht.graph.GraphView(dataModel);              
+                propertyView = new ht.widget.PropertyView(dataModel);
+                listView = new ht.widget.ListView(dataModel);
+                treeView = new ht.widget.TreeView(dataModel);
+                tablePane = new ht.widget.TablePane(dataModel);
+                treeTablePane = new ht.widget.TreeTablePane(dataModel);
+                accordionView = new ht.widget.AccordionView();
+                tabView = new ht.widget.TabView();
+                toolbar = new ht.widget.Toolbar(items);
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(graphView);
+                
+                toolbar.enableToolTip();
+                
+                leftSplit = new ht.widget.SplitView(borderPane, tabView, 'vertical', 0.6);
+                mainSplit = new ht.widget.SplitView(leftSplit, accordionView, 'horizontal', 0.7);                
+        
+                // init split view
+                view = mainSplit.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    mainSplit.invalidate();
+                }, false);                                                  
+                
+                // init list view                
+                listView.setCheckMode(true);  
+                listView.setSelectionModelShared(false);
+                listView.getSelectionModel().setSelectionMode('single');                
+                
+                // init tree table
+                treeTablePane.getTableView().setCheckMode('all');                
+                
+                // init accordion
+                accordionView.add('Tree View', treeView);         
+                accordionView.add('Property View', propertyView, true);                
+
+                // init tab view  
+                tabView.add('List View', listView);
+                tabView.add('Table View', tablePane).setIcon('grid_icon');
+                tabView.add('Tree Table View', treeTablePane, true);
+                
+                var tab = new ht.Tab();
+                tab.setName('HT for 3D Web');
+                tab.setClosable(true);
+                tabView.getTabModel().add(tab);                                
+                if(init3d()){
+                    tab.setView(graph3dView);
+                }else{
+                    tab.setDisabled(true);
+                }
+
+                // init property view                
+                initProperties(propertyView);         
+                
+                // init columns
+                initColumns(tablePane.getTableView());
+                initColumns(treeTablePane.getTableView());              
+                
+                // init data model
+                hello = new ht.Node();
+                hello.setPosition(60, 140);             
+                hello.setName('Hello');
+                hello.setStyle('note', 'I love HT');
+                hello.setStyle('note.background', '#FFA000');
+                dataModel.add(hello);
+
+                world = new ht.Node();
+                world.setPosition(260, 80);
+                world.setName('World');
+                world.setStyle('note', 'HT for your imagination');
+                world.setStyle('note.expanded', false);  
+                world.setStyle('border.color', 'red');                
+                dataModel.add(world);
+
+                edge = new ht.Edge(hello, world);
+                edge.setName('Hello World\nwww.hightopo.com');
+                edge.setStyle('label.color', 'white');
+                edge.setStyle('label.background', '#3498DB');                
+                dataModel.add(edge);  
+                
+                group = new ht.Group();
+                group.setName('HT for Web ' + ht.Default.getVersion());
+                group.addChild(hello);
+                group.addChild(world);
+                group.addChild(edge);
+                dataModel.add(group);
+                
+                names = ['SplitView', 'AccordionView', 'TabView',
+                    'PropertyView', 'ListView', 'TreeView', 'TableView', 'TreeTableView', 
+                    'TableHeader', 'TablePane', 'TreeTablePane','Toolbar','BorderPane', '...'];
+                
+                learnMore = new ht.Node();
+                learnMore.setImage('sunrise');
+                learnMore.setToolTip(names.join('<br>'));                
+                learnMore.setName('Learn More');
+                learnMore.setPosition(430, 130);
+                learnMore.setSize(160, 100);
+                learnMore.setStyle('note', 'TreeView,TableView,\nSplitView,AccordionView,\nPropertyView,...');
+                learnMore.setStyle('note.max', 200); 
+                learnMore.setStyle('select.type', 'shadow');
+                dataModel.add(learnMore);
+                                                                                
+                graphView.enableToolTip();                                                     
+                treeView.expandAll();
+                treeTablePane.getTableView().expandAll();                  
+                dataModel.getSelectionModel().setSelection(hello);  
+            }
+            
+            function init3d(){
+                if(!ht.graph3d){
+                    return;
+                }
+                graph3dView = new ht.graph3d.Graph3dView();
+                shape = new ht.Shape();
+                graph3dView.getDataModel().add(shape);
+                graph3dView.setGridVisible(true);
+                graph3dView.setOriginAxisVisible(true);
+                graph3dView.setCenterAxisVisible(true); 
+                graph3dView.setEye([-200, 100, 300]);
+                shape.setRotationX(Math.PI/2); 
+                shape.s({
+                    'note': 'HT for modern web and mobile app development',
+                    'note.face': 'top',
+                    'note.offset.x': 3,
+                    'note.offset.y': -3,    
+                    'note.autorotate': true
+                });
+                shape.setPoints([                    
+                    // draw H
+                    {x: 20, y: 0},
+                    {x: 20, y: 100},
+                    {x: 20, y: 50},
+                    {x: 80, y: 50},
+                    {x: 80, y: 0},
+                    {x: 80, y: 100},
+
+                    // draw T
+                    {x: 120, y: 0},
+                    {x: 180, y: 0},
+                    {x: 150, y: 0},
+                    {x: 150, y: 100}                    
+                ]);                                
+                shape.setSegments([
+                    // draw H
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2, // lineTo
+
+                    // draw T
+                    1, // moveTo
+                    2, // lineTo
+                    1, // moveTo
+                    2 // lineTo
+                ]);   
+                shape.setPosition3d(0, 50, 0);                
+                return graph3dView.getGL();
+            }
+            
+            function initProperties(propertyView){                  
+                propertyView.addProperties([
+                    {
+                        name: 'id'                        
+                    },
+                    {
+                        name: 'name',
+                        editable: true,
+                        getValue: function(data, property, view){
+                            var value = data.getName();
+                            if(value && value.replace){
+                                value = value.replace(/\n/g, '\\n');
+                            }
+                            return value;
+                        },
+                        setValue: function(data, property, value, view){
+                            console.log(value);
+                            if(value && value.replace){
+                                value = value.replace(/\\n/g, '\n');                                
+                            }
+                            data.setName(value);
+                        }
+                    },
+                    {
+                        name: 'select.color',
+                        displayName: 'color',
+                        accessType: 'style',
+                        valueType: 'color',
+                        categoryName: 'select'
+                    },
+                    {
+                        name: 'select.width',
+                        displayName: 'width',
+                        accessType: 'style',
+                        categoryName: 'select'
+                    },
+                    {
+                        name: 'label.color',
+                        displayName: 'color',
+                        accessType: 'style',
+                        valueType: 'color',
+                        categoryName: 'label'
+                    },  
+                    {
+                        name: 'label.background',
+                        displayName: 'background',
+                        accessType: 'style',
+                        valueType: 'color',
+                        categoryName: 'label'
+                    },                     
+                    {
+                        name: 'note',
+                        accessType: 'style',
+                        categoryName: 'note',
+                        icon: 'sunrise',
+                        editable: true
+                    },
+                    {
+                        name: 'note.color',
+                        displayName: 'color',
+                        accessType: 'style',
+                        valueType: 'color',
+                        categoryName: 'note'                        
+                    },
+                    {
+                        name: 'note.background',
+                        displayName: 'background',
+                        accessType: 'style',
+                        valueType: 'color',
+                        categoryName: 'note'                        
+                    }
+                ]);               
+            }
+            
+            function initColumns(tableView){
+                tableView.addColumns([
+                    {
+                        name: 'id',
+                        displayName: 'Id'
+                    },
+                    {
+                        name: 'name',
+                        displayName: 'Name',
+                        editable: true,
+                        width: 120,
+                        getValue: function(data, column, view){
+                            var value = data.getName();
+                            if(value && value.replace){
+                                value = value.replace(/\n/g, '\\n');
+                            }
+                            return value;
+                        },
+                        setValue: function(data, column, value, view){
+                            if(value && value.replace){
+                                value = value.replace(/\\n/g, '\n');  
+                            }
+                            data.setName(value);
+                        }
+                    },
+                    {
+                        width: 160,
+                        icon: 'sunrise',
+                        align: 'center',
+                        displayName: 'Discription',
+                        getValue: function(data){
+                            if(data instanceof ht.Group){
+                                var size = data.getChildren().size();
+                                if(size === 0){
+                                    return 'I have no child';
+                                }
+                                else if(size === 1){
+                                    return 'I have one child';
+                                }
+                                return 'I have ' + data.size() + ' children';
+                            }
+                            if(data instanceof ht.Node){
+                                var position = data.getPosition();
+                                return 'X:' + parseInt(position.x) + ', Y:' + parseInt(position.y); 
+                            }
+                            if(data instanceof ht.Edge){
+                                return 'Source:' + data.getSource() + ', Target:' + data.getTarget();
+                            }
+                        }
+                    },
+                    {
+                        width: 900,
+                        accessType: 'style',
+                        displayName: 'Note',
+                        drawCell: function (g, data, selected, column, x, y, w, h, view){                    
+                            var label = data.getStyle('note');
+                            if(label){
+                                // draw background
+                                g.fillStyle = data.s('note.background');
+                                g.beginPath();
+                                g.rect(x, y, w, h);
+                                g.fill();   
+
+                                // draw label                    
+                                ht.Default.drawText(g, label, null, data.s('note.color'), x, y, w, h, 'left');            
+                            }
+                        }
+                    }        
+                ]);                
+            }
+
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

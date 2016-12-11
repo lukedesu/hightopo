@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            .view {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        </style>
+        <script src="../../../../lib/core/ht.js"></script>
+        <script src="../../../../lib/plugin/ht-animation.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init() {
+                graph = window.graph = new ht.graph.GraphView();
+                dm = window.dm = graph.dm();
+                view = graph.getView();
+                
+                dm.enableAnimation();
+                
+                var node = new ht.Node();
+                node.setPosition(500, 300);
+                node.s("shape", "oval");
+                node.setWidth(30);
+                node.setHeight(30);
+                node.setStyle('shape.gradient', "radial.north");
+                node.setStyle('shape.background', 'rgb(75,105,155)');
+                node.setStyle('shape.gradient.color', 'rgb(157, 176, 212)');
+                dm.add(node);
+                
+                node.setAnimation({
+                    expandWidth: {
+                        property: "width",
+                        from: 30, 
+                        to: 100,
+                        next: "collapseWidth"
+                    },
+                    collapseWidth: {
+                        property: "width",
+                        from: 100, 
+                        to: 30,
+                        next: "expandWidth"
+                    },
+                    expandHeight: {
+                        property: "height",
+                        from: 30, 
+                        to: 100,
+                        next: "collapseHeight"
+                    },
+                    collapseHeight: {
+                        property: "height",
+                        from: 100, 
+                        to: 30,
+                        next: "expandHeight"
+                    },
+                    start: ["expandWidth", "expandHeight"]
+                });
+                
+                var node2 = new ht.Node();
+                node2.setAnimation({
+                    blend: {
+                        from: 255, 
+                        to: 0,
+                        next: "clear",
+                        onUpdate: function(value) {
+                            value = parseInt(value);
+                            this.s("body.color", "rgb(255, " + value + ", " + value + ")");
+                        }
+                    },
+                    clear: {
+                        from: 0, 
+                        to: 255,
+                        next: "blend",
+                        onUpdate: function(value) {
+                            value = parseInt(value);
+                            this.s("body.color", "rgb(255, " + value + ", " + value + ")");
+                        }
+                    },
+                    start: ["blend"]
+                });
+                node2.setPosition(200, 100);
+                dm.add(node2);
+                
+                var edge = new ht.Edge(node, node2);
+                edge.setAnimation({
+                    show: {
+                        property: "opacity",
+                        accessType: "style", 
+                        from: 1, 
+                        to: 0,
+                        repeat: true
+                    },
+                    start: ["show"]
+                });
+                dm.add(edge);
+                
+                node3 = new ht.Node();
+                node3.setPosition(700, 300);
+                node3.setAnimation({
+                    up: {
+                        from: 300, 
+                        to: 250,
+                        frames: 25,
+                        easing: "Quad.easeOut",
+                        next: "down",
+                        delay: 1000,
+                        onUpdate: function(value) {
+                            this.setPosition(this.getPosition().x, value);
+                        }
+                    },
+                    down: {
+                        from: 250, 
+                        to: 300,
+                        easing: "Bounce.easeOut",
+                        frames: 80,
+                        next: "up",
+                        onUpdate: function(value) {
+                            this.setPosition(this.getPosition().x, value);
+                        }
+                    },
+                    start: ["up"]
+                });
+                dm.add(node3);
+                
+                var node4 = new ht.Node();
+                node4._counter = 0;
+                node4.setAnimation({
+                    hide: {
+                        property: "opacity",
+                        accessType: "style", 
+                        from: 1, 
+                        to: 0,
+                        frames: 20,
+                        next: "show"
+                    },
+                    show: {
+                        property: "opacity",
+                        accessType: "style", 
+                        from: 0, 
+                        to: 1,
+                        frames: 20,
+                        next: "hide",
+                        onComplete: function() {
+                            this._counter++;
+                            if (this._counter >= 10) {
+                                this.setAnimation(null);
+                            }
+                        }
+                    },
+                    start: ["hide"]
+                });
+                node4.setPosition(800, 300);
+                dm.add(node4);
+                
+                var node5 = new ht.Node();
+                node5.setAnimation({
+                    hide: {
+                        property: "opacity",
+                        accessType: "style", 
+                        from: 1, 
+                        to: 0,
+                        frames: 1,
+                        interval: 500,
+                        next: "show"
+                    },
+                    show: {
+                        property: "opacity",
+                        accessType: "style", 
+                        from: 0, 
+                        to: 1,
+                        frames: 1,
+                        interval: 500,
+                        next: "hide"
+                    },
+                    start: ["hide"]
+                });
+                node5.setPosition(900, 300);
+                dm.add(node5);
+                view.className = "view";
+                graph.translate(-120, 0);
+                document.body.appendChild(view);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        
+    </body>
+</html>

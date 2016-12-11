@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TableView Filter</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>                          
+        <script src="../../../../lib/core/ht.js"></script>  
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();                
+                toolbar = new ht.widget.Toolbar();                     
+                
+                dataModel = new ht.DataModel();                
+                tablePane = new ht.widget.TablePane(dataModel); 
+                
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(tablePane); 
+                
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);   
+                
+                nations = ['uk', 'usa', 'mexico'];  
+                sexs = ['man', 'woman']; 
+                tablePane.addColumns([
+                    {
+                        name: 'index',
+                        displayName: 'Index',
+                        accessType: 'attr',
+                        align: 'center'
+                    },
+                    {
+                        name: 'nation',
+                        displayName: 'Nation',
+                        accessType: 'attr',
+                        align: 'center',
+                        drawCell: function (g, data, selected, column, x, y, w, h, view) {
+                            var image = ht.Default.getImage('images/' + nations[data.a('nation')] + '.png');
+                            ht.Default.drawStretchImage(g, image, 'centerUniform', x, y, w, h);
+                        }
+
+                    },
+                    {
+                        name: 'sex',
+                        displayName: 'Sex',
+                        accessType: 'attr',
+                        align: 'center',
+                        drawCell: function (g, data, selected, column, x, y, w, h, view) {                            
+                            var image = ht.Default.getImage('images/' + sexs[data.a('sex')] + '.png');
+                            ht.Default.drawStretchImage(g, image, 'centerUniform', x, y, w, h);
+                        }
+                    }
+                ]);
+                
+                for(var i=0; i<30; i++){
+                    var data = new ht.Data();
+                    data.a({
+                       index: i,
+                       sex: Math.floor(Math.random() + 0.5),
+                       nation: Math.floor(Math.random() * 3)
+                    });
+                    dataModel.add(data);
+                }
+                 
+                tableHeader = tablePane.getTableHeader();
+                if(!ht.Default.isTouchable){
+                    tableHeader.getView().style.background = 'url(images/header.png) repeat-x';
+                }                
+                tableHeader.setColumnLineColor('#C8C8C8');
+                tableHeader.setInsertColor('#6DCDF3');
+                tableHeader.getLabelFont = function(column){ return 'bold 12px Arial' };
+                                  
+                tableView = tablePane.getTableView();                 
+                tableView.setSelectBackground('#6DCDF3');
+                tableView.setRowLineColor('#EDEDED');
+                tableView.setColumnLineVisible(false);                
+                tableView.setRowHeight(23);
+                tableView.setAutoHideScrollBar(false);
+                tableView.drawRowBackground = function(g, data, selected, x, y, width, height){
+                    if(selected){
+                        g.fillStyle = '#87A6CB';
+                    }
+                    else if(tableView.getRowIndex(data) % 2 === 0){
+                        g.fillStyle = '#F1F4F7';
+                    }
+                    else{
+                        g.fillStyle = '#FAFAFA';
+                    }
+                    g.beginPath();
+                    g.rect(x, y, width, height);
+                    g.fill();
+                };
+                
+                toolbar.setItems([
+                    {
+                        id: 'nation-all',
+                        groupId: 'nation',
+                        type: 'toggle',
+                        label: 'All',
+                        selected: true,
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    },
+                    {
+                        id: 'uk',
+                        groupId: 'nation',
+                        type: 'toggle',
+                        icon: 'images/uk.png',
+                        label: 'UK',                        
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    },
+                    {
+                        id: 'usa',
+                        groupId: 'nation',
+                        type: 'toggle',
+                        icon: 'images/usa.png',
+                        label: 'USA',
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    },
+                    {
+                        id: 'mexico',
+                        groupId: 'nation',
+                        type: 'toggle',
+                        icon: 'images/mexico.png',
+                        label: 'MEXICO',
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    },
+                    'separator',
+                    'separator',
+                    {
+                        id: 'sex-all',
+                        groupId: 'sex',
+                        type: 'radio',
+                        label: 'All',
+                        selected: true,
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    },                    
+                    {
+                        id: 'man',
+                        groupId: 'sex',
+                        type: 'radio',
+                        icon: 'images/man.png',
+                        label: 'Man',
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    },
+                    {
+                        id: 'woman',
+                        groupId: 'sex',
+                        type: 'radio',
+                        icon: 'images/woman.png',
+                        label: 'Woman',
+                        action: function(){
+                            tableView.invalidateModel();
+                        }
+                    }
+                ]);
+    
+                tableView.setVisibleFunc(function(data){                    
+                    var nation = data.a('nation'),
+                        sex = data.a('sex');                    
+                    // filter nation 
+                    if(!toolbar.getItemById('nation-all').selected){
+                        if(toolbar.getItemById('uk').selected && nation !== 0){
+                            return false;
+                        }
+                        if(toolbar.getItemById('usa').selected && nation !== 1){
+                            return false;
+                        }
+                        if(toolbar.getItemById('mexico').selected && nation !== 2){
+                            return false;
+                        }
+                    } 
+                    // filter sex
+                    if(!toolbar.getItemById('sex-all').selected){
+                        if(toolbar.getItemById('man').selected && sex !== 0){
+                            return false;
+                        }
+                        if(toolbar.getItemById('woman').selected && sex !== 1){
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+    
+            }
+            
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

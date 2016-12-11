@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Path</title>        
+        <meta charset="UTF-8" name="viewport" content="user-scalable=yes, width=600">
+        <style>
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.5);
+            } 
+        </style>          
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        <script>
+
+            function init(){ 
+                dataModel = new ht.DataModel();                
+                g3d = new ht.graph3d.Graph3dView(dataModel);                                     
+                g3d.setEye(200, 50, 300);
+                g3d.setDashDisabled(false);
+                g3d.getView().style.background = '#4C7BBB';
+                g3d.addToDOM();  
+
+                ht.Default.loadObj('obj/plane.obj', 'obj/plane.mtl', {                    
+                    center: true,
+                    r3: [0, -Math.PI/2, 0], // make plane face right
+                    s3: [0.15, 0.15, 0.15], // make plane smaller
+                    finishFunc: function(modelMap, array, rawS3){
+                        if(modelMap){                            
+                            modelMap.propeller.r3 = {
+                                func: function(data){
+                                    return [data.a('angle'), 0, 0]; 
+                                }                                
+                            };                             
+                            // make propeller a litter bigger
+                            modelMap.propeller.s3 = [1, 1.2, 1.2]; 
+                            modelMap.propeller.color = 'yellow';
+                            
+                            // add a sphere model as an indicator light
+                            array.push({
+                                shape3d: ht.Default.createSmoothSphereModel(),
+                                t3: [-40, 10, 0],
+                                s3: [6, 6, 6],
+                                color: {
+                                    func: function(data){
+                                        return data.a('light') ? 'red': 'black';
+                                    }
+                                }
+                            });
+                            ht.Default.setShape3dModel('plane', array);
+                            
+                            createPlane(rawS3);
+                            createFormPane();  
+                        } 
+                    }
+                });
+                                
+                createPath();
+            } 
+
+            function createPlane(rawS3){
+                plane = new ht.Node();
+                plane.s3(200, 200, 200);
+                plane.s3(rawS3);
+                plane.s({
+                    'shape3d': 'plane',
+                    'shape3d.scaleable': false,
+                    'wf.visible': true,
+                    'wf.color': 'white',
+                    'wf.short': true
+                });
+                plane.a({
+                    'angle': 0,
+                    'light': false
+                });
+                dataModel.add(plane);                                  
+                
+                params = {
+                    delay: 1500,
+                    duration: 20000,
+                    easing: function(t){ 
+                        return (t *= 2) < 1 ? 0.5 * t * t : 0.5 * (1 - (--t) * (t - 2));                      
+                    },
+                    action: function(v, t){
+                        var length = g3d.getLineLength(polyline),
+                            offset = g3d.getLineOffset(polyline, length*v),
+                            point = offset.point,
+                            px = point.x,
+                            py = point.y,
+                            pz = point.z,
+                            tangent = offset.tangent,
+                            tx = tangent.x,
+                            ty = tangent.y,
+                            tz = tangent.z;
+                        plane.p3(px, py, pz);
+                        plane.lookAt([px + tx, py + ty, pz + tz], 'right');   
+                        
+                        var camera = formPane.v('Camera');
+                        if(camera === 'Look At'){
+                            g3d.setCenter(px, py, pz);
+                        }
+                        else if(camera === 'First Person'){                            
+                            g3d.setEye(px - tx * 400, py - ty * 400 + 30, pz - tz * 400);
+                            g3d.setCenter(px, py, pz);                            
+                        }
+                        
+                        plane.a('angle', v*Math.PI*120);                        
+                        if(this.duration * t % 1000 > 500){
+                            plane.a('light', false);
+                        }else{
+                            plane.a('light', true);
+                        }                        
+                    },
+                    finishFunc: function(){
+                        animation = ht.Default.startAnim(params);
+                        plane.a('light', false);
+                    }                  
+                };                               
+                
+                animation = ht.Default.startAnim(params);
+            }
+
+            function createPath(){            
+                polyline = new ht.Polyline();   
+                polyline.setThickness(2);
+                polyline.s({
+                    'shape.border.pattern': [16, 16],
+                    'shape.border.color': 'red',
+                    'shape.border.gradient.color': 'yellow',
+                    'shape3d.resolution': 300,
+                    '3d.selectable': false
+                });
+                dataModel.add(polyline);
+
+                // start point
+                points = [{ x: 0, y: 0, e: 0 }];
+                segments = [1];
+
+                // several circles
+                var cx = -400,
+                    cy = 0,
+                    height = 360,
+                    radius = 180,
+                    round = 5,
+                    roundCount = 500,
+                    count = round * roundCount;
+                for(var k=0; k<count+1; k++){
+                    var angle = k * Math.PI * 2 * round / count;
+                    points.push({
+                        x: cx + radius * Math.cos(angle),
+                        y: cy + radius * Math.sin(angle),
+                        e: k * height / count
+                    }); 
+                    segments.push(2);
+                }
+
+                // quadraticCurveTo
+                points.push({ x: cx+radius, y: 0, e: height/2 });
+                createControlPoint('y');
+                points.push({ x: 0, y: 0, e: height/2 });
+                segments.push(3);
+                createControlPoint('xyz');
+
+                // bezierCurveTo
+                points.push({ x: radius, y: -radius, e: height/2*0.7 });
+                createControlPoint('xz');
+                points.push({ x: radius*2, y: radius, e: height/2*0.3 });
+                createControlPoint('xz');
+                points.push({ x: radius*3, y: 0, e: 0 });
+                segments.push(4);   
+                createControlPoint('x');
+
+                // finish point
+                points.push({ x: 0, y: 0, e: 0 });
+                segments.push(2);  
+
+                polyline.setPoints(points);
+                polyline.setSegments(segments);  
+                
+                // runway
+                runway = new ht.Node();
+                runway.s3(-cx+radius*3, 1, 200);
+                runway.p3(cx+runway.getWidth()/2, -22, 0);
+                runway.s({
+                   'all.color': '#FAFAFA',
+                   'all.transparent': true,
+                   'all.reverse.cull': true,
+                   'all.opacity': 0.8,
+                   '3d.selectable': false
+                });
+                dataModel.add(runway);  
+                
+                // monitor control points to change path
+                g3d.sm().setSelectionMode('single');
+                g3d.mi(function(e){
+                    if(e.kind === 'betweenMove' || e.kind === 'endMove'){
+                        var data = g3d.sm().ld();
+                        if(data && data.a('index') != null){
+                            var p3 = data.p3();
+                            polyline.setPoint(data.a('index'), { x: p3[0], e: p3[1], y: p3[2] });
+                        }
+                    }
+                });
+            }
+            
+            function createControlPoint(moveMode){
+                var index = points.length-1,
+                    point = points[index],
+                    node = new ht.Node();
+                node.s({
+                    'shape3d': 'sphere',
+                    'shape3d.color': 'yellow',
+                    '3d.move.mode': moveMode
+                });
+                node.s3(25, 25, 25);
+                node.p3(point.x, point.e, point.y);
+                node.a({
+                    index: index
+                });
+                dataModel.add(node);
+            }
+            
+            function createFormPane(){ 
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(280);
+                formPane.setHeight(ht.Default.isTouchable ? 156 : 112);                
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());                 
+
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Animation',
+                            selected: true,
+                            onValueChanged: function(){
+                                if(this.isSelected()){
+                                    animation.resume();
+                                }else{
+                                    animation.pause();
+                                }                               
+                            }
+                        }
+                    },
+                    {
+                        id: 'Camera',
+                        comboBox: {
+                            values: ['Look At', 'First Person', null],
+                            value: 'Look At'
+                        }        
+                    }
+                ], [0.1, 0.1]); 
+
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Dash Path',
+                            selected: true,
+                            onValueChanged: function(){
+                                polyline.s('shape.border.pattern', this.isSelected() ? [16, 16] : null);                              
+                            }
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Wireframe',
+                            selected: plane.s('wf.visible'),
+                            onValueChanged: function(){
+                                plane.s('wf.visible', this.isSelected());
+                            }
+                        }        
+                    }
+                ], [0.1, 0.1]);
+                
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Show Path',
+                            selected: true,
+                            onValueChanged: function(){
+                                var visible = this.isSelected();
+                                polyline.s('3d.visible', visible);
+                                dataModel.each(function(data){
+                                    if(data.a('index')){
+                                        data.s('3d.visible', visible);
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    {
+                        checkBox: {
+                            label: 'Show Runway',
+                            selected: true,
+                            onValueChanged: function(){
+                                runway.s('3d.visible', this.isSelected());
+                            }
+                        }        
+                    }
+                ], [0.1, 0.1]);                                
+                
+                formPane.addRow(['Duration', 
+                    {                        
+                        slider: {                    
+                            min: 5000,
+                            max: 30000,
+                            step: 1000,
+                            value: animation.duration,
+                            onValueChanged: function(){     
+                                animation.duration = this.getValue();
+                                params.duration = this.getValue();
+                            }
+                        }
+                    }
+                ], [70, 0.1]);                                                 
+            }
+                        
+          
+        </script>
+    </head>
+    <body onload="init();">                         
+    </body>
+</html>

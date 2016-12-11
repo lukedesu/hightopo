@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TableHeader</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>
+            function init(){
+                dataModel = new ht.DataModel();
+                tableView = new ht.widget.TableView(dataModel);                                         
+
+                tableHeader1 = new ht.widget.TableHeader(tableView);
+                tableHeader2 = new ht.widget.TableHeader(tableView);
+                
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(tableHeader1);
+                borderPane.setCenterView(tableView);
+                borderPane.setBottomView(tableHeader2);
+                
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);                         
+    
+                var map = { 
+                    500: { name: 'Critical', color: '#FF0000'},
+                    400: { name: 'Major', color: '#FFA000'},
+                    300: { name: 'Minor', color: '#FFFF00'},
+                    200: { name: 'Warning', color: '#00FFFF'},
+                    100: { name: 'Indeterminate', color: '#C800FF'},
+                    0: { name: 'Cleared', color: '#00FF00'}
+                };
+
+                for(var key in map){
+                    var data = new ht.Data();
+                    data.setAttr('alarmSeverity', parseInt(key));                    
+                    dataModel.add(data);
+                }                    
+        
+                tableView.addColumns([
+                    {
+                        displayName: 'Severity',
+                        name: 'alarmSeverity',
+                        accessType: 'attr',
+                        sortOrder: 'desc',
+                        color: '#3498DB',
+                        tag: 'sortableColumn',
+                        sortFunc: function(v1, v2, d1, d2){
+                            if(v1 === v2){
+                                return 0;
+                            }
+                            // keep 'Cleared' on top
+                            if(v1 === 0){
+                                return -1;
+                            }
+                            if(v2 === 0){
+                                return 1;
+                            }
+                            // compare value
+                            if(v1 > v2){
+                                return -1;
+                            }else{
+                                return 1;
+                            }                  
+                        }
+                    },
+                    {     
+                        displayName: 'Color',
+                        sortable: false,
+                        valueType: 'color',
+                        getValue: function(data){
+                            var alarmSeverity = data.getAttr('alarmSeverity'),
+                                color = map[alarmSeverity].color;
+                            return tableView.isSelected(data) ? ht.Default.darker(color) : color;
+                        }
+                    },
+                    {
+                        displayName: 'Row',
+                        align: 'center',
+                        sortable: false,
+                        drawCell: function (g, data, selected, column, x, y, w, h, tableView) {
+                            var index = tableView.getRowIndex(data);
+
+                            // draw background
+                            var color = index % 2 === 0 ? 'lightblue' : '#3498DB';
+                            g.fillStyle = selected ? ht.Default.darker(color) : color;
+                            g.beginPath();
+                            g.rect(x, y, w, h);
+                            g.fill();
+
+                            // draw label
+                            color = selected ? 'white' : 'black';
+                            ht.Default.drawText(g, 'row ' + index, null, color, x, y, w, h, 'center');
+                        }
+                    },
+                    {
+                        displayName: 'Name',
+                        width: 200,
+                        sortable: false,
+                        drawCell: function (g, data, selected, column, x, y, w, h, tableView) {
+                            var alarmSeverity = data.getAttr('alarmSeverity'),
+                                info = map[alarmSeverity],
+                                color = info.color;
+
+                            // draw background                    
+                            g.fillStyle = selected ? ht.Default.darker(color) : color;
+                            g.beginPath();
+                            g.rect(x, y, w, h);
+                            g.fill();
+
+                            // draw label     
+                            color = selected ? 'white' : 'black';
+                            ht.Default.drawText(g, info.name, null, color, x, y, w, h, 'center');
+                        }  
+                    }        
+                ]);
+                
+                tableView.setSortColumn(tableView.getColumnModel().getDataByTag('sortableColumn'));
+
+            }
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

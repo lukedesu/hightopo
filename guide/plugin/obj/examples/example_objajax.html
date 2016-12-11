@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OBJ Ajax</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+        </style> 
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script> 
+        
+        <script>
+
+            function init(){ 
+                rawS3 = null;
+                dataModel = new ht.DataModel();                
+                g3d = new ht.graph3d.Graph3dView(dataModel);                  
+                
+                toolbar = new ht.widget.Toolbar([                   
+                    {
+                        label: 'Editable',
+                        type: 'check',
+                        action: function(){
+                            g3d.setEditable(this.selected);
+                        }
+                    },
+                    {
+                        id: 'size',
+                        label: 'Size',
+                        slider: {
+                            width: 120,
+                            min: 1,
+                            max: 60,
+                            value: 1,
+                            thickness: 1,
+                            onValueChanged: function(){
+                                if(rawS3){
+                                    var value = this.getValue();
+                                    dataModel.each(function(data){
+                                        if(data instanceof ht.Node){
+                                            data.s3(rawS3[0] * value, rawS3[1] * value, rawS3[2] * value);
+                                            data.s({
+                                                'note.scale': value/20,
+                                                'note.t3': [0, -value, value]
+                                            });                                            
+                                        }                                         
+                                    });                                    
+                                }
+                            }        
+                        }
+                    }                    
+                ]); 
+                toolbar.setStickToRight(true);
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(toolbar);
+                borderPane.setCenterView(g3d);                 
+
+                treeView = new ht.widget.TreeView(dataModel); 
+                treeView.setSortFunc(ht.Default.sortFunc);
+                treeView.setCheckMode('descendant');
+                treeView.setSelectionModelShared(false);
+                treeView.sm().ms(function(e){
+                    g3d.redraw();
+                });
+                mainSplit = new ht.widget.SplitView(treeView, borderPane, 'h', 0.2);  
+                
+                view = mainSplit.getView();  
+                view.className = 'main';
+                document.body.appendChild(view);
+                window.addEventListener('resize', function (e) {
+                    mainSplit.invalidate();
+                }, false);  
+                
+                g3d.setGridVisible(true);                 
+                g3d.getLabel = function(data){return null;};
+                g3d.isVisible = function(data){return treeView.isSelected(data);}; 
+                 
+                load('obj/scooter.mtl', 'obj/scooter.obj');
+            } 
+        
+            function parse(scooter_mtl, scooter_obj){     
+                var modelMap = ht.Default.parseObj(scooter_obj, scooter_mtl, {center: true, cube: true});                
+                var lastNode = null;
+                var firstNode = null;
+                var parentNode = new ht.Data();    
+                var array = [];                
+            
+                parentNode.setName('Separate Scooter');
+                dataModel.add(parentNode);                                                
+                
+                for(var name in modelMap){                    
+                    var model = modelMap[name];   
+                    var shape3d = 'scooter:' + name;
+                    
+                    ht.Default.setShape3dModel(shape3d, model);
+                    array.push(model);                    
+                    
+                    var node = new ht.Node();
+                    node.setName(name);
+                    node.setParent(parentNode);
+                    node.s({
+                        'shape3d': shape3d,
+                        'wf.visible': 'selected'
+                    });                                                               
+                    node.setHost(lastNode);
+                    lastNode = node;
+                    if(!firstNode){
+                        firstNode = node;
+                    }
+                    if(!rawS3){
+                        rawS3 = model.rawS3;
+                    }
+                    node.s3(rawS3); 
+                    dataModel.add(node);
+                }
+                if(lastNode){
+                    firstNode.setHost(lastNode);
+                }                                
+                node.p3(300, 0, 0);
+                node.s({
+                    'note': 'A lot of Nodes host together',
+                    'note.color': 'black',
+                    'note.background': 'yellow',
+                    'note.face': 'center',
+                    'note.position': 7
+                });                
+                
+                ht.Default.setShape3dModel('scooter', array);
+                var node = new ht.Node();
+                node.setName('All in ONE');
+                node.s({
+                    'shape3d': 'scooter',
+                    'wf.visible': 'selected',
+                    'note': 'One Node',
+                    'note.color': 'black',
+                    'note.background': 'yellow',
+                    'note.face': 'center',
+                    'note.position': 7,
+                    'note.autorotate': 'y'                        
+                });                
+                node.s3(rawS3); 
+                node.p3(-300, 0, 0);
+                dataModel.add(node);                                
+                
+                treeView.expandAll();
+                treeView.selectAll();
+                
+                ht.Default.startAnim({
+                    action: function(t){
+                        toolbar.v('size', 50*t);
+                    }
+                });            
+            }
+        
+            function load(mtlUrl, objUrl){
+                var xhr1 = new XMLHttpRequest();
+                xhr1.onload = function(e){                
+                    var mtlText = e.target.responseText;
+                    var xhr2 = new XMLHttpRequest();
+                    xhr2.onload = function(e){
+                        var objText = e.target.responseText;
+                        parse(mtlText, objText);                                                                               
+                    };
+                    xhr2.open('GET', objUrl, true);
+                    xhr2.send(null);                     
+                };                
+                xhr1.open('GET', mtlUrl, true);
+                xhr1.send(null);                                               
+            }        
+                             
+                        
+        </script>
+    </head>
+    <body onload="init();">                         
+    </body>
+</html>

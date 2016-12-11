@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Edge Type</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+        <script type="text/javascript">
+            htconfig = {
+                Style: {
+                    'edge.width': 2,
+                    'edge.color': 'red',
+                    'edge.dash': true,
+                    'shape.dash': true,
+                    'edge.dash.color': "yellow",
+                    'shape.dash.color': "yellow",
+                    'edge.dash.flow': true,
+                    'shape.dash.flow': true
+                }
+            };
+        </script>
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-edgetype.js"></script>   
+        <script src="../../../../lib/plugin/ht-dashflow.js"></script>   
+        <script src="../../edgetype/examples/edgeModel.js"></script> 
+        <script>
+            function init(){                                
+                dataModel = new ht.DataModel();
+                graphView = new ht.graph.GraphView(dataModel);      
+                graphView.setZoom(0.5);
+                graphView.setEditable(true);
+                graphView.enableToolTip();
+                graphView.getToolTip = function(e){
+                    var data = this.getDataAt(e);
+                    if(data){
+                        return '<pre>' + JSON.stringify(data.getStyleMap(), null, 4) + '</pre>';
+                    }
+                    return null;
+                };                
+                        
+                view = graphView.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);   
+                            
+                createEdgeModel();
+                
+                graphView.enableDashFlow();
+            }
+            
+            function createNode(x, y, style){
+                var node = new ht.Node();
+                node.s({
+                    'shape': 'rect',
+                    'opacity': 0.5
+                });
+                node.setPosition(x, y);
+                node.setSize(20, 20);
+                if(style){
+                    node.s(style);
+                }
+                dataModel.add(node);
+                return node;
+            }
+
+            function createEdge(sourceNode, targetNode, count, typeOrStyle){
+                var edge;
+                for(var i=0; i<count; i++){
+                    edge = new ht.Edge(sourceNode, targetNode);
+                    if(typeof typeOrStyle === 'object'){
+                        edge.s(typeOrStyle);
+                    }else{
+                        edge.s('edge.type', typeOrStyle);                        
+                    }  
+                    dataModel.add(edge);
+                }
+                return edge;
+            }           
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

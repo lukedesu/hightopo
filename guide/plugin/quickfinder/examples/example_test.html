@@ -1,0 +1,404 @@
+<html>
+    <head>
+        <script type="text/javascript" src="../../../../lib/core/ht.js"></script>
+        <script type="text/javascript" src="../../../../lib/plugin/ht-quickfinder.js"></script>
+        <script type="text/javascript">
+            function assertUndefined(value){
+                 if(undefined !== value){
+                    throw new Error('Expect Undefined, but is ' + value)
+                }               
+            }
+            function assertNull(value){
+                if(null !== value){
+                    throw new Error('Expect Null, but is ' + value)
+                }
+            }   
+            function assertNotNull(value){
+                if(null === value){
+                    throw new Error('Expect Not Null, but is ' + value)
+                }
+            } 
+            function assertTrue(value){
+                if(true !== value){
+                    throw new Error('Expect TRUE, but is ' + value)
+                }
+            }
+            function assertFalse(value){
+                if(false !== value){
+                    throw new Error('Expect FALSE, but is ' + value)
+                }
+            }
+            function assertEquals(expect, value){
+                if(expect !== value){
+                    throw new Error('Expect ' + expect + ', but is ' + value)
+                }
+            }  
+            function assertArrayEquals(expect, value){
+                assertEquals(expect.length, value.length);
+                for(var i=0; i<value.length; i++){
+                    assertEquals(expect[i], value[i]);
+                }
+            }
+        </script>
+        <script type="text/javascript">
+            function testProperty() {
+                var dataModel = new ht.DataModel();
+
+                var d1 = new ht.Data(11);
+                var d2 = new ht.Data(12);
+                var d3 = new ht.Data(13);
+
+                dataModel.add(d1);
+                dataModel.add(d2);
+                dataModel.add(d3);
+
+                d1.setName("ht");
+                d2.setName("ht");
+                d3.setName("vector");
+
+                var finder = new ht.QuickFinder(dataModel, "name");
+                assertEquals(dataModel, finder.getDataModel());
+                assertEquals(undefined, finder.getAccessType());
+                assertEquals("name", finder.getPropertyName());
+                
+                var array = finder.find("ht");
+                assertEquals(2, array.size());
+                assertEquals(d1, array.get(0));
+                assertEquals(d2, array.get(1));
+                assertEquals(1, finder.find("vector").size());
+                assertEquals(d3, finder.findFirst("vector"));
+                assertNull(finder.findFirst("eric"));
+
+                d1.setName("vector");
+                array = finder.find("vector");
+                assertEquals(2, array.size());
+                assertEquals(d3, array.get(0));
+                assertEquals(d1, array.get(1));
+                assertEquals(1, finder.find("ht").size());
+                assertEquals(d2, finder.findFirst("ht"));
+
+                d2.setName("newName");
+                assertEquals(d2, finder.findFirst("newName"));
+                assertNull(finder.findFirst("ht"));
+
+                var d4 = new ht.Data(14);
+                var d5 = new ht.Data(15);
+                dataModel.add(d4);
+                dataModel.add(d5);
+                array = finder.find(null);
+                assertEquals(2, array.size());
+                assertEquals(d4, array.get(0));
+                assertEquals(d5, array.get(1));
+                dataModel.remove(d4);
+                assertEquals(1, finder.find(null).size());
+                assertEquals(d5, finder.findFirst(null));
+
+                dataModel.clear();
+                assertNull(finder.findFirst("ht"));
+                assertNull(finder.findFirst("vector"));
+
+            }
+
+            function testGroup() {
+                var dataModel = new ht.DataModel();
+                dataModel.setAutoAdjustIndex(false);
+                var d1 = new ht.Data();
+                var d2 = new ht.Data();
+                var d3 = new ht.Data();
+
+                var g1 = new ht.Group();
+                var g2 = new ht.Group();
+                var g3 = new ht.Group();
+
+                dataModel.add(d1);
+                dataModel.add(d2);
+                dataModel.add(d3);
+
+                dataModel.add(g1);
+                dataModel.add(g2);
+                dataModel.add(g3);
+
+                d1.setName("ht");
+                d2.setName("ht");
+                d3.setName("vector");
+
+                var groupFinder = new ht.QuickFinder(dataModel, "expanded");
+                var ggg = groupFinder.find("false");
+                assertEquals(3, ggg.size());
+                assertEquals(g1, ggg.get(0));
+                assertEquals(g2, ggg.get(1));
+                assertEquals(g3, ggg.get(2));
+
+                ggg = groupFinder.find("true");
+                assertEquals(0, ggg.size());
+
+                g2.setExpanded(true);
+                ggg = groupFinder.find("false");
+                assertEquals(2, ggg.size());
+                assertEquals(g1, ggg.get(0));
+                assertEquals(g3, ggg.get(1));
+
+                ggg = groupFinder.find("true");
+                assertEquals(1, ggg.size());
+                assertEquals(g2, ggg.get(0));
+
+                g1.setExpanded(true);
+                ggg = groupFinder.find("false");
+                assertEquals(1, ggg.size());
+                assertEquals(g3, ggg.get(0));
+
+                ggg = groupFinder.find("true");
+                assertEquals(2, ggg.size());
+                assertEquals(g2, ggg.get(0));
+                assertEquals(g1, ggg.get(1));
+
+                var finder = new ht.QuickFinder(dataModel, "name");
+                assertEquals(dataModel, finder.getDataModel());
+                assertEquals(undefined, finder.getAccessType());
+                assertEquals("name", finder.getPropertyName());
+
+                var array = finder.find("ht");
+                assertEquals(2, array.size());
+                assertEquals(d1, array.get(0));
+                assertEquals(d2, array.get(1));
+                assertEquals(1, finder.find("vector").size());
+                assertEquals(d3, finder.findFirst("vector"));
+                assertNull(finder.findFirst("eric"));
+
+                d1.setName("vector");
+                array = finder.find("vector");
+                assertEquals(2, array.size());
+                assertEquals(d3, array.get(0));
+                assertEquals(d1, array.get(1));
+                assertEquals(1, finder.find("ht").size());
+                assertEquals(d2, finder.findFirst("ht"));
+
+                d2.setName("eric");
+                assertEquals(d2, finder.findFirst("eric"));
+                assertNull(finder.findFirst("ht"));
+                
+                var d4 = new ht.Data();
+                var d5 = new ht.Data();
+                dataModel.add(d4);
+                dataModel.add(d5);
+                array = finder.find(null);
+                assertEquals(5, array.size());
+                assertEquals(g1, array.get(0));
+                assertEquals(g2, array.get(1));
+                assertEquals(g3, array.get(2));
+                assertEquals(d4, array.get(3));
+                assertEquals(d5, array.get(4));
+                dataModel.remove(d4);
+                assertEquals(4, finder.find(null).size());
+
+                dataModel.clear();
+                assertNull(finder.findFirst("ht"));
+                assertNull(finder.findFirst("vector"));
+            }
+
+            function testAttr() {
+                var dataModel = new ht.DataModel();
+
+                var d1 = new ht.Data(11);
+                var d2 = new ht.Data(12);
+                var d3 = new ht.Data(13);
+
+                dataModel.add(d1);
+                dataModel.add(d2);
+                dataModel.add(d3);
+
+                d1.setAttr("name", "ht");
+                d2.setAttr("name", "ht");
+                d3.setAttr("name", "vector");
+
+                var finder = new ht.QuickFinder(dataModel, "name", 'attr');
+                assertEquals('attr', finder.getAccessType());
+                assertEquals("name", finder.getPropertyName());
+
+                var array = finder.find("ht");
+                assertEquals(2, array.size());
+                assertEquals(d1, array.get(0));
+                assertEquals(d2, array.get(1));
+                assertEquals(1, finder.find("vector").size());
+                assertEquals(d3, finder.findFirst("vector"));
+                assertNull(finder.findFirst("eric"));
+
+                d1.setAttr("name", "vector");
+                array = finder.find("vector");
+                assertEquals(2, array.size());
+                assertEquals(d3, array.get(0));
+                assertEquals(d1, array.get(1));
+                assertEquals(1, finder.find("ht").size());
+                assertEquals(d2, finder.findFirst("ht"));
+
+                d2.setAttr("name", "eric");
+                assertEquals(d2, finder.findFirst("eric"));
+                assertNull(finder.findFirst("ht"));
+
+                var d4 = new ht.Data(14);
+                var d5 = new ht.Data(15);
+                dataModel.add(d4);
+                dataModel.add(d5);
+                array = finder.find(null);
+                assertEquals(2, array.size());
+                assertEquals(d4, array.get(0));
+                assertEquals(d5, array.get(1));
+                dataModel.remove(d4);
+                assertEquals(1, finder.find(null).size());
+                assertEquals(d5, finder.findFirst(null));
+
+                dataModel.clear();
+                assertNull(finder.findFirst("ht"));
+                assertNull(finder.findFirst("vector"));
+            }
+
+            function testStyle() {
+                var dataModel = new ht.DataModel();
+
+                var d1 = new ht.Node();
+                var d2 = new ht.Node();
+                var d3 = new ht.Node();
+
+                dataModel.add(d1);
+                dataModel.add(d2);
+                dataModel.add(d3);
+
+                d1.setStyle("name", "ht");
+                d2.setStyle("name", "ht");
+                d3.setStyle("name", "vector");
+
+                var finder = new ht.QuickFinder(dataModel, "name", 'style');
+                assertEquals('style', finder.getAccessType());
+                assertEquals("name", finder.getPropertyName());
+
+                var array = finder.find("ht");
+                assertEquals(2, array.size());
+                assertEquals(d1, array.get(0));
+                assertEquals(d2, array.get(1));
+                assertEquals(1, finder.find("vector").size());
+                assertEquals(d3, finder.findFirst("vector"));
+                assertNull(finder.findFirst("eric"));
+
+                d1.setStyle("name", "vector");
+                var array = finder.find("vector");
+                assertEquals(2, array.size());
+                assertEquals(d3, array.get(0));
+                assertEquals(d1, array.get(1));
+                assertEquals(1, finder.find("ht").size());
+                assertEquals(d2, finder.findFirst("ht"));
+
+                d2.setStyle("name", "eric");
+                assertEquals(d2, finder.findFirst("eric"));
+                assertNull(finder.findFirst("ht"));
+
+                var d4 = new ht.Node();
+                var d5 = new ht.Node();
+                dataModel.add(d4);
+                dataModel.add(d5);
+                dataModel.add(new ht.Data());
+                dataModel.add(new ht.Data());
+                array = finder.find(null);
+                assertEquals(4, array.size());
+                assertEquals(d4, array.get(0));
+                assertEquals(d5, array.get(1));
+                dataModel.remove(d4);
+                assertEquals(3, finder.find(null).size());
+                assertEquals(d5, finder.findFirst(null));
+
+                dataModel.clear();
+                assertNull(finder.findFirst("ht"));
+                assertNull(finder.findFirst("vector"));
+            }
+
+            t = {};
+            t.Person = function() {
+                t.Person.superClass.constructor.call(this);
+            };
+            ht.Default.def(t.Person, ht.Node, {
+                _age: 30,
+                ms_ac: ["age"]
+            });
+
+            function testValueFunc() {
+                var dataModel = new ht.DataModel();
+
+                var d1 = new t.Person();
+                var d2 = new t.Person();
+                var d3 = new t.Person();
+                var d4 = new t.Person();
+                var d5 = new t.Person();
+
+                var f = function(data) {
+                    return data.getAge();
+                };
+                var finder = new ht.QuickFinder(dataModel, "age", null, f);
+                
+                assertEquals(0, finder.find(18).size());
+                assertEquals(0, finder.find(20).size());
+                assertEquals(0, finder.find(30).size());
+
+                dataModel.add(d1);
+                dataModel.add(d2);
+                dataModel.add(d3);
+                dataModel.add(d4);
+                dataModel.add(d5);
+                assertEquals(5, finder.find(30).size());
+
+                d1.setAge(18);
+                d2.setAge(18);
+                d3.setAge(20);
+                d4.setAge(20);
+                d5.setAge(20);
+                assertEquals(2, finder.find(18).size());
+                assertEquals(3, finder.find(20).size());
+                assertEquals(0, finder.find(30).size());
+
+                dataModel.remove(d4);
+                dataModel.remove(d5);
+
+                assertEquals(2, finder.find(18).size());
+                assertEquals(1, finder.find(20).size());
+                assertEquals(d3, finder.findFirst(20));
+            }
+
+            function testFilterFunc() {
+                var dataModel = new ht.DataModel();
+
+                var d1 = new ht.Data(11);
+                var d2 = new ht.Data(12);
+                var d3 = new ht.Data(13);
+
+                dataModel.add(d1);
+                dataModel.add(d2);
+                dataModel.add(d3);
+
+                d1.setName("ht");
+                d2.setName("ht");
+                d3.setName("ht");
+
+                var f = function(data) {
+                    return data !== d2;
+                };
+                var finder = new ht.QuickFinder(dataModel, "name", null, null, f);
+                var array = finder.find("ht");
+                assertEquals(2, array.size());
+                assertEquals(d1, array.get(0));
+                assertEquals(d3, array.get(1));
+
+                dataModel.clear();
+                assertEquals(0, finder.find("ht").size());
+            }
+            function test() {
+                testProperty();
+                testGroup();
+                testAttr();
+                testStyle();
+                testValueFunc();
+                testFilterFunc();
+            }
+        </script>
+    </head>
+
+    <body onload="test();">
+    </body>
+</html>

@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Headlight</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0;
+                margin: 0;                
+            }            
+            .main {
+                background: black;
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;                
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.5);
+            } 
+        </style>    
+                                       
+        <script src="../../../../lib/core/ht.js"></script> 
+        <script src="../../../../lib/plugin/ht-modeling.js"></script> 
+        <script src="../../../../lib/plugin/ht-obj.js"></script> 
+        <script src="../../../../lib/plugin/ht-form.js"></script>  
+        
+        <script src="util.js"></script> 
+        <script src="scooter_obj.js"></script> 
+        <script src="scooter_mtl.js"></script>        
+                
+        <script>
+                                    
+            function init(){                                                                                                                                              
+                dataModel = new ht.DataModel();
+                g3d = new ht.graph3d.Graph3dView(dataModel);    
+                g3d.setEye([500, 400, 800]);
+        
+                view = g3d.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    g3d.iv();
+                }, false);                                
+                
+                createModel();
+                
+                createFormPane();
+                formPane.v('floor', true);               
+                formPane.getView().className = 'formpane';
+                document.body.appendChild(formPane.getView());                                                                               
+                
+            }            
+            
+            function createFormPane(){                                                
+                formPane = new ht.widget.FormPane();
+                formPane.setWidth(200);
+                formPane.setHeight(180);
+                       
+                createTexturePane();         
+        
+                newLine('Headlight');
+                formPane.addRow([
+                    {
+                        checkBox: {
+                            label: 'Disabled',                            
+                            onValueChanged: function(){
+                                g3d.setHeadlightDisabled(this.getValue());
+                            }
+                        }
+                    },
+                    {                        
+                        comboBox: {
+                            values: ['white', 'yellow', 'red', 'blue', 'green', 'orange'],
+                            value: 'white',
+                            onValueChanged: function(){
+                                g3d.setHeadlightColor(this.getValue());
+                            }
+                        }                        
+                    }
+                ], [0.1, 0.15]); 
+                formPane.addRow([
+                    'Range', 
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 3500,
+                            step: 100,
+                            value: g3d.getHeadlightRange(),                            
+                            onValueChanged: function(){     
+                                g3d.setHeadlightRange(this.getValue());                                
+                            }
+                        }
+                    }
+                ], [0.1, 0.15]);
+                formPane.addRow([
+                    'Intensity',
+                    {
+                        slider: {                    
+                            min: 0,
+                            max: 3,
+                            step: 0.1,
+                            value: g3d.getHeadlightIntensity(),                             
+                            onValueChanged: function(){     
+                                g3d.setHeadlightIntensity(this.getValue());                                
+                            }
+                        }
+                    }                        
+                ], [0.1, 0.15]);      
+                
+            }
+            
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

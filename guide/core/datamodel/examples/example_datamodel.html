@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DataModel</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 2px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+            .output{
+                background: #1ABC9C;
+                color: white;
+                float: right;
+                margin-right: 2px;
+                padding: 0px 5px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>           
+            
+            GraphPane = function(dataModel, toolbar, className){    
+                var graphView = this._graphView = new ht.graph.GraphView(dataModel);                
+                if(toolbar){
+                    this._toolbar = toolbar;
+                }else{                                     
+                    this._toolbar = document.createElement('div');
+
+                    var click = "ontouchend" in document ? 'touchup' : 'click';  
+
+                    var button = document.createElement('button');
+                    this._toolbar.appendChild(button);
+                    button.innerHTML = 'Zoom In';
+                    button.addEventListener(click, function(){
+                        graphView.zoomIn(true);
+                    }, false);
+
+                    var button = document.createElement('button');
+                    this._toolbar.appendChild(button);
+                    button.innerHTML = 'Zoom Out';
+                    button.addEventListener(click, function(){
+                        graphView.zoomOut(true);
+                    }, false); 
+
+                    var button = document.createElement('button');
+                    this._toolbar.appendChild(button);
+                    button.innerHTML = 'Zoom Reset';
+                    button.addEventListener(click, function(){
+                        graphView.zoomReset(true);
+                    }, false);    
+                }
+
+                this._view = document.createElement('div');                
+                this._view.appendChild(this._toolbar);
+                this._view.appendChild(this._graphView.getView());
+                this._view.className = className;
+
+                var style = this._graphView.getView().style;
+                style.background = '#ECF0F1';
+                style.left = '0px';
+                style.right = '0px';
+
+                this.invalidate();
+            };
+            ht.Default.def(GraphPane, Object, {
+                getView: function(){
+                    return this._view;
+                },
+                getGraphView: function(){
+                    return this._graphView;
+                },
+                getToolbar: function(){
+                    return this._toolbar;
+                },
+                invalidate: function(){
+                    ht.Default.callLater(this.validate, this);
+                },
+                validate: function(){
+                    var height = this._view.clientHeight - this._toolbar.clientHeight;
+                    if(height < 0) height = 0;
+                    this._graphView.getView().style.height = height + 'px';
+                    this._graphView.invalidate();   
+                }
+            });              
+            
+            function init(){                                
+                index = 0;
+                dataModel = new ht.DataModel();  
+                selectionModel = dataModel.getSelectionModel();
+                graphPane = new GraphPane(dataModel, document.getElementById('toolbar'), 'main');
+                document.body.appendChild(graphPane.getView());
+                
+                window.addEventListener('resize', function (e) {
+                    graphPane.invalidate();
+                }, false);                                             
+                
+                // monitor data property change event
+                dataModel.addDataPropertyChangeListener(function(e){                    
+                    document.getElementById('property').innerHTML = e.data + '\'s ' + e.property + ' changed';
+                });
+                
+                // monitor data model change event
+                dataModel.addDataModelChangeListener(function(e){
+                    var output;
+                    if(e.kind === 'add'){
+                        output = e.data + ' added, ';
+                    }
+                    else if(e.kind === 'remove'){
+                        output = e.data + ' removed, ';
+                    }
+                    else if(e.kind === 'clear'){
+                        output = 'data model cleared, ';
+                    }
+                    output += 'size:' + dataModel.size();
+                    document.getElementById('model').innerHTML = output;
+                });
+                
+                // monitor selection model change event
+                selectionModel.addSelectionChangeListener(function(e){
+                    var output = '';
+                        size = selectionModel.size();                    
+                    if(size === 0){
+                        output = 'nothing selected';
+                    }
+                    else if(size === 1){
+                        output = selectionModel.getLastData() + ' selected';
+                    }
+                    else{
+                        output = size + ' datas selected';
+                    }
+                    document.getElementById('selection').innerHTML = output;
+                });
+                                
+                graphPane.getGraphView().setEditable(true);
+                
+                addData();
+                addData();
+                selectionModel.setSelection(addData());
+            }
+            function addData(){
+                var node = new ht.Node();                             
+                node.setPosition(50 + index % 12 * 50, 50);
+                node.setName('node' + index++);    
+                dataModel.add(node);                                               
+                return node;
+            }
+            function removeData(){
+                while(selectionModel.size() > 0){
+                    dataModel.remove(selectionModel.getLastData());
+                }
+            }        
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="toolbar">
+            <button onclick="addData();">Add</button>
+            <button onclick="removeData();">Remove</button>  
+            <button onclick="dataModel.clear();">Clear</button>  
+            <span id="property" class="output"></span>
+            <span id="model" class="output"></span>
+            <span id="selection" class="output"></span>
+        </div>  
+    </body>
+</html>

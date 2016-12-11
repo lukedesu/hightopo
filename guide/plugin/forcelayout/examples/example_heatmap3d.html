@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <meta name="viewport" content="user-scalable=no">
+        <title>Heatmap - 3D</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px; margin: 0px;                
+            }            
+            .main {
+                margin: 0px; padding: 0px; position: absolute; 
+                top: 0px; bottom: 0px; left: 0px; right: 0px; background: black;
+            }
+            .formpane {
+                top: 10px;
+                right: 10px;   
+                background: rgba(230, 230, 230, 0.7);
+            }  
+        </style>         
+    </head>    
+    <script src="../../../../lib/core/ht.js"></script> 
+    <script src="../../../../lib/plugin/ht-forcelayout.js"></script>    
+    <script src="heatmap.js"></script>         
+    <script>   
+        
+        MAX = 500;
+        WIDTH = 1024;
+        HEIGHT = 512;  
+        
+        function init() {                           
+            
+            dataModel = new ht.DataModel();            
+            g3d = new ht.graph3d.Graph3dView(dataModel);                            
+            g3d.getMoveMode = function(e){
+                return 'xyz'; 
+            };  
+            
+            view = g3d.getView();            
+            view.className = 'main';
+            document.body.appendChild(view);    
+            window.addEventListener('resize', function (e) { 
+                g3d.invalidate(); 
+            }, false);  
+            
+            heatmap = h337.create({ 
+                width: WIDTH, 
+                height: HEIGHT
+            });             
+            heatmap._renderer.canvas.dynamic = true;            
+            ht.Default.setImage('hm-floor', heatmap._renderer.canvas);  
+            
+            var floor = new ht.Node();
+            floor.s3(WIDTH, 1, HEIGHT);
+            floor.s({
+                '3d.selectable': false,
+                'layoutable': false,
+                'all.visible': false,
+                'top.visible': true,
+                'top.image': 'hm-floor',
+                'top.reverse.flip': true,
+                'bottom.visible': true,
+                'bottom.transparent': true,
+                'bottom.opacity': 0.5,
+                'bottom.reverse.flip': true                
+            });
+            dataModel.add(floor); 
+            
+            var root = createNode();                   
+            for (var i = 0; i < 3; i++) {
+                var iNode = createNode();                       
+                createEdge(root, iNode);
+                for (var j = 0; j < 3; j++) {
+                    var jNode = createNode();                            
+                    createEdge(iNode, jNode);                                                         
+                }
+            }
+            
+            forceLayout = new ht.layout.Force3dLayout(g3d);  
+            forceLayout.setEdgeRepulsion(1);
+            forceLayout.start();
+            forceLayout.onRelaxed = function(){
+                var points = [];
+                dataModel.each(function(data){
+                    if(data instanceof ht.Node && data !== floor){
+                        var p3 = data.p3();
+                        if(p3[1] > MAX){
+                            p3[1] = MAX;
+                            data.setElevation(MAX);
+                        }
+                        else if(p3[1] < -MAX){
+                            p3[1] = -MAX;
+                            data.setElevation(-MAX);
+                        }                        
+                        points.push({
+                            x: p3[0] + WIDTH/2,
+                            y: p3[2] + HEIGHT/2,
+                            value: MAX - Math.abs(p3[1])
+                        });
+                    }
+                });
+                heatmap.setData({data: points, min: 0, max: MAX});
+                g3d.invalidateData(floor);
+            };
+        }
+        function createNode(){
+            var node = new ht.Node();             
+            node.s({
+                'shape3d': 'sphere',
+                'shape3d.color': '#E74C3C',
+                'shape3d.opacity': 0.8,
+                'shape3d.transparent': true,
+                'shape3d.reverse.cull': true
+            });
+            node.s3(20, 20, 20);
+            dataModel.add(node);
+            return node;
+        }
+        function createEdge(sourceNode, targetNode){
+            var edge = new ht.Edge(sourceNode, targetNode);
+            edge.s({
+                'edge.width': 3,
+                'edge.offset': 10,                
+                'shape3d': 'cylinder',
+                'shape3d.opacity': 0.7,
+                'shape3d.transparent': true,
+                'shape3d.reverse.cull': true
+            });
+            dataModel.add(edge);
+            return edge;
+        }                       
+    </script>
+    <body onload="init();">
+    </body>
+</html>

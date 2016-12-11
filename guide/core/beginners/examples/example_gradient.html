@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Style Shape</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>     
+        <script src="../../../../lib/core/ht.js"></script>   
+        <script>                                                  
+            
+            function init(){                                
+                var dataModel = new ht.DataModel(),
+                    graphView = new ht.graph.GraphView(dataModel),
+                    view = graphView.getView();            
+
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    graphView.invalidate();
+                }, false);  
+
+                graphView.setEditable(true);
+             
+                var i = 0;
+                ['linear.southwest','linear.southeast','linear.northwest','linear.northeast',
+                'linear.north','linear.south','linear.west','linear.east',
+                'radial.center','radial.southwest','radial.southeast','radial.northwest','radial.northeast',
+                'radial.north','radial.south','radial.west','radial.east',
+                'spread.horizontal','spread.vertical','spread.diagonal','spread.antidiagonal',
+                'spread.north','spread.south','spread.west','spread.east'].forEach(function (gradient) {
+                    var node = new ht.Node();                    
+                    dataModel.add(node);
+                    if(i < 8){
+                        node.setPosition(60 + i * 100, 50);
+                    }
+                    else if(i < 17) {
+                        node.setPosition(60 + (i - 8) * 100, 150);                    
+                    }
+                    else{                
+                        node.setPosition(60 + (i - 17) * 100, 250);                    
+                    }
+                    i++;
+                    node.setName(gradient);
+                    node.setSize(60, 40);                              
+                    node.setStyle('shape', 'rect');
+                    node.setStyle('shape.gradient', gradient);
+                    node.setStyle('shape.background', 'red');
+                }); 
+                
+            }
+                        
+
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>

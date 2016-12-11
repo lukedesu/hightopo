@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ComboBox</title>
+        <meta charset="UTF-8">   
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;                
+            }            
+            .main {
+                margin: 0px;
+                padding: 0px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+            }
+        </style>    
+        <script>
+            htconfig = {
+                Color: {    
+                    highlight: '#6DCDF3'          
+                }
+            };
+        </script>                      
+        <script src="../../../../lib/core/ht.js"></script>        
+        <script src="../../../../lib/plugin/ht-form.js"></script>   
+        <script>
+            function init(){                                                                 
+                borderPane = new ht.widget.BorderPane();
+                borderPane.setTopView(createToolbar());
+                toolbar = createToolbar();
+                toolbar.setStickToRight(true);                
+                borderPane.setBottomView(toolbar);
+                
+                dataModel = new ht.DataModel();
+                tablePane = new ht.widget.TablePane(dataModel);
+                propertyView = new ht.widget.PropertyView(dataModel);
+                splitView = new ht.widget.SplitView(tablePane, propertyView, 'h', 0.6);                                
+                borderPane.setCenterView(splitView);                        
+                view = borderPane.getView();
+                view.className = 'main';
+                document.body.appendChild(view);    
+                window.addEventListener('resize', function (e) {
+                    borderPane.invalidate();
+                }, false);   
+                
+                years = [];
+                for(var i=0; i<100; i++){
+                    data = new ht.Data();
+                    data.setId(i);                    
+                    data.a('year', 1980+i);                    
+                    data.a('city', i % 2 ===0 ? 'Shanghai' : 'Beijing');
+                    data.a('graph', i % 6 + 1);
+                    dataModel.add(data);
+                    years.push(1980+i);
+                }
+                dataModel.sm().ss(data);
+                
+                var attributes = [
+                    {
+                        name: 'id',
+                        align: 'center'
+                    },
+                    {
+                        name: 'city',
+                        displayName: 'City',                        
+                        editable: true,
+                        accessType: 'attr',                        
+                        enum: ['Shanghai', 'Beijing']
+                    },
+                    {
+                        name: 'year',
+                        displayName: 'Year',                        
+                        editable: true,
+                        accessType: 'attr',
+                        enum: { values: years, editable: true, maxHeight: 120 }
+                    },
+                    {
+                        name: 'graph',
+                        displayName: 'Icon',                        
+                        editable: true,
+                        width: 60,
+                        accessType: 'attr',
+                        enum: {      
+                            values: [1, 2, 3, 4, 5, 6], 
+                            labels: ['', '', '', '', '', ''],
+                            icons: ['node_icon', 'edge_icon', 'group_icon', 'shape_icon', 'subGraph_icon', 'grid_icon']
+                        }                        
+                    },                    
+                    {
+                        name: 'graph',
+                        displayName: 'Label',                        
+                        editable: true,
+                        width: 80,
+                        accessType: 'attr',
+                        enum: {
+                            values: [1, 2, 3, 4, 5, 6], 
+                            labels: ['Node', 'Edge', 'Group', 'Shape', 'SubGraph', 'Grid']
+                        }                        
+                    },
+                    {
+                        name: 'graph',
+                        displayName: 'Icon + Label',                        
+                        editable: true,
+                        width: 100,
+                        accessType: 'attr',
+                        align: 'center',
+                        enum: {
+                            values: [1, 2, 3, 4, 5, 6], 
+                            labels: ['Node', 'Edge', 'Group', 'Shape', 'SubGraph', 'Grid'],
+                            icons: ['node_icon', 'edge_icon', 'group_icon', 'shape_icon', 'subGraph_icon', 'grid_icon']
+                        }                        
+                    }
+                ];
+                
+                tablePane.addColumns(attributes);
+                propertyView.addProperties(attributes);
+                                
+            }
+            function createToolbar(){
+                var stringComboBox = new ht.widget.ComboBox();
+                stringComboBox.setValues(['www.hightopo.com', 'HT for Web', 'HT']);
+                stringComboBox.setValue('HT for Web');
+                stringComboBox.setWidth(90);
+                stringComboBox.setDropDownWidth(140);
+                
+                var numberComboBox = new ht.widget.ComboBox();
+                numberComboBox.setValues([2002, 2005, 2013]);
+                numberComboBox.setValue(2013);
+                numberComboBox.setEditable(true);                
+                                            
+                var toolbar = new ht.widget.Toolbar([
+                    {
+                        label: 'String',
+                        element: stringComboBox,
+                        unfocusable: true
+                    },
+                    {
+                        label: 'Number',
+                        element: numberComboBox,
+                        unfocusable: true
+                    },
+                    {
+                        label: 'Icon',
+                        unfocusable: true,
+                        comboBox: {
+                            values: ['Node', 'Group', 'Shape', 'Edge'],
+                            icons: ['node_icon', 'group_icon', 'shape_icon', 'edge_icon'],
+                            value: 'Group'
+                        }                        
+                    },
+                    {
+                        label: 'Label',
+                        unfocusable: true,
+                        comboBox: {
+                            values: [1, 2, 3, 4],
+                            labels: ['ht.Node', 'ht.Group', 'ht.Shape', 'ht.Edge'],
+                            value: 4,
+                            onValueChanged: function(){
+                                alert('Select Value:' + this.getValue());
+                            }                            
+                        }
+                    }
+                ]);
+                toolbar.getLabelColor = function(item){ return 'white'; };               
+                toolbar.getView().style.background = '#3D3D3D';
+                return toolbar;
+            }
+        </script>
+    </head>
+    <body onload="init();">
+    </body>
+</html>
